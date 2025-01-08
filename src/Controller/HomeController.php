@@ -36,6 +36,7 @@ class HomeController extends AbstractController
             'reviews' => $reviews,
             'habitats' => $habitats,
             'services' => $services,
+            
         ]);
     }
 }

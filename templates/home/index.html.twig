@@ -1,20 +1,72 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoo de Arcadia - Accueil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+   
+</head>
+<body>
+ 
+    
 
-{% block title %}Hello HomeController!{% endblock %}
+<div class="container mt-5">
+    <!-- Présentation -->
+    <section class="mb-5">
+        <h2 class="text-center">Bienvenue au Zoo Arcadia</h2>
+        <p class="text-center">Arcadia est un Zoo situé en France près de la forêt de Brocéliande,en bretagne depuis 1960 . </p>
+        <p class="text-center">Ils possèdent tout un panel d'animaux, réparti par habitat(savane,jungle,marais) et font extrêmement attention à leurs santés avec des visites quotidiennes de plusieurs vétérinaires et un contrôle du grammage lors des repas .</p>
+    </section>
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+   
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <!-- Avis des visiteurs -->
+    <section class="mb-5">
+        <h3 class="text-center">Avis des visiteurs</h3>
+        <div class="list-group">
+            {% for review, author in reviews %}
+                <div class="list-group-item">
+                    <p>"{{ review }}"</p>
+                    <small class="text-muted">- {{ author }}</small>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/tchou/projetF22/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>C:/Users/tchou/projetF22/templates/home/index.html.twig</code></li>
-    </ul>
+    <!-- Section des habitats -->
+    <section class="row">
+        <div class="col-md-6">
+            <h3 class="text-center">Habitats</h3>
+            <ul class="list-group">
+                {% for habitat, animals in habitats %}
+                    <li class="list-group-item">
+                        <strong>{{ habitat }}</strong>: {{ animals | join(', ') }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+ 
+    <!-- Section des services -->
+   
+        <div class="col-md-6">
+            <h3 class=" text-center">Nos Services</h3>
+            <ul class="list-group">
+        {% for service in services %}
+            <li class="list-group-item">
+                <strong>{{ service }}</strong>
+            </li>
+        {% endfor %}
+           </ul>
+        </div>
+    </section>
 </div>
-{% endblock %}
+
+<footer class="bg-dark text-white text-center py-3 mt-5">
+    &copy; {{ "now"|date("Y") }} Zoo Arcadia. Tous droits réservés.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
