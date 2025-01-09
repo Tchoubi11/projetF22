@@ -15,7 +15,7 @@ class Image
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $imagePath = null;
+    private ?string $image_path = null;
 
     private ?UploadedFile $imageFile = null; // Propriété temporaire pour le fichier
 
@@ -26,12 +26,12 @@ class Image
 
     public function getImagePath(): ?string
     {
-        return $this->imagePath;
+        return $this->image_path;
     }
 
-    public function setImagePath(?string $imagePath): static
+    public function setImagePath(?string $image_path): static
     {
-        $this->imagePath = $imagePath;
+        $this->image_path = $image_path;
 
         return $this;
     }
