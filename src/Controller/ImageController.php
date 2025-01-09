@@ -8,9 +8,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ImageController extends AbstractController
 {
+    #[Route('/upload-image', name: 'image_upload')]
     public function upload(Request $request, EntityManagerInterface $entityManager): Response
     {
         $image = new Image();
@@ -32,7 +34,7 @@ class ImageController extends AbstractController
                     $newFilename
                 );
 
-                // Enregistrer le chemin dans l'entité
+                // On enregistre le chemin dans l'entité
                 $image->setImagePath($newFilename);
             }
 
