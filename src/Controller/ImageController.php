@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\Image;
 use App\Form\ImageType;
+use App\Repository\ImageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,6 +49,16 @@ class ImageController extends AbstractController
 
         return $this->render('image/upload.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/images', name: 'image_list')]
+    public function list(ImageRepository $imageRepository): Response
+    {
+        $images = $imageRepository->findAll();
+
+        return $this->render('image/list.html.twig', [
+            'images' => $images,
         ]);
     }
 }
