@@ -6,15 +6,17 @@ use App\Form\ImageType;
 use App\Repository\ImageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class ImageController extends AbstractController
 {
     #[Route('/upload-image', name: 'image_upload')]
-    public function upload(Request $request, EntityManagerInterface $entityManager): Response
+    public function upload(Request $request, EntityManagerInterface $entityManager,#[Autowire('%images_directory%')] string $imageDirectory): Response
     {
         $image = new Image();
         $form = $this->createForm(ImageType::class, $image);
@@ -30,10 +32,16 @@ class ImageController extends AbstractController
                 $newFilename = uniqid() . '.' . $imageFile->guessExtension();
 
                 // On déplace le fichier dans le répertoire configuré
-                $imageFile->move(
-                    $this->getParameter('images_directory'),
-                    $newFilename
-                );
+                try {
+                    $imageFile->move(
+                        $imageDirectory,
+                        $newFilename
+                    );
+                } catch (\Exception $e) {
+                    $this->addFlash('error', 'Une erreur est survenue lors du téléchargement: ' . $e->getMessage());
+                    return $this->redirectToRoute('image_upload');
+                }
+                
 
                 // On enregistre le chemin dans l'entité
                 $image->setImagePath($newFilename);
