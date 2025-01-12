@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion - Zoo Arcadia{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center">Connexion</h2>
+    <form method="post" action="#" class="mt-4">
+        <div class="mb-3">
+            <label for="email" class="form-label">Adresse Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Mot de Passe</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Se Connecter</button>
+    </form>
+</div>
+{% endblock %}

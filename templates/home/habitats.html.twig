@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Habitats - Zoo Arcadia{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center">Habitats des Animaux</h2>
+    <div class="row mt-4">
+        <div class="col-12">
+            <ul class="list-group">
+                {% for habitat, animals in habitats %}
+                    <li class="list-group-item">
+                        <strong>{{ habitat }}:</strong> {{ animals | join(', ') }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
