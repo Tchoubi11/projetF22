@@ -7,7 +7,7 @@
 
     {% for image in images %}
         <div>
-            <img src="{{ asset('uploads/images/' ~ image.image_path) }}" alt="Image {{ image.id }}" style="max-width: 200px;">
+            <img src="{{ asset('uploads/images/' ~ image.imagePath) }}" alt="Image {{ image.id }}" style="max-width: 200px;">
         </div>
     {% else %}
         <p>Aucune image disponible.</p>

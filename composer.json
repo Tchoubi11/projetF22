@@ -58,6 +58,10 @@
             "App\\": "src/"
         }
     },
+    "platform": {
+        "php": "8.2.27"
+    },
+    
     "autoload-dev": {
         "psr-4": {
             "App\\Tests\\": "tests/"

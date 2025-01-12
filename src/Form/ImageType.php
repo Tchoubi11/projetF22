@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
 
 class ImageType extends AbstractType
 {
@@ -17,6 +18,17 @@ class ImageType extends AbstractType
             'label' => 'Télécharger une image',
             'mapped' => false, // Ce champ n'est pas directement mappé à une propriété de l'entité
             'required' => true,
+            'constraints' => [
+            new File([
+                'maxSize' => '40M', 
+                'mimeTypes' => [
+                    'image/jpeg',
+                    'image/png',
+                    'image/gif',
+                ],
+                'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, GIF).',
+            ]),
+        ],
         ]);
     }
 

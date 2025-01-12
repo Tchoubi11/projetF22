@@ -14,10 +14,11 @@ class Image
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $image_path = null;
+    #[ORM\Column(length: 255, nullable: true)] 
+    private ?string $imagePath = null;
 
-    private ?UploadedFile $imageFile = null; // Propriété temporaire pour le fichier
+    // Propriété temporaire pour gérer l'upload
+    private ?UploadedFile $imageFile = null;
 
     public function getId(): ?int
     {
@@ -26,12 +27,12 @@ class Image
 
     public function getImagePath(): ?string
     {
-        return $this->image_path;
+        return $this->imagePath;
     }
 
-    public function setImagePath(?string $image_path): static
+    public function setImagePath(?string $imagePath): static
     {
-        $this->image_path = $image_path;
+        $this->imagePath = $imagePath;
 
         return $this;
     }
@@ -48,3 +49,4 @@ class Image
         return $this;
     }
 }
+ 
