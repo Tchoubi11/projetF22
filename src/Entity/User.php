@@ -3,10 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User 
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,13 +20,13 @@ class User
     #[ORM\Column(length: 50)]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, unique: true)]  //Ajout de l'attribut unique pour garantir l'unicité
     private ?string $username = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'json')] 
     private array $roles = [];
 
     public function getId(): ?int
@@ -83,7 +84,13 @@ class User
 
     public function getRoles(): array
     {
-        return $this->roles;
+        // Pour garantir de ne pas avoir d'utilisateur sans rôle
+        $roles = $this->roles;
+        if (!in_array('ROLE_USER', $roles)) {
+            $roles[] = 'ROLE_USER';
+        }
+
+        return $roles;
     }
 
     public function setRoles(array $roles): static
@@ -91,5 +98,18 @@ class User
         $this->roles = $roles;
 
         return $this;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->username; // Pour la sécurité symfony
+    }
+
+    public function eraseCredentials()
+    {
+        // Pour éffacer les données temporaires ou sensibles de l'utilisateur comme le mot de passe ou username
+        //if (isset($this->password)) {
+      //  $this->password = null;
+    //}
     }
 }
