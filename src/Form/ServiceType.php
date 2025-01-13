@@ -14,7 +14,7 @@ class ServiceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('name', TextType::class, [
+        ->add('nom', TextType::class, [
             'label' => 'Nom du service',
             'required' => true,
             'attr' => ['placeholder' => 'Entrez le nom du service'],
