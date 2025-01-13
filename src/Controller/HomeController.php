@@ -97,6 +97,11 @@ class HomeController extends AbstractController
     #[Route('/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+
+    if ($this->getUser()) {
+        // Redirige vers la page d'accueil si déjà connecté
+        return $this->redirectToRoute('app_home');
+    }
         // Récupère l'erreur de connexion, s'il y en a
         $error = $authenticationUtils->getLastAuthenticationError();
 
