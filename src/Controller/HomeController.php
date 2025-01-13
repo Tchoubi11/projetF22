@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class HomeController extends AbstractController
 {
@@ -93,12 +94,24 @@ class HomeController extends AbstractController
         ]);
     }
  
-    #[Route( "/login",name:"app_login")]
-   public function Login():Response
+    #[Route('/login', name: 'app_login')]
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        // Récupère l'erreur de connexion, s'il y en a
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        // Récupère le dernier nom d'utilisateur entré par l'utilisateur
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('home/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ]);
+   }
+   #[Route('/logout', name: 'app_logout', methods: ['GET'])]
+   public function logout(): void
    {
-    return $this->render('home/login.html.twig',[
-    
-    ]);
+       // Je la laisse vide, elle sera interceptée par Symfony pour gérer la déconnexion
    }
   
 }
