@@ -22,7 +22,7 @@
     <tbody>
         {% for service in services %}
             <tr>
-                <td>{{ service.name }}</td>
+                <td>{{ service.nom }}</td>
                 <td>{{ service.description }}</td>
                 <td>
                     <a href="{{ path('admin_service_edit', {'id': service.id}) }}">Modifier</a>
