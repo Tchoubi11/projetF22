@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use App\Repository\HabitatRepository;
+
 
 class HomeController extends AbstractController
 {
@@ -68,16 +70,14 @@ class HomeController extends AbstractController
 
     }
 
-    #[Route("/habitats",name:"app_habitats")]
-    public function Habitats():Response
+    #[Route("/habitats", name: "app_habitats")]
+    public function Habitats(HabitatRepository $habitatRepository): Response
     {
-        $habitats = [
-            'Savane' => ['Lions', 'Girafes', 'Zèbres'],
-            'Jungle' => ['Singes', 'Tigres', 'Léopards'],
-            'Marais' => ['Couguar', 'Renard gris']
-        ];
-        return $this->render('home/habitats.html.twig',[
-        'habitats' => $habitats,
+        // Récupérer tous les habitats depuis la base de données
+        $habitats = $habitatRepository->findAll();
+
+        return $this->render('home/habitats.html.twig', [
+            'habitats' => $habitats,
         ]);
     }
 
