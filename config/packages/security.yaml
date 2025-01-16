@@ -16,18 +16,25 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            pattern: ^/
+            custom_authenticators:
+                - App\Security\AppAuthenticator
             form_login:
                 login_path: app_login
                 check_path: app_login
-                default_target_path: home
+                username_parameter: _username
+                password_parameter: _password
+                default_target_path:  admin_service_index
+                enable_csrf: true
                 always_use_default_target_path: true
             logout:
                 path: app_logout
-                target: login
+                target: app_login
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 semaine
                 path: /
+            custom_authenticator: App\Security\AppAuthenticator
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 

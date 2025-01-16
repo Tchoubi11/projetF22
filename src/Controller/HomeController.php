@@ -100,7 +100,7 @@ class HomeController extends AbstractController
 
     if ($this->getUser()) {
         // Redirige vers la page d'accueil si déjà connecté
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('admin_service_index');
     }
         // Récupère l'erreur de connexion, s'il y en a
         $error = $authenticationUtils->getLastAuthenticationError();

@@ -6,15 +6,25 @@
 <div class="container mt-5">
     <h2 class="text-center">Connexion</h2>
     <form action="{{ path('app_login') }}" method="post">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    
         <div class="mb-3">
             <label for="username" class="form-label">Nom d'utilisateur</label>
-            <input type="text" class="form-control" id="username" name="username" required>
+            <input type="text" class="form-control" id="username" name="_username" required>
         </div>
+    
         <div class="mb-3">
             <label for="password" class="form-label">Mot de Passe</label>
-            <input type="text" class="form-control" id="password" name="password" required>
+            <input type="password" class="form-control" id="password" name="_password" required>
         </div>
         <button type="submit" class="btn btn-primary w-100">Se Connecter</button>
+    
+        {% if error %}
+            <div class="alert alert-danger">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
     </form>
+    
 </div>
 {% endblock %}
