@@ -113,10 +113,6 @@ class HomeController extends AbstractController
             'error' => $error,
         ]);
    }
-   #[Route('/logout', name: 'app_logout', methods: ['GET'])]
-   public function logout(): void
-   {
-       // Je la laisse vide, elle sera interceptée par Symfony pour gérer la déconnexion
-   }
+  
   
 }
