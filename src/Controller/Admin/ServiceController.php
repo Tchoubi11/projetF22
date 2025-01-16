@@ -80,4 +80,9 @@ class ServiceController extends AbstractController
 
         return $this->redirectToRoute('admin_service_index');
     }
+     #[Route('/logout', name: 'app_logout', methods: ['GET'])]
+    public function logout(): void
+    {
+     //code vide car symfony gère la déconnection
+    }
 }
