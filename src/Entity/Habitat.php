@@ -18,7 +18,7 @@ class Habitat
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'string', length: 1000)]
     private ?string $description = null;
 
     #[ORM\Column(type: 'text', nullable: true)] 
