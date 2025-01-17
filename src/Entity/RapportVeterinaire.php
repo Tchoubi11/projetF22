@@ -20,6 +20,10 @@ class RapportVeterinaire
     #[ORM\Column(length: 50)]
     private ?string $detail = null;
 
+    #[ORM\OneToOne(inversedBy: 'rapportVeterinaire', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)] // un rapport associé par animal
+    private ?Animal $animal = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +49,18 @@ class RapportVeterinaire
     public function setDetail(string $detail): static
     {
         $this->detail = $detail;
+
+        return $this;
+    }
+
+    public function getAnimal(): ?Animal
+    {
+        return $this->animal;
+    }
+
+    public function setAnimal(?Animal $animal): static
+    {
+        $this->animal = $animal;
 
         return $this;
     }

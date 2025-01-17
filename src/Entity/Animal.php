@@ -17,7 +17,7 @@ class Animal
     private ?string $prenom = null;
 
     #[ORM\ManyToOne(targetEntity: Race::class, inversedBy: 'animaux')]
-    #[ORM\JoinColumn(nullable: true)]  // car un animal peut ne pas avoir de race au départ
+    #[ORM\JoinColumn(nullable: true)]
     private ?Race $race = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -26,6 +26,9 @@ class Animal
     #[ORM\ManyToOne(targetEntity: Habitat::class, inversedBy: 'animaux')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Habitat $habitat = null;
+
+    #[ORM\OneToOne(mappedBy: 'animal', cascade: ['persist', 'remove'])]
+    private ?RapportVeterinaire $rapportVeterinaire = null;
 
     public function getId(): ?int
     {
@@ -76,6 +79,28 @@ class Animal
     public function setHabitat(?Habitat $habitat): static
     {
         $this->habitat = $habitat;
+
+        return $this;
+    }
+
+    public function getRapportVeterinaire(): ?RapportVeterinaire
+    {
+        return $this->rapportVeterinaire;
+    }
+
+    public function setRapportVeterinaire(?RapportVeterinaire $rapportVeterinaire): static
+    {
+        // Unset the owning side of the relation if necessary
+        if ($rapportVeterinaire === null && $this->rapportVeterinaire !== null) {
+            $this->rapportVeterinaire->setAnimal(null);
+        }
+
+        // Set the owning side of the relation if necessary
+        if ($rapportVeterinaire !== null && $rapportVeterinaire->getAnimal() !== $this) {
+            $rapportVeterinaire->setAnimal($this);
+        }
+
+        $this->rapportVeterinaire = $rapportVeterinaire;
 
         return $this;
     }
