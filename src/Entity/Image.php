@@ -15,6 +15,8 @@ class Image
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)] 
+    #[ORM\ManyToMany(targetEntity: Habitat::class, mappedBy: 'images')]
+    #[ORM\JoinTable(name: 'habitat_images')]
     private ?string $imagePath = null;
 
     // Propriété temporaire pour gérer l'upload

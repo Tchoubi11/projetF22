@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Habitat;
 use App\Entity\Animal;
+use App\Entity\Image;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -54,19 +55,25 @@ class AppFixtures extends Fixture
             $habitat = new Habitat();
             $habitat->setNom($habitatData['nom']);
             $habitat->setDescription($habitatData['description']);
-            $habitat->setImage($habitatData['image']);
+
+            $image = new Image();
+            $image->setImagePath($habitatData['image']);
+            $habitat->addImage($image);
+
+            $manager->persist($image);
             $manager->persist($habitat);
 
-            // Ajouter les animaux associés à cet habitat
             foreach ($habitatData['animaux'] as $animalData) {
                 $animal = new Animal();
                 $animal->setPrenom($animalData['prenom']);
                 $animal->setRace($animalData['race']);
                 $animal->setImage($animalData['image']);
                 $animal->setHabitat($habitat);
+
                 $manager->persist($animal);
             }
         }
+
 
         $manager->flush();
     }

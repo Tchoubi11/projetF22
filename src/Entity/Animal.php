@@ -14,19 +14,16 @@ class Animal
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private string $prenom;
+    private ?string $prenom = null;
 
     #[ORM\Column(length: 255)]
-    private string $race;
+    private ?string $race = null;
 
-    #[ORM\Column(length: 255)]
-    private string $image;
-
-    #[ORM\Column(length: 50)]
-    private ?string $etat = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
 
     #[ORM\ManyToOne(targetEntity: Habitat::class, inversedBy: 'animaux')]
-    #[ORM\JoinColumn(nullable: true)]  // Permettre la nullabilité et discocier un animal de son habitat si nécéssaire
+    #[ORM\JoinColumn(nullable: false)]
     private ?Habitat $habitat = null;
 
     public function getId(): ?int
@@ -34,7 +31,7 @@ class Animal
         return $this->id;
     }
 
-    public function getPrenom(): string
+    public function getPrenom(): ?string
     {
         return $this->prenom;
     }
@@ -46,7 +43,7 @@ class Animal
         return $this;
     }
 
-    public function getRace(): string
+    public function getRace(): ?string
     {
         return $this->race;
     }
@@ -58,26 +55,14 @@ class Animal
         return $this;
     }
 
-    public function getImage(): string
+    public function getImage(): ?string
     {
         return $this->image;
     }
 
-    public function setImage(string $image): static
+    public function setImage(?string $image): static
     {
         $this->image = $image;
-
-        return $this;
-    }
-
-    public function getEtat(): ?string
-    {
-        return $this->etat;
-    }
-
-    public function setEtat(string $etat): static
-    {
-        $this->etat = $etat;
 
         return $this;
     }
@@ -92,18 +77,5 @@ class Animal
         $this->habitat = $habitat;
 
         return $this;
-    }
-
-    /**
-     * Renvoie une chaîne descriptive de l'animal.
-     */
-    public function __toString(): string
-    {
-        return sprintf(
-            '%s (%s) - État: %s',
-            $this->prenom,
-            $this->race,
-            $this->etat ?? 'N/A'
-        );
     }
 }
