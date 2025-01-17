@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Habitat;
 use App\Entity\Animal;
 use App\Entity\Image;
+use App\Entity\Race;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -39,7 +40,7 @@ class AppFixtures extends Fixture
             ],
             [
                 'nom' => 'Marais',
-                'description' => 'Zone humide avec une végétation dense.',
+                'description' => 'Zone humide et végétation dense.',
                 'image' => 'public/uploads/images/67897c6587286.jpg',
                 'animaux' => [
                     ['prenom' => 'Crocodile', 'race' => 'Crocodylus niloticus', 'image' => 'public/uploads/images/67897f3a31afb.jpg'],
@@ -63,17 +64,21 @@ class AppFixtures extends Fixture
             $manager->persist($image);
             $manager->persist($habitat);
 
+            // Créer une Race
+            $race = new Race();
+            $race->setLabel('Panthera leo'); // Exemple de race
+            $manager->persist($race);
+
             foreach ($habitatData['animaux'] as $animalData) {
                 $animal = new Animal();
                 $animal->setPrenom($animalData['prenom']);
-                $animal->setRace($animalData['race']);
                 $animal->setImage($animalData['image']);
                 $animal->setHabitat($habitat);
+                $animal->setRace($race); // j'associe la race à l'animal
 
                 $manager->persist($animal);
             }
         }
-
 
         $manager->flush();
     }

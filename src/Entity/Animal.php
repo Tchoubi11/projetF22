@@ -16,8 +16,9 @@ class Animal
     #[ORM\Column(length: 255)]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $race = null;
+    #[ORM\ManyToOne(targetEntity: Race::class, inversedBy: 'animaux')]
+    #[ORM\JoinColumn(nullable: true)]  // car un animal peut ne pas avoir de race au départ
+    private ?Race $race = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
@@ -43,12 +44,12 @@ class Animal
         return $this;
     }
 
-    public function getRace(): ?string
+    public function getRace(): ?Race
     {
         return $this->race;
     }
 
-    public function setRace(string $race): static
+    public function setRace(?Race $race): static
     {
         $this->race = $race;
 
