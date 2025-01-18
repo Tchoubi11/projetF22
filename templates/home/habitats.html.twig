@@ -1,20 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Habitats - Zoo Arcadia{% endblock %}
+{% block title %}Habitats{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h2 class="text-center">Habitats des Animaux</h2>
-    <div class="row mt-4">
-        <div class="col-12">
-            <ul class="list-group">
-                {% for habitat, animals in habitats %}
-                    <li class="list-group-item">
-                        <strong>{{ habitat }}:</strong> {{ animals | join(', ') }}
-                    </li>
+<h1>Les Habitats</h1>
+<div class="habitats-container">
+    {% for habitat in habitats %}
+        <div class="habitat-card">
+            <a href="{{ path('habitat_detail', { id: habitat.id }) }}">
+                {% for image in habitat.images %}
+                    <img src="{{ asset(image.imagePath) }}" alt="{{ habitat.nom }}" />
                 {% endfor %}
-            </ul>
+                <h2>{{ habitat.nom }}</h2>
+            </a>
         </div>
-    </div>
+    {% endfor %}
 </div>
 {% endblock %}
+
+<style>
+.habitats-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.habitat-card {
+    width: 200px;
+    text-align: center;
+}
+
+.habitat-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+</style>
