@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ habitat.nom }}{% endblock %}
+
+{% block body %}
+<h1>{{ habitat.nom }}</h1>
+<div class="habitat-detail">
+    {% for image in habitat.images %}
+        <img src="{{ asset(image.imagePath) }}" alt="{{ habitat.nom }}">
+    {% endfor %}
+    <p>{{ habitat.description }}</p>
+</div>
+
+<h2>Animaux associés</h2>
+<div class="animaux-container">
+    {% for animal in animaux %}
+        <div class="animal-card">
+            <img src="{{ asset(animal.image) }}" alt="{{ animal.prenom }}">
+            <h3>{{ animal.prenom }}</h3>
+            <p>{{ animal.race.label }}</p>
+        </div>
+    {% else %}
+        <p>Aucun animal n'est associé à cet habitat pour le moment.</p>
+    {% endfor %}
+</div>
+{% endblock %}
+
+<style>
+.habitat-detail img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.animaux-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.animal-card {
+    width: 200px;
+    text-align: center;
+}
+
+.animal-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+</style>
