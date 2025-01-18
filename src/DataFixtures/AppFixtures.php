@@ -17,37 +17,37 @@ class AppFixtures extends Fixture
             [
                 'nom' => 'Savane',
                 'description' => 'Vaste plaine herbeuse.',
-                'image' => 'public/uploads/images/678980c33c04d.jpg',
+                'image' => '/uploads/images/678980c33c04d.jpg',
                 'animaux' => [
-                    ['prenom' => 'Lion', 'race' => 'Panthera leo', 'image' => 'public/uploads/images/6784198bc1b3b.jpg'],
-                    ['prenom' => 'Gazelle', 'race' => 'Gazella', 'image' => 'public/uploads/images/67893d91b355d.jpg'],
-                    ['prenom' => 'Zèbre', 'race' => 'Equus zebra', 'image' => 'public/uploads/images/67893d0410cae.jpg'],
-                    ['prenom' => 'Gorille', 'race' => 'Gorilla gorilla', 'image' => 'public/uploads/images/6788dedce7b80.jpg'], 
-                    ['prenom' => 'Léopard', 'race' => 'Panthera pardus', 'image' => 'public/uploads/images/67841a1918305.jpg'], 
+                    ['prenom' => 'Lion', 'race' => 'Panthera leo', 'image' => '/uploads/images/6784198bc1b3b.jpg'],
+                    ['prenom' => 'Gazelle', 'race' => 'Gazella', 'image' => '/uploads/images/67893d91b355d.jpg'],
+                    ['prenom' => 'Zèbre', 'race' => 'Equus zebra', 'image' => '/uploads/images/67893d0410cae.jpg'],
+                    ['prenom' => 'Gorille', 'race' => 'Gorilla gorilla', 'image' => '/uploads/images/6788dedce7b80.jpg'], 
+                    ['prenom' => 'Léopard', 'race' => 'Panthera pardus', 'image' => '/uploads/images/67841a1918305.jpg'], 
                 ],
             ],
             [
                 'nom' => 'Jungle',
                 'description' => 'Forêt dense et humide.',
-                'image' => 'public/uploads/images/6788dfdc973a4.jpg',
+                'image' => '/uploads/images/6788dfdc973a4.jpg',
                 'animaux' => [
-                    ['prenom' => 'Tigre', 'race' => 'Panthera tigris', 'image' => 'public/uploads/images/67897e4086ef8.jpg'],
-                    ['prenom' => 'Singe', 'race' => 'Macaca mulatta', 'image' => 'public/uploads/images/678412c5ce6aa.jpg'], 
-                    ['prenom' => 'Capibara', 'race' => 'Hydrochoerus hydrochaeris', 'image' => 'public/uploads/images/6788defcdf4a5.jpg'], 
-                    ['prenom' => 'Jaguar', 'race' => 'Panthera onca', 'image' => 'public/uploads/images/6788df28121ef.jpg'], 
-                    ['prenom' => 'Lynx', 'race' => 'Lynx lynx', 'image' => 'public/uploads/images/6788df491c352.jpg'], 
+                    ['prenom' => 'Tigre', 'race' => 'Panthera tigris', 'image' => '/uploads/images/67897e4086ef8.jpg'],
+                    ['prenom' => 'Singe', 'race' => 'Macaca mulatta', 'image' => '/uploads/images/678412c5ce6aa.jpg'], 
+                    ['prenom' => 'Capibara', 'race' => 'Hydrochoerus hydrochaeris', 'image' => '/uploads/images/6788defcdf4a5.jpg'], 
+                    ['prenom' => 'Jaguar', 'race' => 'Panthera onca', 'image' => '/uploads/images/6788df28121ef.jpg'], 
+                    ['prenom' => 'Lynx', 'race' => 'Lynx lynx', 'image' => '/uploads/images/6788df491c352.jpg'], 
                 ],
             ],
             [
                 'nom' => 'Marais',
                 'description' => 'Zone humide et végétation dense.',
-                'image' => 'public/uploads/images/67897c6587286.jpg',
+                'image' => '/uploads/images/67897c6587286.jpg',
                 'animaux' => [
-                    ['prenom' => 'Crocodile', 'race' => 'Crocodylus niloticus', 'image' => 'public/uploads/images/67897f3a31afb.jpg'],
-                    ['prenom' => 'Grenouille', 'race' => 'Anura', 'image' => 'public/uploads/images/67897f9acb62c.jpg'],
-                    ['prenom' => 'Ibis', 'race' => 'Threskiornithidae', 'image' => 'public/uploads/images/67897e9296d3e.jpg'],
-                    ['prenom' => 'Tortue', 'race' => 'Trachemys scripta', 'image' => 'public/uploads/images/6789803803ba9.jpg'],
-                    ['prenom' => 'Héron', 'race' => 'Ardeidae', 'image' => 'public/uploads/images/67897ff81ad1a.jpg'], 
+                    ['prenom' => 'Crocodile', 'race' => 'Crocodylus niloticus', 'image' => '/uploads/images/67897f3a31afb.jpg'],
+                    ['prenom' => 'Grenouille', 'race' => 'Anura', 'image' => '/uploads/images/67897f9acb62c.jpg'],
+                    ['prenom' => 'Ibis', 'race' => 'Threskiornithidae', 'image' => '/uploads/images/67897e9296d3e.jpg'],
+                    ['prenom' => 'Tortue', 'race' => 'Trachemys scripta', 'image' => '/uploads/images/6789803803ba9.jpg'],
+                    ['prenom' => 'Héron', 'race' => 'Ardeidae', 'image' => '/uploads/images/67897ff81ad1a.jpg'], 
                 ],
             ],
         ];
@@ -64,17 +64,21 @@ class AppFixtures extends Fixture
             $manager->persist($image);
             $manager->persist($habitat);
 
-            // Créer une Race
-            $race = new Race();
-            $race->setLabel('Panthera leo'); // Exemple de race
-            $manager->persist($race);
-
             foreach ($habitatData['animaux'] as $animalData) {
+                // Vérifier si la race existe déjà ou la créer
+                $race = $manager->getRepository(Race::class)->findOneBy(['label' => $animalData['race']]);
+                if (!$race) {
+                    $race = new Race();
+                    $race->setLabel($animalData['race']);
+                    $manager->persist($race);
+                }
+
+                // Créer l'animal et l'associer à l'habitat et à la race
                 $animal = new Animal();
                 $animal->setPrenom($animalData['prenom']);
                 $animal->setImage($animalData['image']);
                 $animal->setHabitat($habitat);
-                $animal->setRace($race); // j'associe la race à l'animal
+                $animal->setRace($race); // Associe la bonne race
 
                 $manager->persist($animal);
             }
