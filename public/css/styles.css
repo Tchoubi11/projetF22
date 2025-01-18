@@ -1,0 +1,39 @@
+.habitats-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.habitat-card {
+    width: 200px;
+    text-align: center;
+}
+
+.habitat-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+.habitat-detail img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.animaux-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.animal-card {
+    width: 200px;
+    text-align: center;
+}
+
+.animal-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
