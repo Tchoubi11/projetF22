@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Repository\AnimalRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
@@ -29,6 +28,19 @@ class Animal
 
     #[ORM\OneToOne(mappedBy: 'animal', cascade: ['persist', 'remove'])]
     private ?RapportVeterinaire $rapportVeterinaire = null;
+
+    // Ajout des nouvelles propriétés
+    #[ORM\Column(type: "text", nullable: true)]
+    private ?string $etat = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $nourriture = null;
+
+    #[ORM\Column(type: "float", nullable: true)]
+    private ?float $grammage = null;
+
+    #[ORM\Column(type: "datetime", nullable: true)]
+    private ?\DateTimeInterface $dateDePassage = null;
 
     public function getId(): ?int
     {
@@ -90,17 +102,56 @@ class Animal
 
     public function setRapportVeterinaire(?RapportVeterinaire $rapportVeterinaire): static
     {
-        // Unset the owning side of the relation if necessary
-        if ($rapportVeterinaire === null && $this->rapportVeterinaire !== null) {
-            $this->rapportVeterinaire->setAnimal(null);
-        }
-
-        // Set the owning side of the relation if necessary
-        if ($rapportVeterinaire !== null && $rapportVeterinaire->getAnimal() !== $this) {
-            $rapportVeterinaire->setAnimal($this);
-        }
-
         $this->rapportVeterinaire = $rapportVeterinaire;
+
+        return $this;
+    }
+
+    // Getters et setters pour les nouvelles propriétés
+    public function getEtat(): ?string
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(?string $etat): static
+    {
+        $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getNourriture(): ?string
+    {
+        return $this->nourriture;
+    }
+
+    public function setNourriture(?string $nourriture): static
+    {
+        $this->nourriture = $nourriture;
+
+        return $this;
+    }
+
+    public function getGrammage(): ?float
+    {
+        return $this->grammage;
+    }
+
+    public function setGrammage(?float $grammage): static
+    {
+        $this->grammage = $grammage;
+
+        return $this;
+    }
+
+    public function getDateDePassage(): ?\DateTimeInterface
+    {
+        return $this->dateDePassage;
+    }
+
+    public function setDateDePassage(?\DateTimeInterface $dateDePassage): static
+    {
+        $this->dateDePassage = $dateDePassage;
 
         return $this;
     }

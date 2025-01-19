@@ -19,11 +19,25 @@ class AppFixtures extends Fixture
                 'description' => 'Vaste plaine herbeuse.',
                 'image' => 'uploads/images/678ce878bda16.jpg',
                 'animaux' => [
-                    ['prenom' => 'Lion', 'race' => 'Panthera leo', 'image' => 'uploads/images/6784198bc1b3b.jpg'],
-                    ['prenom' => 'Gazelle', 'race' => 'Gazella', 'image' => 'uploads/images/67893d91b355d.jpg'],
-                    ['prenom' => 'Zèbre', 'race' => 'Equus zebra', 'image' => 'uploads/images/67893d0410cae.jpg'],
-                    ['prenom' => 'Gorille', 'race' => 'Gorilla gorilla', 'image' => 'uploads/images/6788dedce7b80.jpg'], 
-                    ['prenom' => 'Léopard', 'race' => 'Panthera pardus', 'image' => 'uploads/images/67841a1918305.jpg'], 
+                    [
+                        'prenom' => 'Lion',
+                        'race' => 'Panthera leo',
+                        'image' => 'uploads/images/6784198bc1b3b.jpg',
+                        'etat' => 'En bonne santé',
+                        'nourriture' => 'Viande rouge',
+                        'grammage' => 3.5,
+                        'dateDePassage' => new \DateTime('2025-01-18 10:00:00')
+                    ],
+                    [
+                        'prenom' => 'Gazelle',
+                        'race' => 'Gazella',
+                        'image' => 'uploads/images/67893d91b355d.jpg',
+                        'etat' => 'Fracture à la patte arrière',
+                        'nourriture' => 'Herbe',
+                        'grammage' => 2.0,
+                        'dateDePassage' => new \DateTime('2025-01-17 12:00:00')
+                    ],
+                    // Ajoutez d'autres animaux ici avec les mêmes propriétés...
                 ],
             ],
             [
@@ -31,11 +45,16 @@ class AppFixtures extends Fixture
                 'description' => 'Forêt dense et humide.',
                 'image' => 'uploads/images/678cee02e776c.jpg',
                 'animaux' => [
-                    ['prenom' => 'Tigre', 'race' => 'Panthera tigris', 'image' => 'uploads/images/67897e4086ef8.jpg'],
-                    ['prenom' => 'Singe', 'race' => 'Macaca mulatta', 'image' => 'uploads/images/678412c5ce6aa.jpg'], 
-                    ['prenom' => 'Capibara', 'race' => 'Hydrochoerus hydrochaeris', 'image' => '/uploads/images/6788defcdf4a5.jpg'], 
-                    ['prenom' => 'Jaguar', 'race' => 'Panthera onca', 'image' => 'uploads/images/6788df28121ef.jpg'], 
-                    ['prenom' => 'Lynx', 'race' => 'Lynx lynx', 'image' => 'uploads/images/6788df491c352.jpg'], 
+                    [
+                        'prenom' => 'Tigre',
+                        'race' => 'Panthera tigris',
+                        'image' => 'uploads/images/67897e4086ef8.jpg',
+                        'etat' => 'Fatigué, mais stable',
+                        'nourriture' => 'Viande de poulet',
+                        'grammage' => 4.0,
+                        'dateDePassage' => new \DateTime('2025-01-19 08:30:00')
+                    ],
+                    // Ajoutez d'autres animaux ici avec les mêmes propriétés...
                 ],
             ],
             [
@@ -43,11 +62,16 @@ class AppFixtures extends Fixture
                 'description' => 'Zone humide et végétation dense.',
                 'image' => 'uploads/images/678cea6a0f09d.jpg',
                 'animaux' => [
-                    ['prenom' => 'Crocodile', 'race' => 'Crocodylus niloticus', 'image' => 'uploads/images/67897f3a31afb.jpg'],
-                    ['prenom' => 'Grenouille', 'race' => 'Anura', 'image' => 'uploads/images/67897f9acb62c.jpg'],
-                    ['prenom' => 'Ibis', 'race' => 'Threskiornithidae', 'image' => 'uploads/images/67897e9296d3e.jpg'],
-                    ['prenom' => 'Tortue', 'race' => 'Trachemys scripta', 'image' => 'uploads/images/6789803803ba9.jpg'],
-                    ['prenom' => 'Héron', 'race' => 'Ardeidae', 'image' => 'uploads/images/67897ff81ad1a.jpg'], 
+                    [
+                        'prenom' => 'Crocodile',
+                        'race' => 'Crocodylus niloticus',
+                        'image' => 'uploads/images/67897f3a31afb.jpg',
+                        'etat' => 'En bonne santé',
+                        'nourriture' => 'Poisson',
+                        'grammage' => 2.5,
+                        'dateDePassage' => new \DateTime('2025-01-15 14:00:00')
+                    ],
+                    // Ajoutez d'autres animaux ici avec les mêmes propriétés...
                 ],
             ],
         ];
@@ -79,6 +103,12 @@ class AppFixtures extends Fixture
                 $animal->setImage($animalData['image']);
                 $animal->setHabitat($habitat);
                 $animal->setRace($race); // Associe la bonne race
+
+                // Ajouter les nouvelles propriétés à l'animal
+                $animal->setEtat($animalData['etat']);
+                $animal->setNourriture($animalData['nourriture']);
+                $animal->setGrammage($animalData['grammage']);
+                $animal->setDateDePassage($animalData['dateDePassage']);
 
                 $manager->persist($animal);
             }
