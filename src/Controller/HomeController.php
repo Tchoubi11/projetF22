@@ -9,6 +9,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use App\Repository\HabitatRepository;
 use App\Entity\Habitat;
 use App\Entity\Animal;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 class HomeController extends AbstractController
 {
@@ -113,6 +115,25 @@ class HomeController extends AbstractController
         return $this->render('home/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
+        ]);
+    }
+    #[Route('/animal/show/{id}', name: 'animal_show')]
+    public function show(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $animal = $entityManager->getRepository(Animal::class)->find($id);
+
+        if (!$animal) {
+            throw $this->createNotFoundException(
+                'Aucun animal trouvé pour cet identifiant ' . $id
+            );
+        }
+
+        // Récupérer le rapport vétérinaire s'il existe
+        $rapportVeterinaire = $animal->getRapportVeterinaire();
+
+        return $this->render('home/animal_show.html.twig', [
+            'animal' => $animal,
+            'rapportVeterinaire' => $rapportVeterinaire,
         ]);
     }
 }
