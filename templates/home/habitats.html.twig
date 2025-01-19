@@ -9,7 +9,8 @@
         <div class="habitat-card">
             <a href="{{ path('habitat_detail', { id: habitat.id }) }}">
                 {% for image in habitat.images %}
-                    <img src="{{ asset(image.imagePath) }}" alt="{{ habitat.nom }}" />
+                <img src="{{ asset(image.imagePath|replace({'public/': ''})) }}" alt="{{ habitat.nom }}" />
+
                 {% endfor %}
                 <h2>{{ habitat.nom }}</h2>
             </a>

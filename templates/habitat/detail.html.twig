@@ -6,7 +6,7 @@
 <h1>{{ habitat.nom }}</h1>
 <div class="habitat-detail">
     {% for image in habitat.images %}
-        <img src="{{ asset(image.imagePath) }}" alt="{{ habitat.nom }}">
+    <img src="{{ asset(image.imagePath|replace({'public/': ''})) }}" alt="{{ habitat.nom }}">
     {% endfor %}
     <p>{{ habitat.description }}</p>
 </div>
@@ -15,7 +15,7 @@
 <div class="animaux-container">
     {% for animal in animaux %}
         <div class="animal-card">
-            <img src="{{ asset(animal.image) }}" alt="{{ animal.prenom }}">
+            <img src="{{ asset(animal.image|replace({'public/': ''})) }}" alt="{{ animal.prenom }}">
             <h3>{{ animal.prenom }}</h3>
             <p>{{ animal.race.label }}</p>
         </div>
