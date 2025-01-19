@@ -17,7 +17,7 @@ class AppFixtures extends Fixture
             [
                 'nom' => 'Savane',
                 'description' => 'Vaste plaine herbeuse.',
-                'image' => 'uploads/images/678980c33c04d.jpg',
+                'image' => 'uploads/images/678ce878bda16.jpg',
                 'animaux' => [
                     ['prenom' => 'Lion', 'race' => 'Panthera leo', 'image' => 'uploads/images/6784198bc1b3b.jpg'],
                     ['prenom' => 'Gazelle', 'race' => 'Gazella', 'image' => 'uploads/images/67893d91b355d.jpg'],
@@ -29,7 +29,7 @@ class AppFixtures extends Fixture
             [
                 'nom' => 'Jungle',
                 'description' => 'Forêt dense et humide.',
-                'image' => 'uploads/images/6788dfdc973a4.jpg',
+                'image' => 'uploads/images/678cee02e776c.jpg',
                 'animaux' => [
                     ['prenom' => 'Tigre', 'race' => 'Panthera tigris', 'image' => 'uploads/images/67897e4086ef8.jpg'],
                     ['prenom' => 'Singe', 'race' => 'Macaca mulatta', 'image' => 'uploads/images/678412c5ce6aa.jpg'], 
@@ -41,7 +41,7 @@ class AppFixtures extends Fixture
             [
                 'nom' => 'Marais',
                 'description' => 'Zone humide et végétation dense.',
-                'image' => 'uploads/images/67897c6587286.jpg',
+                'image' => 'uploads/images/678cea6a0f09d.jpg',
                 'animaux' => [
                     ['prenom' => 'Crocodile', 'race' => 'Crocodylus niloticus', 'image' => 'uploads/images/67897f3a31afb.jpg'],
                     ['prenom' => 'Grenouille', 'race' => 'Anura', 'image' => 'uploads/images/67897f9acb62c.jpg'],
