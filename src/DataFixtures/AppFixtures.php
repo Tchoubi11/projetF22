@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\DataFixtures;
 
@@ -24,20 +24,46 @@ class AppFixtures extends Fixture
                         'race' => 'Panthera leo',
                         'image' => 'uploads/images/6784198bc1b3b.jpg',
                         'etat' => 'En bonne santé',
-                        'nourriture' => 'Viande rouge',
-                        'grammage' => 3.5,
-                        'dateDePassage' => new \DateTime('2025-01-18 10:00:00')
+                        'nourriture' => 'Viande',
+                        'grammage' => 5.0,
+                        'dateDePassage' => '2025-01-01 10:00:00',
                     ],
                     [
                         'prenom' => 'Gazelle',
                         'race' => 'Gazella',
                         'image' => 'uploads/images/67893d91b355d.jpg',
-                        'etat' => 'Fracture à la patte arrière',
+                        'etat' => 'Nerveuse',
                         'nourriture' => 'Herbe',
-                        'grammage' => 2.0,
-                        'dateDePassage' => new \DateTime('2025-01-17 12:00:00')
+                        'grammage' => 3.5,
+                        'dateDePassage' => '2025-01-02 11:30:00',
                     ],
-                    // Ajoutez d'autres animaux ici avec les mêmes propriétés...
+                    [
+                        'prenom' => 'Zèbre',
+                        'race' => 'Equus zebra',
+                        'image' => 'uploads/images/67893d0410cae.jpg',
+                        'etat' => 'Calme',
+                        'nourriture' => 'Herbe',
+                        'grammage' => 4.0,
+                        'dateDePassage' => '2025-01-03 08:45:00',
+                    ],
+                    [
+                        'prenom' => 'Gorille',
+                        'race' => 'Gorilla gorilla',
+                        'image' => 'uploads/images/6788dedce7b80.jpg',
+                        'etat' => 'Agité',
+                        'nourriture' => 'Fruits',
+                        'grammage' => 3.8,
+                        'dateDePassage' => '2025-01-04 14:00:00',
+                    ],
+                    [
+                        'prenom' => 'Léopard',
+                        'race' => 'Panthera pardus',
+                        'image' => 'uploads/images/67841a1918305.jpg',
+                        'etat' => 'Agressif',
+                        'nourriture' => 'Viande',
+                        'grammage' => 4.5,
+                        'dateDePassage' => '2025-01-05 09:15:00',
+                    ],
                 ],
             ],
             [
@@ -49,12 +75,47 @@ class AppFixtures extends Fixture
                         'prenom' => 'Tigre',
                         'race' => 'Panthera tigris',
                         'image' => 'uploads/images/67897e4086ef8.jpg',
-                        'etat' => 'Fatigué, mais stable',
-                        'nourriture' => 'Viande de poulet',
-                        'grammage' => 4.0,
-                        'dateDePassage' => new \DateTime('2025-01-19 08:30:00')
+                        'etat' => 'Affamé',
+                        'nourriture' => 'Viande',
+                        'grammage' => 6.0,
+                        'dateDePassage' => '2025-01-06 12:00:00',
                     ],
-                    // Ajoutez d'autres animaux ici avec les mêmes propriétés...
+                    [
+                        'prenom' => 'Singe',
+                        'race' => 'Macaca mulatta',
+                        'image' => 'uploads/images/678412c5ce6aa.jpg',
+                        'etat' => 'Curieux',
+                        'nourriture' => 'Fruits',
+                        'grammage' => 2.5,
+                        'dateDePassage' => '2025-01-07 15:00:00',
+                    ],
+                    [
+                        'prenom' => 'Capibara',
+                        'race' => 'Hydrochoerus hydrochaeris',
+                        'image' => '/uploads/images/6788defcdf4a5.jpg',
+                        'etat' => 'Paisible',
+                        'nourriture' => 'Herbe',
+                        'grammage' => 3.2,
+                        'dateDePassage' => '2025-01-08 10:30:00',
+                    ],
+                    [
+                        'prenom' => 'Jaguar',
+                        'race' => 'Panthera onca',
+                        'image' => 'uploads/images/6788df28121ef.jpg',
+                        'etat' => 'Féroce',
+                        'nourriture' => 'Viande',
+                        'grammage' => 5.5,
+                        'dateDePassage' => '2025-01-09 11:45:00',
+                    ],
+                    [
+                        'prenom' => 'Lynx',
+                        'race' => 'Lynx lynx',
+                        'image' => 'uploads/images/6788df491c352.jpg',
+                        'etat' => 'Méfiant',
+                        'nourriture' => 'Petits mammifères',
+                        'grammage' => 2.7,
+                        'dateDePassage' => '2025-01-10 16:00:00',
+                    ],
                 ],
             ],
             [
@@ -66,12 +127,47 @@ class AppFixtures extends Fixture
                         'prenom' => 'Crocodile',
                         'race' => 'Crocodylus niloticus',
                         'image' => 'uploads/images/67897f3a31afb.jpg',
-                        'etat' => 'En bonne santé',
-                        'nourriture' => 'Poisson',
-                        'grammage' => 2.5,
-                        'dateDePassage' => new \DateTime('2025-01-15 14:00:00')
+                        'etat' => 'Lent',
+                        'nourriture' => 'Poissons',
+                        'grammage' => 7.0,
+                        'dateDePassage' => '2025-01-11 13:30:00',
                     ],
-                    // Ajoutez d'autres animaux ici avec les mêmes propriétés...
+                    [
+                        'prenom' => 'Grenouille',
+                        'race' => 'Anura',
+                        'image' => 'uploads/images/67897f9acb62c.jpg',
+                        'etat' => 'Sautillante',
+                        'nourriture' => 'Insectes',
+                        'grammage' => 0.2,
+                        'dateDePassage' => '2025-01-12 17:45:00',
+                    ],
+                    [
+                        'prenom' => 'Ibis',
+                        'race' => 'Threskiornithidae',
+                        'image' => 'uploads/images/67897e9296d3e.jpg',
+                        'etat' => 'Actif',
+                        'nourriture' => 'Poissons',
+                        'grammage' => 1.5,
+                        'dateDePassage' => '2025-01-13 07:15:00',
+                    ],
+                    [
+                        'prenom' => 'Tortue',
+                        'race' => 'Trachemys scripta',
+                        'image' => 'uploads/images/6789803803ba9.jpg',
+                        'etat' => 'Lente',
+                        'nourriture' => 'Plantes aquatiques',
+                        'grammage' => 0.8,
+                        'dateDePassage' => '2025-01-14 09:00:00',
+                    ],
+                    [
+                        'prenom' => 'Héron',
+                        'race' => 'Ardeidae',
+                        'image' => 'uploads/images/67897ff81ad1a.jpg',
+                        'etat' => 'Calme',
+                        'nourriture' => 'Poissons',
+                        'grammage' => 1.8,
+                        'dateDePassage' => '2025-01-15 14:30:00',
+                    ],
                 ],
             ],
         ];
@@ -89,7 +185,6 @@ class AppFixtures extends Fixture
             $manager->persist($habitat);
 
             foreach ($habitatData['animaux'] as $animalData) {
-                // Vérifier si la race existe déjà ou la créer
                 $race = $manager->getRepository(Race::class)->findOneBy(['label' => $animalData['race']]);
                 if (!$race) {
                     $race = new Race();
@@ -97,18 +192,17 @@ class AppFixtures extends Fixture
                     $manager->persist($race);
                 }
 
-                // Créer l'animal et l'associer à l'habitat et à la race
                 $animal = new Animal();
                 $animal->setPrenom($animalData['prenom']);
                 $animal->setImage($animalData['image']);
                 $animal->setHabitat($habitat);
-                $animal->setRace($race); // Associe la bonne race
-
-                // Ajouter les nouvelles propriétés à l'animal
-                $animal->setEtat($animalData['etat']);
-                $animal->setNourriture($animalData['nourriture']);
-                $animal->setGrammage($animalData['grammage']);
-                $animal->setDateDePassage($animalData['dateDePassage']);
+                $animal->setRace($race);
+                $animal->setEtat($animalData['etat'] ?? null);
+                $animal->setNourriture($animalData['nourriture'] ?? null);
+                $animal->setGrammage($animalData['grammage'] ?? null);
+                $animal->setDateDePassage(
+                    isset($animalData['dateDePassage']) ? new \DateTime($animalData['dateDePassage']) : null
+                );
 
                 $manager->persist($animal);
             }

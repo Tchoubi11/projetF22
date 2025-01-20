@@ -5,24 +5,78 @@
 {% block body %}
 <h1>{{ habitat.nom }}</h1>
 <div class="habitat-detail">
-    {% for image in habitat.images %}
-    <img src="{{ asset(image.imagePath|replace({'public/': ''})) }}" alt="{{ habitat.nom }}">
-    {% endfor %}
+    {% if habitat.images is not empty %}
+        {% for image in habitat.images %}
+            <img src="{{ asset(image.imagePath|replace({'public/': ''})) }}" alt="{{ habitat.nom }}">
+        {% endfor %}
+    {% else %}
+        <p>Aucune image disponible pour cet habitat.</p>
+    {% endif %}
     <p>{{ habitat.description }}</p>
 </div>
 
 <h2>Animaux associés</h2>
 <div class="animaux-container">
-    {% for animal in animaux %}
-        <div class="animal-card">
-            <img src="{{ asset(animal.image|replace({'public/': ''})) }}" alt="{{ animal.prenom }}">
-            <h3>{{ animal.prenom }}</h3>
-            <p>{{ animal.race.label }}</p>
-        </div>
+    {% if animaux is not empty %}
+        {% for animal in animaux %}
+            <div class="animal-card" data-id="{{ animal.id }}">
+                {% if animal.image %}
+                    <img src="{{ asset(animal.image|replace({'public/': ''})) }}" alt="{{ animal.prenom }}">
+                {% else %}
+                    <img src="{{ asset('images/default-animal.png') }}" alt="Image par défaut">
+                {% endif %}
+                <h3>{{ animal.prenom }}</h3>
+                <p>{{ animal.race ? animal.race.label : 'Race inconnue' }}</p>
+            </div>
+        {% endfor %}
     {% else %}
         <p>Aucun animal n'est associé à cet habitat pour le moment.</p>
-    {% endfor %}
+    {% endif %}
 </div>
+
+<!-- Section pour afficher les détails de l'animal -->
+<div id="animal-details" style="display: none;">
+    <h2>Détails de l'animal</h2>
+    <div id="details-container">
+        <!-- Contenu dynamique inséré via JavaScript -->
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.animal-card').forEach(card => {
+            card.addEventListener('click', function () {
+                const animalId = this.getAttribute('data-id');
+                showAnimalDetails(animalId);
+            });
+        });
+    });
+
+    function showAnimalDetails(animalId) {
+        fetch(`/animal/${animalId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la récupération des données.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const detailsContainer = document.getElementById('details-container');
+                detailsContainer.innerHTML = `
+                    <h3>${data.prenom}</h3>
+                    <p><strong>Race:</strong> ${data.race}</p>
+                    <p><strong>État:</strong> ${data.etat}</p>
+                    <p><strong>Nourriture:</strong> ${data.nourriture}</p>
+                    <p><strong>Grammage:</strong> ${data.grammage} kg</p>
+                    <p><strong>Date de passage:</strong> ${data.dateDePassage || 'Inconnue'}</p>
+                    <h4>Avis vétérinaire</h4>
+                    <p>${data.rapportVeterinaire || 'Aucun avis disponible.'}</p>
+                `;
+                document.getElementById('animal-details').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des détails de l\'animal:', error);
+            });
+    }
+</script>
 {% endblock %}
-
-

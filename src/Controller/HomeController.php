@@ -7,10 +7,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use App\Repository\HabitatRepository;
+use Symfony\Component\HttpFoundation\Request;
+use App\Repository\AnimalRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Habitat;
 use App\Entity\Animal;
-use Doctrine\ORM\EntityManagerInterface;
-
 
 class HomeController extends AbstractController
 {
@@ -79,14 +80,26 @@ class HomeController extends AbstractController
         ]);
     }
     //Pour afficher les détails des habitats
-    #[Route('/animal/{id}', name: 'animal_detail')]
-    public function animalDetail(Animal $animal): Response
-    {
-        return $this->render('animal/detail.html.twig', [
-            'animal' => $animal,
-            'rapportVeterinaire' => $animal->getRapportVeterinaire(),
-        ]);
+    #[Route('/animal/{id}', name: 'animal_details', methods: ['GET'])]
+public function getAnimalDetails(int $id, AnimalRepository $animalRepository): JsonResponse
+{
+    $animal = $animalRepository->find($id);
+
+    if (!$animal) {
+        return new JsonResponse(['error' => 'Animal not found'], Response::HTTP_NOT_FOUND);
     }
+
+    return new JsonResponse([
+        'prenom' => $animal->getPrenom(),
+        'race' => $animal->getRace() ? $animal->getRace()->getLabel() : null,
+        'etat' => $animal->getEtat(),
+        'nourriture' => $animal->getNourriture(),
+        'grammage' => $animal->getGrammage(),
+        'dateDePassage' => $animal->getDateDePassage() ? $animal->getDateDePassage()->format('Y-m-d') : null,
+        'rapportVeterinaire' => $animal->getRapportVeterinaire(),
+    ]);
+}
+
 
     #[Route('/contacts', name: 'app_contact')]
     public function contacts(): Response
@@ -117,23 +130,6 @@ class HomeController extends AbstractController
             'error' => $error,
         ]);
     }
-    #[Route('/animal/show/{id}', name: 'animal_show')]
-    public function show(int $id, EntityManagerInterface $entityManager): Response
-    {
-        $animal = $entityManager->getRepository(Animal::class)->find($id);
 
-        if (!$animal) {
-            throw $this->createNotFoundException(
-                'Aucun animal trouvé pour cet identifiant ' . $id
-            );
-        }
-
-        // Récupérer le rapport vétérinaire s'il existe
-        $rapportVeterinaire = $animal->getRapportVeterinaire();
-
-        return $this->render('home/animal_show.html.twig', [
-            'animal' => $animal,
-            'rapportVeterinaire' => $rapportVeterinaire,
-        ]);
-    }
+    
 }
