@@ -30,6 +30,7 @@
 .animal-card {
     width: 200px;
     text-align: center;
+    cursor: pointer;
 }
 
 .animal-card img {
