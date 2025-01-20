@@ -6,6 +6,7 @@ use App\Entity\Habitat;
 use App\Entity\Animal;
 use App\Entity\Image;
 use App\Entity\Race;
+use App\Entity\RapportVeterinaire;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -172,6 +173,7 @@ class AppFixtures extends Fixture
             ],
         ];
 
+        
         foreach ($habitats as $habitatData) {
             $habitat = new Habitat();
             $habitat->setNom($habitatData['nom']);
@@ -197,14 +199,16 @@ class AppFixtures extends Fixture
                 $animal->setImage($animalData['image']);
                 $animal->setHabitat($habitat);
                 $animal->setRace($race);
-                $animal->setEtat($animalData['etat'] ?? null);
-                $animal->setNourriture($animalData['nourriture'] ?? null);
-                $animal->setGrammage($animalData['grammage'] ?? null);
-                $animal->setDateDePassage(
-                    isset($animalData['dateDePassage']) ? new \DateTime($animalData['dateDePassage']) : null
-                );
-
+                $animal->setEtat($animalData['etat']);
                 $manager->persist($animal);
+
+                $rapport = new RapportVeterinaire();
+                $rapport->setAnimal($animal);
+                $rapport->setDate(new \DateTime($animalData['dateDePassage']));
+                $rapport->setDetail("Rapport de santé pour l'animal : {$animalData['prenom']}.");
+                $manager->persist($rapport);
+
+                $animal->setRapportVeterinaire($rapport);
             }
         }
 

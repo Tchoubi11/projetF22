@@ -7,11 +7,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use App\Repository\HabitatRepository;
-use Symfony\Component\HttpFoundation\Request;
 use App\Repository\AnimalRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Habitat;
 use App\Entity\Animal;
+
+
 
 class HomeController extends AbstractController
 {
@@ -79,26 +80,71 @@ class HomeController extends AbstractController
             'animaux' => $habitat->getAnimaux(),
         ]);
     }
-    //Pour afficher les détails des habitats
-    #[Route('/animal/{id}', name: 'animal_details', methods: ['GET'])]
-public function getAnimalDetails(int $id, AnimalRepository $animalRepository): JsonResponse
+    #[Route('/animal/{id}', name: 'animal_details')]
+public function animalDetails(Animal $animal): JsonResponse
 {
-    $animal = $animalRepository->find($id);
+    // Définir des valeurs possibles pour chaque propriété
+    $nourritures = [
+        'Lion' => ['Viande'],
+        'Héron' => ['Poissons'],
+        'Tigre' => ['Viande'],
+        'Tortue' => ['Plantes aquatiques'],
+        'Zebre' => ['Herbe'],
+        'Lynx' => ['Petits mamifères'],
+        'Gazelle'=>[''],
+        'Gorille'=>['Fruits'],
+        'Léopard'=>['Viande'],
+        'Singe'=>['Fruits'],
+        'Capibara'=>['Herbes'],
+        'Jaguar'=>['Viande'],
+        'Crocodile'=>['Poissons'],
+        'Grenouille'=>['Insectes'],
+        'Ibis'=>['Poissons'],
+    ];
 
-    if (!$animal) {
-        return new JsonResponse(['error' => 'Animal not found'], Response::HTTP_NOT_FOUND);
+    $grammages = [
+        'Lion' => ['150 kg'],
+        'Héron' => ['10 kg'],
+        'Tigre' => ['150 kg'],
+        'Tortue' => ['8kg'],
+        'Zebre' => ['100 kg'],
+        'Lynx' => ['70 kg'],
+        'Gazelle'=>['65 kg'],
+        'Gorille'=>['130 kg'],
+        'Léopard'=>['80 kg'],
+        'Singe'=>['20 kg'],
+        'Capibara'=>['35 kg'],
+        'Jaguar'=>['80 kg'],
+        'Crocodile'=>['90 kg'],
+        'Grenouille'=>['1 kg'],
+        'Ibis'=>['10 kg'],
+    ];
+
+    $animalName = $animal->getPrenom();
+
+    if (!array_key_exists($animalName, $nourritures) || !array_key_exists($animalName, $grammages)) {
+        return new JsonResponse(['error' => 'Animal non trouvé dans les données spécifiées'], Response::HTTP_NOT_FOUND);
     }
+    $nourriture = $nourritures[$animalName][array_rand($nourritures[$animalName])] ?? 'Non spécifié';
+    $grammage = $grammages[$animalName][array_rand($grammages[$animalName])] ?? 'Non spécifié';
 
-    return new JsonResponse([
+    // Je recupère la date de passage à partir de l'entité RapportVeterinaire 
+    $rapportVeterinaire = $animal->getRapportVeterinaire();
+    $dateDePassage = $rapportVeterinaire ? $rapportVeterinaire->getDate()->format('Y-m-d') : 'Non spécifiée';
+
+    $details = [
         'prenom' => $animal->getPrenom(),
-        'race' => $animal->getRace() ? $animal->getRace()->getLabel() : null,
         'etat' => $animal->getEtat(),
-        'nourriture' => $animal->getNourriture(),
-        'grammage' => $animal->getGrammage(),
-        'dateDePassage' => $animal->getDateDePassage() ? $animal->getDateDePassage()->format('Y-m-d') : null,
-        'rapportVeterinaire' => $animal->getRapportVeterinaire(),
-    ]);
+        'nourriture' => $nourriture,
+        'grammage' => $grammage,
+        'dateDePassage' => $dateDePassage, 
+        'avisVeterinaire' => $animal->getRapportVeterinaire() ? $animal->getRapportVeterinaire()->getDetail() : null,
+        'imageUrl' => $this->generateUrl('asset', ['path' => str_replace('public/', '', $animal->getImage())]),
+    ];
+
+    return new JsonResponse($details);
 }
+
 
 
     #[Route('/contacts', name: 'app_contact')]

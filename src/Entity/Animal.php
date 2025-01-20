@@ -31,18 +31,18 @@ class Animal
     #[ORM\OneToOne(mappedBy: 'animal', cascade: ['persist', 'remove'])]
     private ?RapportVeterinaire $rapportVeterinaire = null;
 
-    // Ajout des nouvelles propriétés
+   
     #[ORM\Column(type: "text", nullable: true)]
     private ?string $etat = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $nourriture = null;
+    
 
     #[ORM\Column(type: "float", nullable: true)]
-    private ?float $grammage = null;
+    
 
     #[ORM\Column(type: "datetime", nullable: true)]
-    private ?\DateTimeInterface $dateDePassage = null;
+    
 
     public function getId(): ?int
     {
@@ -109,7 +109,7 @@ class Animal
         return $this;
     }
 
-    // Getters et setters pour les nouvelles propriétés
+    
     public function getEtat(): ?string
     {
         return $this->etat;
@@ -122,39 +122,5 @@ class Animal
         return $this;
     }
 
-    public function getNourriture(): ?string
-    {
-        return $this->nourriture;
-    }
-
-    public function setNourriture(?string $nourriture): static
-    {
-        $this->nourriture = $nourriture;
-
-        return $this;
-    }
-
-    public function getGrammage(): ?float
-    {
-        return $this->grammage;
-    }
-
-    public function setGrammage(?float $grammage): static
-    {
-        $this->grammage = $grammage;
-
-        return $this;
-    }
-
-    public function getDateDePassage(): ?\DateTimeInterface
-    {
-        return $this->dateDePassage;
-    }
-
-    public function setDateDePassage(?\DateTimeInterface $dateDePassage): static
-    {
-        $this->dateDePassage = $dateDePassage;
-
-        return $this;
-    }
+  
 }
