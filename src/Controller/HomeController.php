@@ -91,7 +91,7 @@ public function animalDetails(Animal $animal): JsonResponse
         'Tortue' => ['Plantes aquatiques'],
         'Zebre' => ['Herbe'],
         'Lynx' => ['Petits mamifères'],
-        'Gazelle'=>[''],
+        'Gazelle'=>['Herbes'],
         'Gorille'=>['Fruits'],
         'Léopard'=>['Viande'],
         'Singe'=>['Fruits'],
