@@ -83,17 +83,22 @@
     background-color: #0056b3;
 }
 
-    .animal-info {
-        padding: 10px;
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        margin-top: 10px;
-        border-radius: 5px;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.5s ease-out;
+.animal-info {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    margin-top: 10px;
+    border-radius: 5px;
+    max-height: 0; /* Caché par défaut */
+    overflow: hidden;
+    opacity: 0; /* Initialement invisible */
+    transition: max-height 0.5s ease-out, opacity 0.3s ease-out; /* Transition pour masquer et afficher */
+}
+    .animal-info.show {
+        max-height: 500px; /* Assurez-vous que la valeur de max-height est suffisante pour afficher le contenu */
+        opacity: 1; /* Rendre visible */
     }
-
+    
     .animal-card {
         margin-bottom: 20px;
     }

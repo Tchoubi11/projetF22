@@ -64,6 +64,25 @@
             });
         });
     });
+    const images = document.querySelectorAll('.animal-card img');  // Suppose que les images sont dans .animal-card
+    const details = document.querySelectorAll('.animal-info'); // Suppose que chaque carte a un élément .animal-info
+
+    images.forEach((image, index) => {
+        image.addEventListener('click', () => {
+            const detail = details[index];
+
+            // Si les détails sont déjà visibles, les cacher
+            if (detail.classList.contains('show')) {
+                detail.classList.remove('show');
+            } else {
+                // Cacher tous les autres détails
+                details.forEach(d => d.classList.remove('show'));
+
+                // Afficher celui de l'animal en cliquant
+                detail.classList.add('show');
+            }
+        });
+    });
 </script>
 
 {% endblock %}
