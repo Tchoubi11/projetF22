@@ -7,7 +7,8 @@
     <h1>Détails de l'animal : {{ details.prenom }}</h1>
     
     <div class="animal-image">
-        <img src="{{ details.imageUrl }}" alt="Image de {{ details.prenom }}" style="max-width: 300px; border-radius: 10px;">
+        <!-- Utilisation de la méthode asset pour récupérer l'image -->
+        <img src="{{ asset('uploads/animals/' ~ details.imageUrl) }}" alt="Image de {{ details.prenom }}" style="max-width: 300px; border-radius: 10px;">
     </div>
     
     <div class="animal-info">

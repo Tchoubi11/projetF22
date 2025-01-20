@@ -139,7 +139,7 @@ public function animalDetails(Animal $animal): JsonResponse
         'grammage' => $grammage,
         'dateDePassage' => $dateDePassage, 
         'avisVeterinaire' => $animal->getRapportVeterinaire() ? $animal->getRapportVeterinaire()->getDetail() : null,
-        'imageUrl' => $this->generateUrl('asset', ['path' => str_replace('public/', '', $animal->getImage())]),
+        'imageUrl' => $this->getParameter('kernel.project_dir') . 'public/uploads/animals/' . $animal->getImage(),
     ];
 
     return new JsonResponse($details);
