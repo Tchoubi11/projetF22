@@ -103,21 +103,21 @@ public function animalDetails(Animal $animal): JsonResponse
     ];
 
     $grammages = [
-        'Lion' => ['150 kg'],
-        'Héron' => ['10 kg'],
-        'Tigre' => ['150 kg'],
-        'Tortue' => ['8kg'],
-        'Zebre' => ['100 kg'],
-        'Lynx' => ['70 kg'],
-        'Gazelle'=>['65 kg'],
-        'Gorille'=>['130 kg'],
-        'Léopard'=>['80 kg'],
-        'Singe'=>['20 kg'],
-        'Capibara'=>['35 kg'],
-        'Jaguar'=>['80 kg'],
-        'Crocodile'=>['90 kg'],
-        'Grenouille'=>['1 kg'],
-        'Ibis'=>['10 kg'],
+        'Lion' => ['5.0'],
+        'Héron' => ['1.8'],
+        'Tigre' => ['6.0'],
+        'Tortue' => ['0.8'],
+        'Zebre' => ['4.0'],
+        'Lynx' => ['2.7'],
+        'Gazelle'=>['3.5'],
+        'Gorille'=>['3.8'],
+        'Léopard'=>['4.5'],
+        'Singe'=>['2.5'],
+        'Capibara'=>['3.2'],
+        'Jaguar'=>['5.5'],
+        'Crocodile'=>['8.0'],
+        'Grenouille'=>['0.2'],
+        'Ibis'=>['1.5'],
     ];
 
     $animalName = $animal->getPrenom();
