@@ -82,3 +82,18 @@
 .btn:hover {
     background-color: #0056b3;
 }
+
+    .animal-info {
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        margin-top: 10px;
+        border-radius: 5px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-out;
+    }
+
+    .animal-card {
+        margin-bottom: 20px;
+    }

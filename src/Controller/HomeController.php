@@ -62,91 +62,89 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/habitats', name: 'app_habitats')]
-    public function habitats(HabitatRepository $habitatRepository): Response
+    #[Route('/habitat/{id}', name: 'habitat_detail')]
+    public function habitatDetail(Habitat $habitat): Response
     {
+        // Initialiser les tableaux
+        $nourritures = [
+            'Lion' => ['Viande'],
+            'Héron' => ['Poissons'],
+            'Tigre' => ['Viande'],
+            'Tortue' => ['Plantes aquatiques'],
+            'Zebre' => ['Herbe'],
+            'Lynx' => ['Petits mammifères'],
+            'Gazelle' => ['Herbes'],
+            'Gorille' => ['Fruits'],
+            'Léopard' => ['Viande'],
+            'Singe' => ['Fruits'],
+            'Capibara' => ['Herbes'],
+            'Jaguar' => ['Viande'],
+            'Crocodile' => ['Poissons'],
+            'Grenouille' => ['Insectes'],
+            'Ibis' => ['Poissons'],
+        ];
+
+        $grammages = [
+            'Lion' => '5.0 kg',
+            'Héron' => '1.8 kg',
+            'Tigre' => '6.0 kg',
+            'Tortue' => '0.8 kg',
+            'Zebre' => '4.0 kg',
+            'Lynx' => '2.7 kg',
+            'Gazelle' => '3.5 kg',
+            'Gorille' => '3.8 kg',
+            'Léopard' => '4.5 kg',
+            'Singe' => '2.5 kg',
+            'Capibara' => '3.2 kg',
+            'Jaguar' => '5.5 kg',
+            'Crocodile' => '8.0 kg',
+            'Grenouille' => '0.2 kg',
+            'Ibis' => '1.5 kg',
+        ];
+
+        // Tableau des détails des animaux
+        $animauxDetails = [];
+
+        // Parcours des animaux associés à l'habitat
+        foreach ($habitat->getAnimaux() as $animal) {
+            $nourriture = implode(', ', $nourritures[$animal->getPrenom()] ?? ['Non spécifiée']);
+            $grammage = $grammages[$animal->getPrenom()] ?? 'Non spécifié';
+
+            // Récupérer les données vétérinaires si disponibles
+            $rapportVeterinaire = $animal->getRapportVeterinaire();
+            $dateDePassage = $rapportVeterinaire ? $rapportVeterinaire->getDate()->format('Y-m-d') : 'Non spécifiée';
+            $avisVeterinaire = $rapportVeterinaire ? $rapportVeterinaire->getDetail() : 'Non disponible';
+
+            $animauxDetails[] = [
+                'id' => $animal->getId(),
+                'prenom' => $animal->getPrenom(),
+                'etat' => $animal->getEtat(),
+                'nourriture' => $nourriture,
+                'grammage' => $grammage,
+                'dateDePassage' => $dateDePassage,
+                'avisVeterinaire' => $avisVeterinaire,
+                'image' => $animal->getImage(),
+            ];
+        }
+
+        return $this->render('habitat/detail.html.twig', [
+            'habitat' => $habitat,
+            'animaux' => $animauxDetails, // Passe les détails calculés
+        ]);
+    }
+    #[Route('/habitats', name: 'app_habitats')]
+    
+    public function habitats(HabitatRepository $habitatRepository): Response
+    
+    {
+        // Récupérer tous les habitats depuis la base de données
         $habitats = $habitatRepository->findAll();
 
         return $this->render('home/habitats.html.twig', [
             'habitats' => $habitats,
         ]);
     }
-    //Pour afficher la liste des habitats
-    #[Route('/habitat/{id}', name: 'habitat_detail')]
-    public function habitatDetail(Habitat $habitat): Response
-    {
-        return $this->render('habitat/detail.html.twig', [
-            'habitat' => $habitat,
-            'animaux' => $habitat->getAnimaux(),
-        ]);
-    }
-    #[Route('/animal/{id}', name: 'animal_details')]
-public function animalDetails(Animal $animal): JsonResponse
-{
-    // Définir des valeurs possibles pour chaque propriété
-    $nourritures = [
-        'Lion' => ['Viande'],
-        'Héron' => ['Poissons'],
-        'Tigre' => ['Viande'],
-        'Tortue' => ['Plantes aquatiques'],
-        'Zebre' => ['Herbe'],
-        'Lynx' => ['Petits mamifères'],
-        'Gazelle'=>['Herbes'],
-        'Gorille'=>['Fruits'],
-        'Léopard'=>['Viande'],
-        'Singe'=>['Fruits'],
-        'Capibara'=>['Herbes'],
-        'Jaguar'=>['Viande'],
-        'Crocodile'=>['Poissons'],
-        'Grenouille'=>['Insectes'],
-        'Ibis'=>['Poissons'],
-    ];
-
-    $grammages = [
-        'Lion' => ['5.0'],
-        'Héron' => ['1.8'],
-        'Tigre' => ['6.0'],
-        'Tortue' => ['0.8'],
-        'Zebre' => ['4.0'],
-        'Lynx' => ['2.7'],
-        'Gazelle'=>['3.5'],
-        'Gorille'=>['3.8'],
-        'Léopard'=>['4.5'],
-        'Singe'=>['2.5'],
-        'Capibara'=>['3.2'],
-        'Jaguar'=>['5.5'],
-        'Crocodile'=>['8.0'],
-        'Grenouille'=>['0.2'],
-        'Ibis'=>['1.5'],
-    ];
-
-    $animalName = $animal->getPrenom();
-
-    if (!array_key_exists($animalName, $nourritures) || !array_key_exists($animalName, $grammages)) {
-        return new JsonResponse(['error' => 'Animal non trouvé dans les données spécifiées'], Response::HTTP_NOT_FOUND);
-    }
-    $nourriture = $nourritures[$animalName][array_rand($nourritures[$animalName])] ?? 'Non spécifié';
-    $grammage = $grammages[$animalName][array_rand($grammages[$animalName])] ?? 'Non spécifié';
-
-    // Je recupère la date de passage à partir de l'entité RapportVeterinaire 
-    $rapportVeterinaire = $animal->getRapportVeterinaire();
-    $dateDePassage = $rapportVeterinaire ? $rapportVeterinaire->getDate()->format('Y-m-d') : 'Non spécifiée';
-
-    $details = [
-        'prenom' => $animal->getPrenom(),
-        'etat' => $animal->getEtat(),
-        'nourriture' => $nourriture,
-        'grammage' => $grammage,
-        'dateDePassage' => $dateDePassage, 
-        'avisVeterinaire' => $animal->getRapportVeterinaire() ? $animal->getRapportVeterinaire()->getDetail() : null,
-        'imageUrl' => $this->getParameter('kernel.project_dir') . 'public/uploads/animals/' . $animal->getImage(),
-    ];
-
-    return new JsonResponse($details);
-}
-
-
-
+    
     #[Route('/contacts', name: 'app_contact')]
     public function contacts(): Response
     {

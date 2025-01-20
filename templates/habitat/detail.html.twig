@@ -17,44 +17,53 @@
 <h2>Animaux associés</h2>
 <div class="animaux-container">
     {% for animal in animaux %}
-        <div class="animal-card" data-id="{{ animal.id }}">
-            <img src="{{ asset(animal.image|replace({'public/': ''})) }}" alt="{{ animal.prenom }}">
+        <div class="animal-card">
+            <!-- Image de l'animal -->
+            <img 
+                src="{{ asset(animal.image|replace({'public/': ''})) }}" 
+                alt="{{ animal.prenom }}" 
+                style="max-width: 300px; border-radius: 10px; cursor: pointer;" 
+                class="animal-image" 
+                data-animal-id="{{ animal.id }}"
+            >
             <h3>{{ animal.prenom }}</h3>
             <p>État : {{ animal.etat }}</p>
+
+            <!-- Détails de l'animal (coulissement au clic) -->
+            <div class="animal-info" id="details-{{ animal.id }}" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out;">
+                <h4>Détails de {{ animal.prenom }}</h4>
+                <ul>
+                    
+                    <li><strong>Nourriture :</strong> {{ animal.nourriture ?? 'Non spécifiée' }}</li>
+                    <li><strong>Grammage :</strong> {{ animal.grammage ?? 'Non spécifié' }}</li>
+                    <li><strong>Date de passage vétérinaire :</strong> {{ animal.dateDePassage ?? 'Non spécifiée' }}</li>
+                    <li><strong>Avis vétérinaire :</strong> {{ animal.avisVeterinaire ?? 'Non disponible' }}</li>
+                </ul>
+            </div>
         </div>
     {% endfor %}
 </div>
 
-<!-- Détails animal -->
-<div id="animal-details" style="display: none;">
-    <h2>Détails de l'animal</h2>
-    <div id="details-container"></div>
+<div class="back-link">
+    <a href="{{ path('app_habitats') }}" class="btn btn-primary">Retour aux habitats</a>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.animal-card').forEach(card => {
-        card.addEventListener('click', function () {
-            const animalId = this.dataset.id;
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.animal-image').forEach((image) => {
+            image.addEventListener('click', () => {
+                const animalId = image.getAttribute('data-animal-id');
+                const detailsDiv = document.getElementById(`details-${animalId}`);
+                const isOpen = detailsDiv.style.maxHeight !== '0px' && detailsDiv.style.maxHeight !== '';
 
-            fetch(`/animal/${animalId}`)
-                .then(response => response.json())
-                .then(data => {
-                    const details = `
-                        <h3>${data.prenom}</h3>
-                        <p><strong>État :</strong> ${data.etat}</p>
-                        <p><strong>Nourriture :</strong> ${data.nourriture}</p>
-                        <p><strong>Grammage :</strong> ${data.grammage} kg</p>
-                        <p><strong>Date de passage :</strong> ${data.dateDePassage}</p>
-                        <p><strong>Avis vétérinaire :</strong> ${data.avisVeterinaire || 'Aucun avis disponible.'}</p>
-                    `;
-                    document.getElementById('details-container').innerHTML = details;
-                    document.getElementById('animal-details').style.display = 'block';
-                })
-                .catch(error => console.error('Erreur :', error));
+                if (isOpen) {
+                    detailsDiv.style.maxHeight = '0'; // Masquer les détails
+                } else {
+                    detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Afficher les détails
+                }
+            });
         });
     });
-});
-
 </script>
+
 {% endblock %}
