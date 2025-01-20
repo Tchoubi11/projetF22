@@ -27,6 +27,7 @@
                 {% endif %}
                 <h3>{{ animal.prenom }}</h3>
                 <p>{{ animal.race ? animal.race.label : 'Race inconnue' }}</p>
+                <p><strong>État :</strong> {{ animal.etat ? animal.etat : 'État inconnu' }}</p> <!-- Ajout de l'état -->
             </div>
         {% endfor %}
     {% else %}
