@@ -49,7 +49,7 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/veterinaire, roles: ROLE_VETERINAIRE }
         - { path: ^/employe, roles: ROLE_EMPLOYE }
-       
+        - { path: ^/admin/user, roles: ROLE_ADMIN }
         
 
 
