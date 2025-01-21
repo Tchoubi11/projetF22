@@ -10,7 +10,6 @@
     <title>Zoo de Arcadia - Accueil</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-   
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -42,71 +41,100 @@
             </div>
         </div>
     </nav>
-    
 
 <div class="container mt-5">
     <!-- Présentation -->
     <section class="mb-5">
         <h2 class="text-center">Bienvenue au Zoo Arcadia</h2>
-        <p class="text-center">Arcadia est un Zoo situé en France près de la forêt de Brocéliande,en bretagne depuis 1960 . </p>
-        <p class="text-center">Ils possèdent tout un panel d'animaux, réparti par habitat(savane,jungle,marais) et font extrêmement attention à leurs santés avec des visites quotidiennes de plusieurs vétérinaires et un contrôle du grammage lors des repas .</p>
+        <p class="text-center">
+            Situé au cœur de la magnifique forêt de Brocéliande, en Bretagne, le Zoo Arcadia est un havre de paix pour les amoureux de la nature et des animaux. Depuis son ouverture en 1960, le zoo s’est engagé à protéger la biodiversité et à offrir un espace unique où les visiteurs peuvent découvrir des espèces fascinantes dans des habitats soigneusement reconstitués.
+        </p>
+        <p class="text-center">
+            En tant que zoo écoresponsable, nous fonctionnons exclusivement grâce à des énergies renouvelables, en harmonie avec notre mission de préserver notre planète. Nos habitats, conçus pour refléter les écosystèmes naturels, accueillent une grande diversité d’animaux, allant des majestueuses girafes des savanes aux crocodiles des marais. Chaque jour, notre équipe dédiée de vétérinaires veille à la santé et au bien-être de nos résidents.
+        </p>
+        <p class="text-center">
+            Découvrez un lieu où la nature, la pédagogie et le respect de l’environnement se rencontrent, et participez à nos efforts pour construire un avenir plus vert.
+        </p>
     </section>
 
     <!-- Galerie d'images -->
-  
-<section class="mb-5">
-    <h3 class="text-center">Galerie d'images</h3>
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-        <!-- Indicateurs -->
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+    <section class="mb-5">
+        <h3 class="text-center">Galerie d'images</h3>
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/uploads/images/678418be0edb0.jpg" class="d-block w-100 img-fluid rounded" alt="Hippopotame">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Girafe</h5>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="/uploads/images/678418f7c5213.jpg" class="d-block w-100 img-fluid rounded" alt="Singe">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Antilope</h5>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="/uploads/images/678419e9af3c4.jpg" class="d-block w-100 img-fluid rounded" alt="Antilope">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Singe</h5>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="/uploads/images/678418842e8e1.jpg" class="d-block w-100 img-fluid rounded" alt="Girafe">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Hippopotame</h5>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Précédent</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Suivant</span>
+            </button>
         </div>
+    </section>
 
-        <!-- Slides -->
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="/uploads/images/678418be0edb0.jpg" class="d-block w-100 img-fluid rounded" alt="Hippopotame">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Girafe</h5>
-                </div>
+    <!-- Habitats et Services -->
+    <section class="mb-5">
+        <h3 class="text-center">Habitats et Services</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Habitats</h4>
+                <ul>
+                    {% for habitat, animaux in habitats %}
+                        <li>
+                            <strong>{{ habitat }}</strong>: 
+                            <ul>
+                                {% for animal in animaux %}
+                                    <li>{{ animal }}</li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
             </div>
-            <div class="carousel-item">
-                <img src="/uploads/images/678418f7c5213.jpg" class="d-block w-100 img-fluid rounded" alt="Singe">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Antilope</h5>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="/uploads/images/678419e9af3c4.jpg" class="d-block w-100 img-fluid rounded" alt="Antilope">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Singe</h5>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="/uploads/images/678418842e8e1.jpg" class="d-block w-100 img-fluid rounded" alt="Girafe">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Hippopotame</h5>
-                </div>
+            <div class="col-md-6">
+                <h4>Nos services</h4>
+                <ul>
+                    {% for service in services %}
+                        <li>{{ service }}</li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
+    </section>
 
-        <!-- Contrôles -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Précédent</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Suivant</span>
-        </button>
-    </div>
-</section>
-
-
-    <!-- Section des habitats -->
+    <!-- Commentaires -->
     <h2>Laissez un commentaire</h2>
     {{ form_start(form) }}
         {{ form_row(form.pseudo) }}
@@ -122,48 +150,8 @@
             </li>
         {% endfor %}
     </ul>
+</div>
 
-    <h2>Critiques</h2>
-    <ul>
-        {% for commentaire, auteur in reviews %}
-            <li>
-                <strong>{{ auteur }}:</strong> {{ commentaire }}
-            </li>
-        {% endfor %}
-    </ul>
-
-    <h2>Habitats</h2>
-    <ul>
-        {% for habitat, animaux in habitats %}
-            <li>
-                <strong>{{ habitat }}</strong>: 
-                <ul>
-                    {% for animal in animaux %}
-                        <li>{{ animal }}</li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-    </ul>
-
-    <h2>Nos services</h2>
-    <ul>
-        {% for service in services %}
-            <li>{{ service }}</li>
-        {% endfor %}
-    </ul>
- <!-- Avis des visiteurs 
- <section class="mb-5">
-    <h3 class="text-center">Avis des visiteurs</h3>
-    <div class="list-group">
-        {% for review, author in reviews %}
-            <div class="list-group-item">
-                <p>"{{ review }}"</p>
-                <small class="text-muted">- {{ author }}</small>
-            </div>
-        {% endfor %}
-    </div>
-</section> -->
 <footer class="bg-dark text-white text-center py-3 mt-5">
     &copy; {{ "now"|date("Y") }} Zoo Arcadia. Tous droits réservés.
 </footer>
