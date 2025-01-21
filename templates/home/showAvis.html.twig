@@ -1,0 +1,25 @@
+{# templates/home/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <h1>Bienvenue sur notre site</h1>
+
+    <h2>Laissez un commentaire</h2>
+    {{ form_start(form) }}
+        {{ form_row(form.pseudo) }}
+        {{ form_row(form.commentaire) }}
+        {{ form_row(form.submit) }}
+    {{ form_end(form) }}
+
+    <h2>Commentaires</h2>
+    <ul>
+        {% for avis in avisVisibles %}
+            <li>
+                <strong>{{ avis.pseudo }}</strong>: {{ avis.commentaire }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
