@@ -74,6 +74,9 @@ class HomeController extends AbstractController
     #[Route('/employe/avis', name: 'employe_avis')]
     public function gestionAvis(): Response
     {
+        //Pour m'assurer que seuls les administrateurs et les utilisateurs puissent accéder à la route
+        $this->denyAccessUnlessGranted('ROLE_EMPLOYE');
+
         // Récupère les avis non visibles
         $avisNonVisibles = $this->avisRepository->findBy(['isVisible' => false]);
 
