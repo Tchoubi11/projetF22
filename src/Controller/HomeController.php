@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,14 +11,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Habitat;
 use App\Entity\Animal;
 
-
-
 class HomeController extends AbstractController
 {
-    /**
-     * Page d'accueil
-     * @return Response
-     */
+    private $habitatRepository;
+
+    // Injecter HabitatRepository via le constructeur
+    public function __construct(HabitatRepository $habitatRepository)
+    {
+        $this->habitatRepository = $habitatRepository;
+    }
+
     #[Route('/', name: 'app_home')]
     public function index(): Response
     {
@@ -62,16 +63,27 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/habitats', name: 'app_habitats')]
+    public function habitats(): Response
+    {
+        // Utilisation de l'injection du repository pour récupérer les habitats
+        $habitats = $this->habitatRepository->findAll();
+
+        return $this->render('home/habitats.html.twig', [
+            'habitats' => $habitats,
+        ]);
+    }
+
     #[Route('/habitat/{id}', name: 'habitat_detail')]
     public function habitatDetail(Habitat $habitat): Response
     {
-        // Initialiser les tableaux
+        // Initialisation des tableaux de nourriture et grammages
         $nourritures = [
             'Lion' => ['Viande'],
             'Héron' => ['Poissons'],
             'Tigre' => ['Viande'],
             'Tortue' => ['Plantes aquatiques'],
-            'Zebre' => ['Herbe'],
+            'Zèbre' => ['Herbe'],
             'Lynx' => ['Petits mammifères'],
             'Gazelle' => ['Herbes'],
             'Gorille' => ['Fruits'],
@@ -89,7 +101,7 @@ class HomeController extends AbstractController
             'Héron' => '1.8 kg',
             'Tigre' => '6.0 kg',
             'Tortue' => '0.8 kg',
-            'Zebre' => '4.0 kg',
+            'Zèbre' => '4.0 kg',
             'Lynx' => '2.7 kg',
             'Gazelle' => '3.5 kg',
             'Gorille' => '3.8 kg',
@@ -129,22 +141,10 @@ class HomeController extends AbstractController
 
         return $this->render('habitat/detail.html.twig', [
             'habitat' => $habitat,
-            'animaux' => $animauxDetails, // Passe les détails calculés
+            'animaux' => $animauxDetails,
         ]);
     }
-    #[Route('/habitats', name: 'app_habitats')]
-    
-    public function habitats(HabitatRepository $habitatRepository): Response
-    
-    {
-        // Récupérer tous les habitats depuis la base de données
-        $habitats = $habitatRepository->findAll();
 
-        return $this->render('home/habitats.html.twig', [
-            'habitats' => $habitats,
-        ]);
-    }
-    
     #[Route('/contacts', name: 'app_contact')]
     public function contacts(): Response
     {
@@ -174,6 +174,4 @@ class HomeController extends AbstractController
             'error' => $error,
         ]);
     }
-
-    
 }
