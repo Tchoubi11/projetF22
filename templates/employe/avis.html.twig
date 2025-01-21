@@ -1,0 +1,19 @@
+{# templates/employe/avis.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des avis{% endblock %}
+
+{% block body %}
+    <h1>Gestion des avis (Employé)</h1>
+
+    <ul>
+        {% for avis in avisNonVisibles %}
+            <li>
+                <strong>{{ avis.pseudo }}</strong>: {{ avis.commentaire }}
+                <a href="{{ path('employe_avis_valider', {'id': avis.id}) }}">Valider</a>
+                <a href="{{ path('employe_avis_supprimer', {'id': avis.id}) }}">Supprimer</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
