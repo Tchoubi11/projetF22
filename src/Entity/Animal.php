@@ -5,7 +5,6 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AnimalRepository;
 
-
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 class Animal
 {
@@ -31,19 +30,16 @@ class Animal
     #[ORM\OneToOne(mappedBy: 'animal', cascade: ['persist', 'remove'])]
     private ?RapportVeterinaire $rapportVeterinaire = null;
 
-   
     #[ORM\Column(type: "text", nullable: true)]
     private ?string $etat = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    
-
     #[ORM\Column(type: "float", nullable: true)]
-    
+    private ?float $poids = null;
 
     #[ORM\Column(type: "datetime", nullable: true)]
-    
+    private ?\DateTimeInterface $dateNaissance = null;
 
+    // Getters et Setters
     public function getId(): ?int
     {
         return $this->id;
@@ -109,7 +105,6 @@ class Animal
         return $this;
     }
 
-    
     public function getEtat(): ?string
     {
         return $this->etat;
@@ -122,5 +117,27 @@ class Animal
         return $this;
     }
 
-  
+    public function getPoids(): ?float
+    {
+        return $this->poids;
+    }
+
+    public function setPoids(?float $poids): static
+    {
+        $this->poids = $poids;
+
+        return $this;
+    }
+
+    public function getDateNaissance(): ?\DateTimeInterface
+    {
+        return $this->dateNaissance;
+    }
+
+    public function setDateNaissance(?\DateTimeInterface $dateNaissance): static
+    {
+        $this->dateNaissance = $dateNaissance;
+
+        return $this;
+    }
 }

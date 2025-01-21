@@ -21,8 +21,14 @@ class Habitat
     #[ORM\Column(type: 'string', length: 1000)]
     private ?string $description = null;
 
-    #[ORM\Column(type: 'text', nullable: true)] 
-    private ?string $commentaire_habitat = null;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $commentaireHabitat = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $adresse = null;
+
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    private ?string $horairesOuverture = null;
 
     #[ORM\OneToMany(targetEntity: Animal::class, mappedBy: 'habitat', cascade: ['persist', 'remove'])]
     private Collection $animaux;
@@ -37,6 +43,7 @@ class Habitat
         $this->images = new ArrayCollection();
     }
 
+     // Getters et Setters
     public function getId(): ?int
     {
         return $this->id;
@@ -68,12 +75,36 @@ class Habitat
 
     public function getCommentaireHabitat(): ?string
     {
-        return $this->commentaire_habitat;
+        return $this->commentaireHabitat;
     }
 
-    public function setCommentaireHabitat(?string $commentaire_habitat): static
+    public function setCommentaireHabitat(?string $commentaireHabitat): static
     {
-        $this->commentaire_habitat = $commentaire_habitat;
+        $this->commentaireHabitat = $commentaireHabitat;
+
+        return $this;
+    }
+
+    public function getAdresse(): ?string
+    {
+        return $this->adresse;
+    }
+
+    public function setAdresse(?string $adresse): static
+    {
+        $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    public function getHorairesOuverture(): ?string
+    {
+        return $this->horairesOuverture;
+    }
+
+    public function setHorairesOuverture(?string $horairesOuverture): static
+    {
+        $this->horairesOuverture = $horairesOuverture;
 
         return $this;
     }
@@ -96,7 +127,6 @@ class Habitat
     public function removeAnimal(Animal $animal): static
     {
         if ($this->animaux->removeElement($animal)) {
-            // Désassocie l'animal si nécessaire
             if ($animal->getHabitat() === $this) {
                 $animal->setHabitat(null);
             }
