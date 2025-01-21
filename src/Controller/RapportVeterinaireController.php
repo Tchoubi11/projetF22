@@ -2,67 +2,69 @@
 
 namespace App\Controller;
 
-use App\Entity\RapportVeterinaire;
-use App\Form\RapportVeterinaireType;
-use App\Repository\RapportVeterinaireRepository;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-#[Route('/rapport-veterinaire')]
+#[Route('/admin/user')]
 class RapportVeterinaireController extends AbstractController
 {
-    #[Route('/new', name: 'rapport_veterinaire_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em): Response
+    #[Route('/edit/{id}', name: 'user_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, User $user, EntityManagerInterface $em): Response
     {
-        $rapportVeterinaire = new RapportVeterinaire();
-        $form = $this->createForm(RapportVeterinaireType::class, $rapportVeterinaire);
+        // Vérifie si on tente de modifier un compte administrateur
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
+            throw $this->createAccessDeniedException('Impossible de modifier un compte Administrateur.');
+        }
+
+        // Crée le formulaire pour modifier les rôles de l'utilisateur
+        $form = $this->createFormBuilder($user)
+            ->add('roles', ChoiceType::class, [
+                'choices' => [
+                    'Employé' => 'ROLE_EMPLOYE',
+                    'Vétérinaire' => 'ROLE_VETERINAIRE',
+                ],
+                'expanded' => false,
+                'multiple' => true,
+                'label' => 'Rôles',
+            ])
+            ->getForm();
 
         $form->handleRequest($request);
+
+        // Vérifie si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($rapportVeterinaire);
+            // Vérifie à nouveau si le rôle admin est assigné dans les données soumises
+            if (in_array('ROLE_ADMIN', $user->getRoles())) {
+                throw $this->createAccessDeniedException('Impossible d’attribuer le rôle Administrateur.');
+            }
+
+            $em->persist($user);
             $em->flush();
 
-            $this->addFlash('success', 'Le rapport vétérinaire a été créé avec succès.');
+            $this->addFlash('success', 'Les rôles de l\'utilisateur ont été mis à jour avec succès.');
 
-            return $this->redirectToRoute('rapport_veterinaire_list');
+            return $this->redirectToRoute('user_list');
         }
 
-        return $this->render('rapport_veterinaire/new.html.twig', [
+        return $this->render('admin/user/edit.html.twig', [
             'form' => $form->createView(),
+            'user' => $user,
         ]);
     }
 
-    #[Route('/', name: 'rapport_veterinaire_list', methods: ['GET'])]
-    public function index(RapportVeterinaireRepository $repository): Response
+    #[Route('/', name: 'user_list', methods: ['GET'])]
+    public function index(EntityManagerInterface $em): Response
     {
-        $rapports = $repository->findAll();
+        // Récupère la liste des utilisateurs
+        $users = $em->getRepository(User::class)->findAll();
 
-        return $this->render('rapport_veterinaire/index.html.twig', [
-            'rapports' => $rapports,
+        return $this->render('admin/user/index.html.twig', [
+            'users' => $users,
         ]);
-    }
-
-    #[Route('/{id}', name: 'rapport_veterinaire_show', methods: ['GET'])]
-    public function show(RapportVeterinaire $rapportVeterinaire): Response
-    {
-        return $this->render('rapport_veterinaire/show.html.twig', [
-            'rapport' => $rapportVeterinaire,
-        ]);
-    }
-
-    #[Route('/{id}/delete', name: 'rapport_veterinaire_delete', methods: ['POST'])]
-    public function delete(Request $request, RapportVeterinaire $rapportVeterinaire, EntityManagerInterface $em): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $rapportVeterinaire->getId(), $request->request->get('_token'))) {
-            $em->remove($rapportVeterinaire);
-            $em->flush();
-
-            $this->addFlash('success', 'Le rapport vétérinaire a été supprimé avec succès.');
-        }
-
-        return $this->redirectToRoute('rapport_veterinaire_list');
     }
 }
