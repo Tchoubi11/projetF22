@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\RapportVeterinaire;
+use App\Entity\Animal; 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +17,29 @@ class RapportVeterinaireRepository extends ServiceEntityRepository
         parent::__construct($registry, RapportVeterinaire::class);
     }
 
-    //    /**
-    //     * @return RapportVeterinaire[] Returns an array of RapportVeterinaire objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('r.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Recherche des rapports vétérinaires par animal ou par date
+     *
+     * @param Animal|null $animal
+     * @param \DateTimeInterface|null $date
+     * @return RapportVeterinaire[]
+     */
+    public function findByAnimalOrDate(?Animal $animal, ?\DateTimeInterface $date): array
+    {
+        $qb = $this->createQueryBuilder('r'); // Alias 'r' pour RapportVeterinaire
 
-    //    public function findOneBySomeField($value): ?RapportVeterinaire
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        // Ajout d'une condition si $animal est fourni
+        if ($animal !== null) {
+            $qb->andWhere('r.animal = :animal')
+               ->setParameter('animal', $animal);
+        }
+
+        // Ajout d'une condition si $date est fourni
+        if ($date !== null) {
+            $qb->andWhere('r.date = :date')
+               ->setParameter('date', $date);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }
