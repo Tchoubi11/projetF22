@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Repository;
 
 use App\Entity\Avis;
@@ -15,17 +14,19 @@ class AvisRepository extends ServiceEntityRepository
 
     public function save(Avis $entity, bool $flush = false): void
     {
-        $this->_em->persist($entity);
+        $em = $this->getEntityManager(); // Utiliser getEntityManager() pour obtenir l'EntityManager
+        $em->persist($entity);
         if ($flush) {
-            $this->_em->flush();
+            $em->flush();
         }
     }
 
     public function remove(Avis $entity, bool $flush = false): void
     {
-        $this->_em->remove($entity);
+        $em = $this->getEntityManager(); // Utiliser getEntityManager() pour obtenir l'EntityManager
+        $em->remove($entity);
         if ($flush) {
-            $this->_em->flush();
+            $em->flush();
         }
     }
 }

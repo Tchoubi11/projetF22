@@ -5,29 +5,45 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use App\Repository\HabitatRepository;
-use App\Repository\AnimalRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Avis;
+use App\Entity\Habitat;
 use App\Form\AvisType;
 use App\Repository\AvisRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Entity\Habitat;
-use App\Entity\Animal;
+use App\Repository\HabitatRepository;
 
 class HomeController extends AbstractController
 {
     private $habitatRepository;
+    private $avisRepository;
 
-    // Injecter HabitatRepository via le constructeur
-    public function __construct(HabitatRepository $habitatRepository)
+    // Injecter HabitatRepository et AvisRepository via le constructeur
+    public function __construct(HabitatRepository $habitatRepository, AvisRepository $avisRepository)
     {
         $this->habitatRepository = $habitatRepository;
+        $this->avisRepository = $avisRepository;
     }
 
     #[Route('/', name: 'app_home')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        // Récupération des avis visibles
+        $avisVisibles = $this->avisRepository->findBy(['isVisible' => true]);
+
+        // Crée un nouvel avis et traite le formulaire
+        $avis = new Avis();
+        $form = $this->createForm(AvisType::class, $avis);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $avis->setVisible(false); // L'avis est invisible par défaut
+            $this->avisRepository->save($avis, true);
+
+            $this->addFlash('success', 'Votre avis a été soumis pour validation.');
+            return $this->redirectToRoute('app_home');
+        }
+
+        // Contenu statique pour les critiques, habitats et services
         $reviews = [
             "Très belle expérience, mes enfants ont adoré voir les tigres!" => "Cathérine",
             "Un endroit magnifique et bien entretenu. Bravo à l'équipe!" => "Marcus",
@@ -47,10 +63,42 @@ class HomeController extends AbstractController
         ];
 
         return $this->render('home/index.html.twig', [
+            'form' => $form->createView(),
+            'avisVisibles' => $avisVisibles,
             'reviews' => $reviews,
             'habitats' => $habitats,
             'services' => $services,
         ]);
+    }
+
+    #[Route('/employe/avis', name: 'employe_avis')]
+    public function gestionAvis(): Response
+    {
+        // Récupère les avis non visibles
+        $avisNonVisibles = $this->avisRepository->findBy(['isVisible' => false]);
+
+        return $this->render('employe/avis.html.twig', [
+            'avisNonVisibles' => $avisNonVisibles,
+        ]);
+    }
+
+    #[Route('/employe/avis/valider/{id}', name: 'employe_avis_valider')]
+    public function validerAvis(Avis $avis): Response
+    {
+        $avis->setVisible(true);
+        $this->avisRepository->save($avis, true);
+
+        $this->addFlash('success', 'Avis validé avec succès.');
+        return $this->redirectToRoute('employe_avis');
+    }
+
+    #[Route('/employe/avis/supprimer/{id}', name: 'employe_avis_supprimer')]
+    public function supprimerAvis(Avis $avis): Response
+    {
+        $this->avisRepository->remove($avis, true);
+
+        $this->addFlash('success', 'Avis supprimé avec succès.');
+        return $this->redirectToRoute('employe_avis');
     }
 
     #[Route('/services', name: 'app_services')]
@@ -177,36 +225,5 @@ class HomeController extends AbstractController
             'last_username' => $lastUsername,
             'error' => $error,
         ]);
-    }
-
-    #[Route('/employe/avis', name: 'employe_avis')]
-    public function adminAvis(AvisRepository $avisRepository): Response
-    {
-        $avisNonVisibles = $avisRepository->findBy(['isVisible' => false]);
-
-        return $this->render('employe/avis.html.twig', [
-            'avisNonVisibles' => $avisNonVisibles,
-        ]);
-    }
-
-    #[Route('/employe/avis/valider/{id}', name: 'employe_avis_valider')]
-    public function validerAvis(Avis $avis, AvisRepository $avisRepository): Response
-    {
-        $avis->setVisible(true);
-        $avisRepository->save($avis, true);
-
-        $this->addFlash('success', 'L\'avis a été validé.');
-
-        return $this->redirectToRoute('employe_avis');
-    }
-
-    #[Route('/employe/avis/supprimer/{id}', name: 'employe_avis_supprimer')]
-    public function supprimerAvis(Avis $avis, AvisRepository $avisRepository): Response
-    {
-        $avisRepository->remove($avis, true);
-
-        $this->addFlash('success', 'L\'avis a été supprimé.');
-
-        return $this->redirectToRoute('employe_avis');
     }
 }
