@@ -7,6 +7,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use App\Repository\HabitatRepository;
 use App\Repository\AnimalRepository;
+use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Avis;
+use App\Form\AvisType;
+use App\Repository\AvisRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Habitat;
 use App\Entity\Animal;
@@ -173,5 +177,36 @@ class HomeController extends AbstractController
             'last_username' => $lastUsername,
             'error' => $error,
         ]);
+    }
+
+    #[Route('/admin/avis', name: 'admin_avis')]
+    public function adminAvis(AvisRepository $avisRepository): Response
+    {
+        $avisNonVisibles = $avisRepository->findBy(['isVisible' => false]);
+
+        return $this->render('admin/avis.html.twig', [
+            'avisNonVisibles' => $avisNonVisibles,
+        ]);
+    }
+
+    #[Route('/admin/avis/valider/{id}', name: 'admin_avis_valider')]
+    public function validerAvis(Avis $avis, AvisRepository $avisRepository): Response
+    {
+        $avis->setVisible(true);
+        $avisRepository->save($avis, true);
+
+        $this->addFlash('success', 'L\'avis a été validé.');
+
+        return $this->redirectToRoute('admin_avis');
+    }
+
+    #[Route('/admin/avis/supprimer/{id}', name: 'admin_avis_supprimer')]
+    public function supprimerAvis(Avis $avis, AvisRepository $avisRepository): Response
+    {
+        $avisRepository->remove($avis, true);
+
+        $this->addFlash('success', 'L\'avis a été supprimé.');
+
+        return $this->redirectToRoute('admin_avis');
     }
 }
