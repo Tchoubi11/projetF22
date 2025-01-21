@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Rapport Vétérinaire{% endblock %}
+
+{% block body %}
+    <h1>Détails du Rapport Vétérinaire</h1>
+
+    <p><strong>ID :</strong> {{ rapport.id }}</p>
+    <p><strong>Animal :</strong> {{ rapport.animal.prenom }}</p>
+    <p><strong>Date :</strong> {{ rapport.date ? rapport.date|date('d/m/Y') : 'N/A' }}</p>
+    <p><strong>Observations :</strong> {{ rapport.observations }}</p>
+
+    <a href="{{ path('rapport_veterinaire_list') }}" class="btn btn-secondary">Retour à la liste</a>
+{% endblock %}
