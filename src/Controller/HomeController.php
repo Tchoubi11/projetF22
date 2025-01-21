@@ -179,17 +179,17 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/avis', name: 'admin_avis')]
+    #[Route('/employe/avis', name: 'employe_avis')]
     public function adminAvis(AvisRepository $avisRepository): Response
     {
         $avisNonVisibles = $avisRepository->findBy(['isVisible' => false]);
 
-        return $this->render('admin/avis.html.twig', [
+        return $this->render('employe/avis.html.twig', [
             'avisNonVisibles' => $avisNonVisibles,
         ]);
     }
 
-    #[Route('/admin/avis/valider/{id}', name: 'admin_avis_valider')]
+    #[Route('/employe/avis/valider/{id}', name: 'employe_avis_valider')]
     public function validerAvis(Avis $avis, AvisRepository $avisRepository): Response
     {
         $avis->setVisible(true);
@@ -197,16 +197,16 @@ class HomeController extends AbstractController
 
         $this->addFlash('success', 'L\'avis a été validé.');
 
-        return $this->redirectToRoute('admin_avis');
+        return $this->redirectToRoute('employe_avis');
     }
 
-    #[Route('/admin/avis/supprimer/{id}', name: 'admin_avis_supprimer')]
+    #[Route('/employe/avis/supprimer/{id}', name: 'employe_avis_supprimer')]
     public function supprimerAvis(Avis $avis, AvisRepository $avisRepository): Response
     {
         $avisRepository->remove($avis, true);
 
         $this->addFlash('success', 'L\'avis a été supprimé.');
 
-        return $this->redirectToRoute('admin_avis');
+        return $this->redirectToRoute('employe_avis');
     }
 }
