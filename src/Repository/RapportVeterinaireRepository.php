@@ -42,4 +42,15 @@ class RapportVeterinaireRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+    // ajout d'une méthode pour compter les consultations 
+    public function countConsultationsByAnimal(): array
+   {
+       return $this->createQueryBuilder('r')
+        ->select('a.prenom, COUNT(r.id) as consultations')
+        ->join('r.animal', 'a')
+        ->groupBy('a.id')
+        ->getQuery()
+        ->getResult();
+   }
+ 
 }
