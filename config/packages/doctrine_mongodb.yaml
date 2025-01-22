@@ -13,7 +13,8 @@ doctrine_mongodb:
                 App:
                     dir: '%kernel.project_dir%/src/Document'
                     prefix: 'App\Document'
-
+                    alias: App
+                    is_bundle: false
 when@prod:
     doctrine_mongodb:
         auto_generate_proxy_classes: false
