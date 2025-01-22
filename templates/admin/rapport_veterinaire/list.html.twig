@@ -10,7 +10,6 @@
         <tr>
             <th>ID</th>
             <th>Date</th>
-            <th>Détail</th>
             <th>Animal</th>
             <th>Actions</th>
         </tr>
@@ -20,7 +19,6 @@
         <tr>
             <td>{{ rapport.id }}</td>
             <td>{{ rapport.date|date('Y-m-d') }}</td>
-            <td>{{ rapport.detail }}</td>
             <td>{{ rapport.animal.prenom }}</td>
             <td>
                 <a href="{{ path('rapport_veterinaire_show', {id: rapport.id}) }}">Voir</a>
