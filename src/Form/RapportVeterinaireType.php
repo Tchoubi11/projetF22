@@ -25,6 +25,9 @@ class RapportVeterinaireType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'Date du rapport',
             ])
+            ->add('observations', TextareaType::class, [
+                'label' => 'Observations',
+            ])
             ->add('etat', TextareaType::class, [
                 'label' => 'État du rapport',
                 'required' => false,

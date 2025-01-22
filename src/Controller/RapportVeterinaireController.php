@@ -37,8 +37,8 @@ class RapportVeterinaireController extends AbstractController
                 'widget' => 'single_text',
                 'label' => 'Date du rapport',
             ])
-            ->add('detail', TextareaType::class, [
-                'label' => 'Détail',
+            ->add('observations', TextareaType::class, [
+                'label' => 'Observations',
             ])
             ->add('animal', null, [
                 'choice_label' => 'prenom',
