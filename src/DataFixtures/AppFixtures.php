@@ -21,7 +21,7 @@ class AppFixtures extends Fixture
                 'image' => 'uploads/images/678ce878bda16.jpg',
                 'animaux' => [
                     [
-                        'prenom' => 'Lion',
+                        'prenom' => 'Simba',
                         'race' => 'Panthera leo',
                         'image' => 'uploads/images/6784198bc1b3b.jpg',
                         'etat' => 'En bonne santé',
@@ -30,7 +30,7 @@ class AppFixtures extends Fixture
                         'dateDePassage' => '2025-01-01 10:00:00',
                     ],
                     [
-                        'prenom' => 'Gazelle',
+                        'prenom' => 'Grace',
                         'race' => 'Gazella',
                         'image' => 'uploads/images/67893d91b355d.jpg',
                         'etat' => 'Nerveuse',
@@ -39,7 +39,7 @@ class AppFixtures extends Fixture
                         'dateDePassage' => '2025-01-02 11:30:00',
                     ],
                     [
-                        'prenom' => 'Zèbre',
+                        'prenom' => 'Ziggy',
                         'race' => 'Equus zebra',
                         'image' => 'uploads/images/67893d0410cae.jpg',
                         'etat' => 'Calme',
@@ -48,7 +48,7 @@ class AppFixtures extends Fixture
                         'dateDePassage' => '2025-01-03 08:45:00',
                     ],
                     [
-                        'prenom' => 'Gorille',
+                        'prenom' => 'Kong',
                         'race' => 'Gorilla gorilla',
                         'image' => 'uploads/images/6788dedce7b80.jpg',
                         'etat' => 'Agité',
@@ -57,7 +57,7 @@ class AppFixtures extends Fixture
                         'dateDePassage' => '2025-01-04 14:00:00',
                     ],
                     [
-                        'prenom' => 'Léopard',
+                        'prenom' => 'Shadow',
                         'race' => 'Panthera pardus',
                         'image' => 'uploads/images/67841a1918305.jpg',
                         'etat' => 'Agressif',
@@ -73,7 +73,7 @@ class AppFixtures extends Fixture
                 'image' => 'uploads/images/678cee02e776c.jpg',
                 'animaux' => [
                     [
-                        'prenom' => 'Tigre',
+                        'prenom' => 'Raja',
                         'race' => 'Panthera tigris',
                         'image' => 'uploads/images/67897e4086ef8.jpg',
                         'etat' => 'Affamé',
@@ -82,7 +82,7 @@ class AppFixtures extends Fixture
                         'dateDePassage' => '2025-01-06 12:00:00',
                     ],
                     [
-                        'prenom' => 'Singe',
+                        'prenom' => 'Kiki',
                         'race' => 'Macaca mulatta',
                         'image' => 'uploads/images/678412c5ce6aa.jpg',
                         'etat' => 'Curieux',
@@ -91,7 +91,7 @@ class AppFixtures extends Fixture
                         'dateDePassage' => '2025-01-07 15:00:00',
                     ],
                     [
-                        'prenom' => 'Capibara',
+                        'prenom' => 'Coco',
                         'race' => 'Hydrochoerus hydrochaeris',
                         'image' => '/uploads/images/6788defcdf4a5.jpg',
                         'etat' => 'Paisible',
@@ -100,7 +100,7 @@ class AppFixtures extends Fixture
                         'dateDePassage' => '2025-01-08 10:30:00',
                     ],
                     [
-                        'prenom' => 'Jaguar',
+                        'prenom' => 'Blaze',
                         'race' => 'Panthera onca',
                         'image' => 'uploads/images/6788df28121ef.jpg',
                         'etat' => 'Féroce',
@@ -109,7 +109,7 @@ class AppFixtures extends Fixture
                         'dateDePassage' => '2025-01-09 11:45:00',
                     ],
                     [
-                        'prenom' => 'Lynx',
+                        'prenom' => 'Lynxie',
                         'race' => 'Lynx lynx',
                         'image' => 'uploads/images/6788df491c352.jpg',
                         'etat' => 'Méfiant',
@@ -125,7 +125,7 @@ class AppFixtures extends Fixture
                 'image' => 'uploads/images/678cea6a0f09d.jpg',
                 'animaux' => [
                     [
-                        'prenom' => 'Crocodile',
+                        'prenom' => 'Snap',
                         'race' => 'Crocodylus niloticus',
                         'image' => 'uploads/images/67897f3a31afb.jpg',
                         'etat' => 'Lent',
@@ -134,7 +134,7 @@ class AppFixtures extends Fixture
                         'dateDePassage' => '2025-01-11 13:30:00',
                     ],
                     [
-                        'prenom' => 'Grenouille',
+                        'prenom' => 'Hoppy',
                         'race' => 'Anura',
                         'image' => 'uploads/images/67897f9acb62c.jpg',
                         'etat' => 'Sautillante',
@@ -143,7 +143,7 @@ class AppFixtures extends Fixture
                         'dateDePassage' => '2025-01-12 17:45:00',
                     ],
                     [
-                        'prenom' => 'Ibis',
+                        'prenom' => 'Iris',
                         'race' => 'Threskiornithidae',
                         'image' => 'uploads/images/67897e9296d3e.jpg',
                         'etat' => 'Actif',
@@ -152,7 +152,7 @@ class AppFixtures extends Fixture
                         'dateDePassage' => '2025-01-13 07:15:00',
                     ],
                     [
-                        'prenom' => 'Tortue',
+                        'prenom' => 'Shelly',
                         'race' => 'Trachemys scripta',
                         'image' => 'uploads/images/6789803803ba9.jpg',
                         'etat' => 'Lente',
@@ -161,7 +161,7 @@ class AppFixtures extends Fixture
                         'dateDePassage' => '2025-01-14 09:00:00',
                     ],
                     [
-                        'prenom' => 'Héron',
+                        'prenom' => 'Hero',
                         'race' => 'Ardeidae',
                         'image' => 'uploads/images/67897ff81ad1a.jpg',
                         'etat' => 'Calme',
