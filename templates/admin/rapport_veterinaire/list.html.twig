@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des rapports vétérinaires{% endblock %}
+
+{% block body %}
+<h1>Liste des rapports vétérinaires</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Détail</th>
+            <th>Animal</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rapport in rapports %}
+        <tr>
+            <td>{{ rapport.id }}</td>
+            <td>{{ rapport.date|date('Y-m-d') }}</td>
+            <td>{{ rapport.detail }}</td>
+            <td>{{ rapport.animal.prenom }}</td>
+            <td>
+                <a href="{{ path('rapport_veterinaire_show', {id: rapport.id}) }}">Voir</a>
+                <form action="{{ path('rapport_veterinaire_delete', {id: rapport.id}) }}" method="post" style="display:inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ rapport.id) }}">
+                    <button type="submit">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
