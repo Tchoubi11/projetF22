@@ -39,7 +39,9 @@ class Animal
     #[ORM\Column(type: "datetime", nullable: true)]
     private ?\DateTimeInterface $dateNaissance = null;
 
-    // Getters et Setters
+    #[ORM\Column(type: "integer", options: ["default" => 0])]
+    private int $views = 0;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +139,25 @@ class Animal
     public function setDateNaissance(?\DateTimeInterface $dateNaissance): static
     {
         $this->dateNaissance = $dateNaissance;
+
+        return $this;
+    }
+
+    public function getViews(): int
+    {
+        return $this->views;
+    }
+
+    public function setViews(int $views): static
+    {
+        $this->views = $views;
+
+        return $this;
+    }
+
+    public function incrementViews(): static
+    {
+        $this->views++;
 
         return $this;
     }
