@@ -67,4 +67,8 @@ class UserController extends AbstractController
             'users' => $users,
         ]);
     }
+    public function eraseCredentials(): void
+{
+    // Logique éventuelle pour supprimer les informations sensibles
+}
 }
