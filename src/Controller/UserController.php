@@ -60,15 +60,15 @@ class UserController extends AbstractController
     #[Route('/', name: 'user_list', methods: ['GET'])]
     public function index(EntityManagerInterface $em): Response
     {
-        // Récupère la liste des utilisateurs
+        // Récupération de la liste des utilisateurs
         $users = $em->getRepository(User::class)->findAll();
 
         return $this->render('admin/user/index.html.twig', [
             'users' => $users,
         ]);
     }
-    public function eraseCredentials(): void
-{
+    //public function eraseCredentials(): void
+    //   {
     // Logique éventuelle pour supprimer les informations sensibles
-}
+  // }
 }

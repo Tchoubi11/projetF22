@@ -19,14 +19,7 @@ security:
             pattern: ^/
             custom_authenticators:
                 - App\Security\AppAuthenticator
-            form_login:
-                login_path: app_login
-                check_path: app_login
-                username_parameter: _username
-                password_parameter: _password
-                default_target_path:  admin_service_index
-                enable_csrf: true
-                always_use_default_target_path: true
+           
             logout:
                 path: app_logout
                 target: app_login

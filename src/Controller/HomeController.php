@@ -18,9 +18,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
-
-
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+
 
 class HomeController extends AbstractController
 {
@@ -28,7 +27,7 @@ class HomeController extends AbstractController
     private $avisRepository;
     private $entityManager;
 
-    // Injecter HabitatRepository, AvisRepository et EntityManager via le constructeur
+    // Injection de HabitatRepository, AvisRepository et EntityManager via le constructeur
     public function __construct(
         HabitatRepository $habitatRepository,
         AvisRepository $avisRepository,
@@ -39,20 +38,19 @@ class HomeController extends AbstractController
         $this->entityManager = $entityManager;
     }
     
-    //Route de la page d'accueil
     #[Route('/', name: 'app_home')]
     public function index(Request $request): Response
     {
         // Récupération des avis visibles
         $avisVisibles = $this->avisRepository->findBy(['isVisible' => true]);
 
-        // Crée un nouvel avis et traite le formulaire
+        // Créationd' un nouvel avis et traite le formulaire
         $avis = new Avis();
         $form = $this->createForm(AvisType::class, $avis);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $avis->setVisible(false); // L'avis est invisible par défaut
+            $avis->setVisible(false); // avis est invisible par défaut
             $this->avisRepository->save($avis, true);
 
             $this->addFlash('success', 'Votre avis a été soumis pour validation.');
@@ -86,15 +84,14 @@ class HomeController extends AbstractController
             'services' => $services,
         ]);
     }
-    
-    //Route Pour afficher les avis 
+
     #[Route('/employe/avis', name: 'employe_avis')]
     public function gestionAvis(): Response
     {
-        //Pour m'assurer que seuls les administrateurs et les utilisateurs puissent accéder à la route
+        // Pour m'assurer que seuls les administrateurs et les utilisateurs peuvent accéder à la route
         $this->denyAccessUnlessGranted('ROLE_EMPLOYE');
 
-        // Récupère les avis non visibles
+        // Je récupère les avis non visibles
         $avisNonVisibles = $this->avisRepository->findBy(['isVisible' => false]);
 
         return $this->render('employe/avis.html.twig', [
@@ -102,7 +99,6 @@ class HomeController extends AbstractController
         ]);
     }
 
-    //Route pour afficher les avis/Valider
     #[Route('/employe/avis/valider/{id}', name: 'employe_avis_valider')]
     public function validerAvis(Avis $avis): Response
     {
@@ -112,8 +108,7 @@ class HomeController extends AbstractController
         $this->addFlash('success', 'Avis validé avec succès.');
         return $this->redirectToRoute('employe_avis');
     }
-   
-    //Route pour afficher les avis/supprimer
+
     #[Route('/employe/avis/supprimer/{id}', name: 'employe_avis_supprimer')]
     public function supprimerAvis(Avis $avis): Response
     {
@@ -122,8 +117,7 @@ class HomeController extends AbstractController
         $this->addFlash('success', 'Avis supprimé avec succès.');
         return $this->redirectToRoute('employe_avis');
     }
-    
-    //Route pour afficher les différents services proposés
+
     #[Route('/services', name: 'app_services')]
     public function services(): Response
     {
@@ -138,7 +132,6 @@ class HomeController extends AbstractController
         ]);
     }
 
-    //Route pour afficher les différents habitats
     #[Route('/habitats', name: 'app_habitats')]
     public function habitats(): Response
     {
@@ -150,7 +143,6 @@ class HomeController extends AbstractController
         ]);
     }
 
-    //Route pour afficher les details de l'animal
     #[Route('/habitat/{id}', name: 'habitat_detail')]
     public function habitatDetail(Habitat $habitat): Response
     {
@@ -199,10 +191,13 @@ class HomeController extends AbstractController
             $nourriture = implode(', ', $nourritures[$animal->getPrenom()] ?? ['Non spécifiée']);
             $grammage = $grammages[$animal->getPrenom()] ?? 'Non spécifié';
 
-            //On récupére les données vétérinaires si disponibles
+            // On récupère les données vétérinaires si disponibles
             $rapportVeterinaire = $animal->getRapportVeterinaire();
             $dateDePassage = $rapportVeterinaire ? $rapportVeterinaire->getDate()->format('Y-m-d') : 'Non spécifiée';
             $avisVeterinaire = $rapportVeterinaire ? $rapportVeterinaire->getDetail() : 'Non disponible';
+
+            // Ajout de la clé "views"
+            $views = $animal->getViews();  // Supposons que chaque animal a un nombre de vues
 
             $animauxDetails[] = [
                 'id' => $animal->getId(),
@@ -213,6 +208,7 @@ class HomeController extends AbstractController
                 'dateDePassage' => $dateDePassage,
                 'avisVeterinaire' => $avisVeterinaire,
                 'image' => $animal->getImage(),
+                'views' => $views,  // Ajout de la clé "views"
             ];
         }
 
@@ -221,8 +217,6 @@ class HomeController extends AbstractController
             'animaux' => $animauxDetails,
         ]);
     }
-
-    //Route pour l'espace Contact
 
     #[Route('/contacts', name: 'app_contact')]
     public function contacts(): Response
@@ -238,7 +232,6 @@ class HomeController extends AbstractController
         ]);
     }
 
-   //Route pour l'espace connexion
     #[Route('/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -255,55 +248,53 @@ class HomeController extends AbstractController
         ]);
     }
 
-   //Route pour afficher les utilisateurs avec un role particulier
-   #[Route('/admin/user/create', name: 'admin_user_create')]
-   public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher): Response
-   {
-       $user = new User();
+    #[Route('/admin/user/create', name: 'admin_user_create')]
+    public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        $user = new User();
 
-       $form = $this->createFormBuilder($user)
-           ->add('username', TextType::class)
-           ->add('password', PasswordType::class)
-           ->add('roles', ChoiceType::class, [
-               'choices' => [
-                   'Employé' => 'ROLE_EMPLOYE',
-                   'Vétérinaire' => 'ROLE_VETERINAIRE',
-               ],
-               'expanded' => false,
-               'multiple' => true,
-           ])
-           ->getForm();
+        $form = $this->createFormBuilder($user)
+            ->add('username', TextType::class)
+            ->add('password', PasswordType::class)
+            ->add('roles', ChoiceType::class, [
+                'choices' => [
+                    'Employé' => 'ROLE_EMPLOYE',
+                    'Vétérinaire' => 'ROLE_VETERINAIRE',
+                ],
+                'expanded' => false,
+                'multiple' => true,
+            ])
+            ->getForm();
 
-       $form->handleRequest($request);
+        $form->handleRequest($request);
 
-       if ($form->isSubmitted() && $form->isValid()) {
-           $user->setPassword(
-               $passwordHasher->hashPassword($user, $user->getPassword())
-           );
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword(
+                $passwordHasher->hashPassword($user, $user->getPassword())
+            );
 
-           $this->entityManager->persist($user);
-           $this->entityManager->flush();
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
 
-           $this->addFlash('success', 'Utilisateur créé avec succès.');
+            $this->addFlash('success', 'Utilisateur créé avec succès.');
 
-           return $this->redirectToRoute('admin_dashboard');
-       }
+            return $this->redirectToRoute('admin_dashboard');
+        }
 
-       return $this->render('admin/user_create.html.twig', [
-           'form' => $form->createView(),
-       ]);
-   } 
+        return $this->render('admin/user_create.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 
-   #[Route('/admin/user/notify', name: 'admin_user_notify')]
-public function notifyUser(User $user, MailerInterface $mailer): void
-{
-    $email = (new Email())
-        ->from('admin@example.com')
-        ->to($user->getUsername())
-        ->subject('Votre compte a été créé')
-        ->html('<p>Votre compte a été créé. Veuillez contacter un administrateur pour obtenir votre mot de passe.</p>');
+    #[Route('/admin/user/notify', name: 'admin_user_notify')]
+    public function notifyUser(User $user, MailerInterface $mailer): void
+    {
+        $email = (new Email())
+            ->from('admin@example.com')
+            ->to($user->getUsername())
+            ->subject('Votre compte a été créé')
+            ->html('<p>Votre compte a été créé. Veuillez contacter un administrateur pour obtenir votre mot de passe.</p>');
 
-    $mailer->send($email);
-}
-
+        $mailer->send($email);
+    }
 }

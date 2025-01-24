@@ -10,31 +10,30 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AnimalDocumentController extends AbstractController
 {
-    #[Route('/animalDocument/{prenom}', name: 'animal_view', methods: ['GET'])]
-    public function viewAnimal(string $prenom, DocumentManager $dm): JsonResponse
-    {
-        // Ici on recherche l'animal dans MongoDB
-        $animalDocument = $dm->getRepository(AnimalDocument::class)->findOneBy(['prenom' => $prenom]);
+    #[Route('/animalDocument/incrementByPrenom/{prenom}', name: 'animal_increment_prenom', methods: ['POST'])]
+public function incrementViewsByPrenom(string $prenom, DocumentManager $dm): JsonResponse
+{
+    error_log("Prénom reçu par le serveur : $prenom");
 
-        if (!$animalDocument) {
-            // Si l'animal n'existe pas, créer un nouveau document
-            $animalDocument = new AnimalDocument();
-            $animalDocument->setPrenom($prenom);
-            $animalDocument->setViews(1); // Initialiser les vues à 1
-        } else {
-            // Incrémentation du compteur de vues
-            $animalDocument->incrementViews();
-        }
+    // Recherche de l'animal par prénom
+    $animal = $dm->getRepository(AnimalDocument::class)->findOneBy(['prenom' => $prenom]);
 
-        // Sauvegarde des modifications dans MongoDB
-        $dm->persist($animalDocument);
-        $dm->flush();
-
-        // Retour de la réponse JSON avec les détails de l'animal
-        return $this->json([
-            'message' => "Consultation de l'animal mise à jour.",
-            'animal' => $animalDocument->getPrenom(),
-            'views' => $animalDocument->getViews(),
-        ]);
+    if (!$animal) {
+        error_log("Aucun animal trouvé avec le prénom : $prenom");
+        return new JsonResponse(['error' => 'Animal non trouvé'], 404);
     }
+
+    try {
+        // Incrémentation des vues
+        $animal->setViews($animal->getViews() + 1);
+        $dm->flush();
+        error_log("Vues mises à jour pour $prenom : " . $animal->getViews());
+        return new JsonResponse(['views' => $animal->getViews()]);
+    } catch (\Exception $e) {
+        error_log("Erreur lors de la mise à jour : " . $e->getMessage());
+        return new JsonResponse(['error' => 'Erreur serveur', 'details' => $e->getMessage()], 500);
+    }
+}
+
+
 }

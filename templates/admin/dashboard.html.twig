@@ -1,27 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Administrateur</title>
-</head>
-<body>
-    <h1>Dashboard Administrateur</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Prénom</th>
-                <th>Nombre de consultations</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for animal in animals %}
-                <tr>
-                    <td>{{ animal.getPrenom() }}</td>
-                    <td>{{ animal.getViews() }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</body>
-</html>
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques des Animaux{% endblock %}
+
+{% block body %}
+<h1>Statistiques des Animaux</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Prénom</th>
+            <th>Consultations</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for animal in statistics %}
+        <tr>
+            <td>{{ animal.prenom }}</td>
+            <td>{{ animal.views }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

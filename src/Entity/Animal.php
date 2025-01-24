@@ -38,6 +38,24 @@ class Animal
 
     #[ORM\Column(type: "datetime", nullable: true)]
     private ?\DateTimeInterface $dateNaissance = null;
+    private $views = 0;  
+      // Getter for views
+      public function getViews(): ?int
+    {
+        return $this->views;
+    }
+
+    public function setViews(int $views): self
+    {
+        $this->views = $views;
+        return $this;
+    }
+
+    public function incrementViews(): Void
+    {
+        $this->views++;
+       
+    }
 
     public function getId(): ?int
     {

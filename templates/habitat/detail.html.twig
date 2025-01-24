@@ -17,30 +17,38 @@
 <h2>Animaux associés</h2>
 <div class="animaux-container">
     {% for animal in animaux %}
-        <div class="animal-card">
-            <!-- Image de l'animal -->
-            <img 
-                src="{{ asset(animal.image|replace({'public/': ''})) }}" 
-                alt="{{ animal.prenom }}" 
-                style="max-width: 300px; border-radius: 10px; cursor: pointer;" 
-                class="animal-image" 
-                data-animal-id="{{ animal.id }}"
-            >
-            <h3>{{ animal.prenom }}</h3>
-            <p>État : {{ animal.etat }}</p>
+    <div class="animal-card">
+        <!-- Image de l'animal -->
+        <img 
+    src="{{ asset(animal.image|replace({'public/': ''})) }}" 
+    alt="{{ animal.prenom }}" 
+    class="animal-image" 
+    data-animal-prenom="{{ animal.prenom }}" 
+>
 
-            <!-- Détails de l'animal (coulissement au clic) -->
-            <div class="animal-info" id="details-{{ animal.id }}" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out;">
-                <h4>Détails de {{ animal.prenom }}</h4>
-                <ul>
-                    
-                    <li><strong>Nourriture :</strong> {{ animal.nourriture ?? 'Non spécifiée' }}</li>
-                    <li><strong>Grammage :</strong> {{ animal.grammage ?? 'Non spécifié' }}</li>
-                    <li><strong>Date de passage vétérinaire :</strong> {{ animal.dateDePassage ?? 'Non spécifiée' }}</li>
-                    <li><strong>Avis vétérinaire :</strong> {{ animal.avisVeterinaire ?? 'Non disponible' }}</li>
-                </ul>
-            </div>
+
+        <!-- Détails de l'animal -->
+        <h3>{{ animal.prenom }}</h3>
+        <p>État : {{ animal.etat }}</p>
+
+        <!-- Compteur de vues -->
+        <div>
+            <strong>Vues :</strong> 
+            <span id="views-{{ animal.prenom }}">{{ animal.views }}</span>
         </div>
+        
+        <div class="animal-info" id="details-{{ animal.prenom }}" 
+             style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out;">
+            <h4>Détails de {{ animal.prenom }}</h4>
+            <ul>
+                <li><strong>Nourriture :</strong> {{ animal.nourriture ?? 'Non spécifiée' }}</li>
+                <li><strong>Grammage :</strong> {{ animal.grammage ?? 'Non spécifié' }}</li>
+                <li><strong>Date de passage vétérinaire :</strong> {{ animal.dateDePassage ?? 'Non spécifiée' }}</li>
+                <li><strong>Avis vétérinaire :</strong> {{ animal.avisVeterinaire ?? 'Non disponible' }}</li>
+            </ul>
+        </div>
+        
+    </div>
     {% endfor %}
 </div>
 
@@ -49,40 +57,45 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.animal-image').forEach((image) => {
-            image.addEventListener('click', () => {
-                const animalId = image.getAttribute('data-animal-id');
-                const detailsDiv = document.getElementById(`details-${animalId}`);
-                const isOpen = detailsDiv.style.maxHeight !== '0px' && detailsDiv.style.maxHeight !== '';
+    document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".animal-image").forEach((image) => {
+        image.addEventListener("click", async () => {
+            const animalPrenom = image.getAttribute("data-animal-prenom");
+            console.log("Prénom envoyé au serveur :", animalPrenom); // Vérification
+            const detailsDiv = document.getElementById(`details-${animalPrenom}`);
+            const viewsElement = document.getElementById(`views-${animalPrenom}`);
 
-                if (isOpen) {
-                    detailsDiv.style.maxHeight = '0'; // Masquer les détails
-                } else {
-                    detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Afficher les détails
+            viewsElement.textContent = "Chargement...";
+
+            try {
+                const response = await fetch(`/animalDocument/incrementByPrenom/${animalPrenom}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Erreur serveur :", errorData);
+                    throw new Error(errorData.error || `Erreur serveur : ${response.statusText}`);
                 }
-            });
-        });
-    });
-    const images = document.querySelectorAll('.animal-card img');  // Suppose que les images sont dans .animal-card
-    const details = document.querySelectorAll('.animal-info'); // Suppose que chaque carte a un élément .animal-info
 
-    images.forEach((image, index) => {
-        image.addEventListener('click', () => {
-            const detail = details[index];
+                const data = await response.json();
+                console.log("Réponse reçue du serveur :", data); // Débogage
+                viewsElement.textContent = data.views;
+            } catch (error) {
+                console.error("Erreur lors de la mise à jour :", error);
+                viewsElement.textContent = "Erreur de mise à jour";
+            }
 
-            // Si les détails sont déjà visibles, les cacher
-            if (detail.classList.contains('show')) {
-                detail.classList.remove('show');
-            } else {
-                // Cacher tous les autres détails
-                details.forEach(d => d.classList.remove('show'));
-
-                // Afficher celui de l'animal en cliquant
-                detail.classList.add('show');
+            if (detailsDiv) {
+                detailsDiv.style.maxHeight = detailsDiv.classList.contains("show") ? "0" : detailsDiv.scrollHeight + "px";
+                detailsDiv.classList.toggle("show");
             }
         });
     });
+});
+
 </script>
+
 
 {% endblock %}
