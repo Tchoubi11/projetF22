@@ -44,7 +44,7 @@ security:
         - { path: ^/employe, roles: ROLE_EMPLOYE }
         - { path: ^/admin/user, roles: ROLE_ADMIN }
         - { path: ^/employe/alimentation, roles: ROLE_EMPLOYE }
-        
+        - { path: ^/admin/service, roles: ROLE_EMPLOYE }
 
 
 when@test:

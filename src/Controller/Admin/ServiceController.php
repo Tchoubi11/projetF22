@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/service')]
 class ServiceController extends AbstractController
@@ -22,6 +23,8 @@ class ServiceController extends AbstractController
     }
 
     #[Route('/', name: 'admin_service_index', methods: ['GET'])]
+    #[IsGranted('ROLE_EMPLOYE')]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(ServiceRepository $serviceRepository): Response
     {
         return $this->render('admin/service/index.html.twig', [
@@ -30,6 +33,8 @@ class ServiceController extends AbstractController
     }
 
     #[Route('/new', name: 'admin_service_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_EMPLOYE')]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request): Response
     {
         $service = new Service();
@@ -51,6 +56,8 @@ class ServiceController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'admin_service_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_EMPLOYE')]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Service $service): Response
     {
         $form = $this->createForm(ServiceType::class, $service);
@@ -80,9 +87,10 @@ class ServiceController extends AbstractController
 
         return $this->redirectToRoute('admin_service_index');
     }
-     #[Route('/logout', name: 'app_logout', methods: ['GET'])]
+
+    #[Route('/logout', name: 'app_logout', methods: ['GET'])]
     public function logout(): void
     {
-     //code vide car symfony gère la déconnection
+        // Code vide car Symfony gère la déconnexion automatiquement
     }
 }
