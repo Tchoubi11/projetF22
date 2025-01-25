@@ -43,7 +43,7 @@ security:
         - { path: ^/veterinaire, roles: ROLE_VETERINAIRE }
         - { path: ^/employe, roles: ROLE_EMPLOYE }
         - { path: ^/admin/user, roles: ROLE_ADMIN }
-    
+        - { path: ^/employe/alimentation, roles: ROLE_EMPLOYE }
         
 
 
