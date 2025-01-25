@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -25,12 +26,15 @@ class RapportVeterinaireType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'Date du rapport',
             ])
+            ->add('habitatComment', TextareaType::class, [
+                'label' => 'Commentaires sur l\'habitat',
+                'required' => false,
+            ])
             ->add('observations', TextareaType::class, [
                 'label' => 'Observations',
             ])
-            ->add('etat', TextareaType::class, [
-                'label' => 'État du rapport',
-                'required' => false,
+            ->add('save', SubmitType::class, [
+                'label' => 'Enregistrer le rapport',
             ]);
     }
 
