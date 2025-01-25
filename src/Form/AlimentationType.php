@@ -21,12 +21,11 @@ class AlimentationType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'Date et heure',
             ])
+            ->add('nourriture', TextType::class, [
+                'label' => 'Type de nourriture',
+            ])  
             ->add('grammage', NumberType::class, [
                 'label' => 'Grammage (en grammes)',
-            ])
-            
-            ->add('quantite', NumberType::class, [
-                'label' => 'Quantité (en kg)',
             ])
             ->add('animal', EntityType::class, [
                 'class' => Animal::class,
