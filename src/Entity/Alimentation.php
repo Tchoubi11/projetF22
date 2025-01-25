@@ -23,7 +23,7 @@ class Alimentation
     private ?float $quantite = null;
 
     #[ORM\ManyToOne(targetEntity: Animal::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)] // Permet d'avoir une valeur null
     private ?Animal $animal = null;
 
     public function getId(): ?int
@@ -72,7 +72,7 @@ class Alimentation
         return $this->animal;
     }
 
-    public function setAnimal(Animal $animal): static
+    public function setAnimal(?Animal $animal): static
     {
         $this->animal = $animal;
 

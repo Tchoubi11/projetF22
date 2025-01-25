@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AnimalRepository;
 
@@ -38,9 +40,20 @@ class Animal
 
     #[ORM\Column(type: "datetime", nullable: true)]
     private ?\DateTimeInterface $dateNaissance = null;
-    private $views = 0;  
-      // Getter for views
-      public function getViews(): ?int
+
+    #[ORM\Column(type: "integer", options: ["default" => 0])]
+    private int $views = 0;
+
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Alimentation::class, cascade: ['persist', 'remove'])]
+    private Collection $alimentations;
+
+    public function __construct()
+    {
+        $this->alimentations = new ArrayCollection();
+    }
+
+    // Getter and Setter for $views
+    public function getViews(): int
     {
         return $this->views;
     }
@@ -51,12 +64,12 @@ class Animal
         return $this;
     }
 
-    public function incrementViews(): Void
+    public function incrementViews(): void
     {
         $this->views++;
-       
     }
 
+    // Getters and Setters for other properties...
     public function getId(): ?int
     {
         return $this->id;
@@ -70,7 +83,6 @@ class Animal
     public function setPrenom(string $prenom): static
     {
         $this->prenom = $prenom;
-
         return $this;
     }
 
@@ -82,7 +94,6 @@ class Animal
     public function setRace(?Race $race): static
     {
         $this->race = $race;
-
         return $this;
     }
 
@@ -94,7 +105,6 @@ class Animal
     public function setImage(?string $image): static
     {
         $this->image = $image;
-
         return $this;
     }
 
@@ -106,7 +116,6 @@ class Animal
     public function setHabitat(?Habitat $habitat): static
     {
         $this->habitat = $habitat;
-
         return $this;
     }
 
@@ -118,7 +127,6 @@ class Animal
     public function setRapportVeterinaire(?RapportVeterinaire $rapportVeterinaire): static
     {
         $this->rapportVeterinaire = $rapportVeterinaire;
-
         return $this;
     }
 
@@ -130,7 +138,6 @@ class Animal
     public function setEtat(?string $etat): static
     {
         $this->etat = $etat;
-
         return $this;
     }
 
@@ -142,7 +149,6 @@ class Animal
     public function setPoids(?float $poids): static
     {
         $this->poids = $poids;
-
         return $this;
     }
 
@@ -154,9 +160,36 @@ class Animal
     public function setDateNaissance(?\DateTimeInterface $dateNaissance): static
     {
         $this->dateNaissance = $dateNaissance;
+        return $this;
+    }
+
+    // Getter for $alimentations
+    public function getAlimentations(): Collection
+    {
+        return $this->alimentations;
+    }
+
+    // Add an alimentation to the collection
+    public function addAlimentation(Alimentation $alimentation): static
+    {
+        if (!$this->alimentations->contains($alimentation)) {
+            $this->alimentations->add($alimentation);
+            $alimentation->setAnimal($this);
+        }
 
         return $this;
     }
 
-   
+    // Remove an alimentation from the collection
+    public function removeAlimentation(Alimentation $alimentation): static
+    {
+        if ($this->alimentations->removeElement($alimentation)) {
+            // Set the owning side to null (unless already changed)
+            if ($alimentation->getAnimal() === $this) {
+                $alimentation->setAnimal(null);
+            }
+        }
+
+        return $this;
+    }
 }
