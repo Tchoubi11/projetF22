@@ -6,7 +6,10 @@
 <h1>Services proposés</h1>
 
 <a href="{{ path('admin_service_new') }}">Ajouter un service</a>
-<a href="{{ path('app_logout') }}" class="btn btn-danger">Se déconnecter</a>
+<form action="{{ path('app_logout') }}" method="post">
+    <button type="submit" class="btn btn-danger">Se déconnecter</button>
+</form>
+
 
 
 <table>

@@ -81,13 +81,15 @@ class ServiceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'admin_service_delete', methods: ['POST'])]
+    // requirements: ['id' => '\d+'] c'est pour m'assurer que l'ID passé dans l'URL est un entier (\d+).
+    #[Route('/{id}', name: 'admin_service_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, Service $service): Response
     {
         if (!$this->isGranted('ROLE_EMPLOYE') && !$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException();
         }
 
+        // Vérification CSRF avant suppression
         if ($this->isCsrfTokenValid('delete' . $service->getId(), $request->request->get('_token'))) {
             $entityManager = $this->doctrine->getManager();
             $entityManager->remove($service);
@@ -96,11 +98,10 @@ class ServiceController extends AbstractController
 
         return $this->redirectToRoute('admin_service_index');
     }
-    #[Route('/logout', name: 'app_logout', methods: ['GET'])]
-public function logout(): void
-{
-    
-    //Je laisse le code vide ici car Symfony gère automatiquement la déconnexion
-}
 
+    #[Route('/logout', name: 'app_logout', methods: ['POST'])]
+    public function logout(): void
+    {
+        // Symfony gère automatiquement la déconnexion, donc ce contrôleur peut rester vide
+    }
 }
