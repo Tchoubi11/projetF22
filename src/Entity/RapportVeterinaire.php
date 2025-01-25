@@ -14,6 +14,9 @@ class RapportVeterinaire
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(type: "text", nullable: true)]
+    private ?string $habitatComment = null;
+
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
@@ -28,6 +31,17 @@ class RapportVeterinaire
      
     private ?string $observations = null;
 
+    public function getHabitatComment(): ?string
+    {
+    return $this->habitatComment;
+    }
+
+    public function setHabitatComment(?string $habitatComment): static
+    {
+    $this->habitatComment = $habitatComment;
+
+    return $this;
+    }
     
     public function getObservations(): ?string
     {
