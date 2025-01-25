@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Employe;
+namespace App\Controller;
 
 use App\Entity\Alimentation;
 use App\Form\AlimentationType;
