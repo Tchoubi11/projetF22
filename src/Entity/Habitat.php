@@ -15,6 +15,9 @@ class Habitat
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(type: "text", nullable: true)]
+    private ?string $comment = null;
+
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
@@ -44,7 +47,19 @@ class Habitat
     }
 
      // Getters et Setters
-    public function getId(): ?int
+
+     public function getComment(): ?string
+     {
+         return $this->comment;
+     }
+ 
+     public function setComment(?string $comment): static
+     {
+         $this->comment = $comment;
+ 
+         return $this;
+     }
+     public function getId(): ?int
     {
         return $this->id;
     }
