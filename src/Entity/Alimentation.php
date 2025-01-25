@@ -20,7 +20,7 @@ class Alimentation
     private ?string $grammage = null;
 
     #[ORM\Column]
-    private ?float $quantite = null;
+    private ?float $nourriture= null;
 
     #[ORM\ManyToOne(targetEntity: Animal::class)]
     #[ORM\JoinColumn(nullable: true)] // Pour permettre d'avoir une valeur null
@@ -55,14 +55,14 @@ class Alimentation
         return $this;
     }
 
-    public function getQuantite(): ?float
+    public function getNourriture(): ?float
     {
-        return $this->quantite;
+        return $this->nourriture;
     }
 
-    public function setQuantite(float $quantite): static
+    public function setNourriture(float $nourriture): static
     {
-        $this->quantite = $quantite;
+        $this->nourriture = $nourriture;
 
         return $this;
     }
