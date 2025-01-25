@@ -17,13 +17,13 @@ class Alimentation
     private ?\DateTimeInterface $dateHeure = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nourriture = null;
+    private ?string $grammage = null;
 
     #[ORM\Column]
     private ?float $quantite = null;
 
     #[ORM\ManyToOne(targetEntity: Animal::class)]
-    #[ORM\JoinColumn(nullable: true)] // Permet d'avoir une valeur null
+    #[ORM\JoinColumn(nullable: true)] // Pour permettre d'avoir une valeur null
     private ?Animal $animal = null;
 
     public function getId(): ?int
@@ -43,14 +43,14 @@ class Alimentation
         return $this;
     }
 
-    public function getNourriture(): ?string
+    public function getGrammage(): ?string
     {
-        return $this->nourriture;
+        return $this->grammage;
     }
 
-    public function setNourriture(string $nourriture): static
+    public function setGrammage(string $grammage): static
     {
-        $this->nourriture = $nourriture;
+        $this->grammage = $grammage;
 
         return $this;
     }
