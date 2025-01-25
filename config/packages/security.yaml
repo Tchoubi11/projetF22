@@ -22,7 +22,7 @@ security:
            
             logout:
                 path: app_logout
-                target: app_login
+                target: '/login' 
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 semaine
@@ -39,13 +39,14 @@ security:
     access_control:
         # Restriction d'accès
         - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/admin, roles: ROLE_ADMIN }
+        
         - { path: ^/veterinaire, roles: ROLE_VETERINAIRE }
         - { path: ^/employe, roles: ROLE_EMPLOYE }
         - { path: ^/admin/user, roles: ROLE_ADMIN }
         - { path: ^/employe/alimentation, roles: ROLE_EMPLOYE }
         - { path: ^/admin/service, roles: ROLE_EMPLOYE }
-
+        - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/service, roles: [ROLE_EMPLOYE, ROLE_ADMIN] }
 
 when@test:
     security:

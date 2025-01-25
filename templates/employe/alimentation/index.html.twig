@@ -27,4 +27,9 @@
         {% endfor %}
     </tbody>
 </table>
+<form method="post" action="{{ path('app_logout') }}">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+    <button type="submit" class="btn btn-danger">Se déconnecter</button>
+</form>
+
 {% endblock %}
