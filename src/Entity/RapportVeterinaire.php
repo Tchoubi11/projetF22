@@ -15,7 +15,7 @@ class RapportVeterinaire
     private ?int $id = null;
 
     #[ORM\Column(type: "text", nullable: true)]
-    private ?string $habitatComment = null;
+    private ?string $habitatComment = null; //colonne est spécifique à l'entité RapportVeterinaire,utilisée pour stocker des informations ou commentaires relatifs à l'habitat dans le contexte d'un rapport vétérinaire pour un animal particulier.
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;

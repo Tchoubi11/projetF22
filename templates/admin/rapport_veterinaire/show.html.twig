@@ -11,6 +11,24 @@
     <p><strong>Observations :</strong> {{ rapport.observations }}</p>
     <p><strong>Commentaires sur l'Habitat :</strong> {{ rapport.habitatComment }}</p>
 
+    <h2>Alimentation</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Nourriture</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for feeding in rapport.animal.feedings %}
+                <tr>
+                    <td>{{ feeding.feedingTime|date('d/m/Y H:i') }}</td>
+                    <td>{{ feeding.food }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 
     <a href="{{ path('rapport_veterinaire_list') }}" class="btn btn-secondary">Retour à la liste</a>
 {% endblock %}

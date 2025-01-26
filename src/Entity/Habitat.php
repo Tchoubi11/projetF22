@@ -15,9 +15,6 @@ class Habitat
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: "text", nullable: true)]
-    private ?string $comment = null;
-
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
@@ -25,7 +22,7 @@ class Habitat
     private ?string $description = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $commentaireHabitat = null;
+    private ?string $commentaireHabitat = null; //contient des commentaires généraux  supplémentaires sur l'habitat lui-même.
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $adresse = null;
@@ -46,20 +43,9 @@ class Habitat
         $this->images = new ArrayCollection();
     }
 
-     // Getters et Setters
+    // Suppression des getters et setters pour `comment` et conservation de ceux pour `commentaireHabitat`
 
-     public function getComment(): ?string
-     {
-         return $this->comment;
-     }
- 
-     public function setComment(?string $comment): static
-     {
-         $this->comment = $comment;
- 
-         return $this;
-     }
-     public function getId(): ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
