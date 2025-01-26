@@ -2,14 +2,16 @@
 
 namespace App\Entity;
 
+use App\Repository\AnimalRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\AnimalRepository;
 
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 class Animal
 {
+    //  Propriétés 
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -32,49 +34,41 @@ class Animal
     #[ORM\OneToOne(mappedBy: 'animal', cascade: ['persist', 'remove'])]
     private ?RapportVeterinaire $rapportVeterinaire = null;
 
-    #[ORM\Column(type: "text", nullable: true)]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $etat = null;
 
-    #[ORM\Column(type: "float", nullable: true)]
+    #[ORM\Column(type: 'float', nullable: true)]
     private ?float $poids = null;
 
-    #[ORM\Column(type: "datetime", nullable: true)]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $dateNaissance = null;
 
-    #[ORM\Column(type: "integer", options: ["default" => 0])]
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private int $views = 0;
 
     #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Alimentation::class, cascade: ['persist', 'remove'])]
     private Collection $alimentations;
 
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: AnimalFeeding::class)]
+    private Collection $feedings;
+
+    //  Constructeur 
+
     public function __construct()
     {
         $this->alimentations = new ArrayCollection();
+        $this->feedings = new ArrayCollection();
     }
 
-    // Getter and Setter for $views
-    public function getViews(): int
-    {
-        return $this->views;
-    }
+    //  Méthodes 
 
-    public function setViews(int $views): self
-    {
-        $this->views = $views;
-        return $this;
-    }
-
-    public function incrementViews(): void
-    {
-        $this->views++;
-    }
-
-    // Getters and Setters for other properties...
+    //  Getter et Setter pour ID 
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    //  Getter et Setter pour Prenom 
     public function getPrenom(): ?string
     {
         return $this->prenom;
@@ -86,6 +80,7 @@ class Animal
         return $this;
     }
 
+    //  Getter et Setter pour Race 
     public function getRace(): ?Race
     {
         return $this->race;
@@ -97,6 +92,7 @@ class Animal
         return $this;
     }
 
+    //  Getter et Setter pour Image 
     public function getImage(): ?string
     {
         return $this->image;
@@ -108,6 +104,7 @@ class Animal
         return $this;
     }
 
+    //  Getter et Setter pour Habitat 
     public function getHabitat(): ?Habitat
     {
         return $this->habitat;
@@ -119,6 +116,7 @@ class Animal
         return $this;
     }
 
+    //  Getter et Setter pour Rapport Vétérinaire 
     public function getRapportVeterinaire(): ?RapportVeterinaire
     {
         return $this->rapportVeterinaire;
@@ -130,6 +128,7 @@ class Animal
         return $this;
     }
 
+    //  Getter et Setter pour Etat 
     public function getEtat(): ?string
     {
         return $this->etat;
@@ -141,6 +140,7 @@ class Animal
         return $this;
     }
 
+    //  Getter et Setter pour Poids 
     public function getPoids(): ?float
     {
         return $this->poids;
@@ -152,6 +152,7 @@ class Animal
         return $this;
     }
 
+    //  Getter et Setter pour Date de Naissance 
     public function getDateNaissance(): ?\DateTimeInterface
     {
         return $this->dateNaissance;
@@ -163,13 +164,29 @@ class Animal
         return $this;
     }
 
-    // Getter for $alimentations
+    //  Gestion des Vues 
+    public function getViews(): int
+    {
+        return $this->views;
+    }
+
+    public function setViews(int $views): static
+    {
+        $this->views = $views;
+        return $this;
+    }
+
+    public function incrementViews(): void
+    {
+        $this->views++;
+    }
+
+    // Gestion des Alimentations 
     public function getAlimentations(): Collection
     {
         return $this->alimentations;
     }
 
-    // Add an alimentation to the collection
     public function addAlimentation(Alimentation $alimentation): static
     {
         if (!$this->alimentations->contains($alimentation)) {
@@ -180,16 +197,20 @@ class Animal
         return $this;
     }
 
-    // Remove an alimentation from the collection
     public function removeAlimentation(Alimentation $alimentation): static
     {
         if ($this->alimentations->removeElement($alimentation)) {
-            // Set the owning side to null (unless already changed)
             if ($alimentation->getAnimal() === $this) {
                 $alimentation->setAnimal(null);
             }
         }
 
         return $this;
+    }
+
+    //  Gestion des Feedings 
+    public function getFeedings(): Collection
+    {
+        return $this->feedings;
     }
 }
