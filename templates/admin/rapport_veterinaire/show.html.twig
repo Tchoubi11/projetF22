@@ -9,6 +9,8 @@
     <p><strong>Animal :</strong> {{ rapport.animal.prenom }}</p>
     <p><strong>Date :</strong> {{ rapport.date ? rapport.date|date('d/m/Y') : 'N/A' }}</p>
     <p><strong>Observations :</strong> {{ rapport.observations }}</p>
+    <p><strong>Commentaires sur l'Habitat :</strong> {{ rapport.habitatComment }}</p>
+
 
     <a href="{{ path('rapport_veterinaire_list') }}" class="btn btn-secondary">Retour à la liste</a>
 {% endblock %}
