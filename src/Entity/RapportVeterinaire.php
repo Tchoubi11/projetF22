@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RapportVeterinaireRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,9 +16,6 @@ class RapportVeterinaire
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: "text", nullable: true)]
-    private ?string $habitatComment = null; //colonne est spécifique à l'entité RapportVeterinaire,utilisée pour stocker des informations ou commentaires relatifs à l'habitat dans le contexte d'un rapport vétérinaire pour un animal particulier.
-
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
@@ -24,35 +23,21 @@ class RapportVeterinaire
     private ?string $detail = null;
 
     #[ORM\OneToOne(inversedBy: 'rapportVeterinaire', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)] // un rapport associé par animal
+    #[ORM\JoinColumn(nullable: false)]
     private ?Animal $animal = null;
-      
-     #[ORM\Column(type:"text", nullable:true)]
-     
+
+    #[ORM\Column(type: "text", nullable: true)]
     private ?string $observations = null;
 
-    public function getHabitatComment(): ?string
-    {
-    return $this->habitatComment;
-    }
+    #[ORM\Column(type: "text", nullable: true)]
+    private ?string $habitatComment = null;//colonne est spécifique à l'entité RapportVeterinaire utilisée pour un animal particulier.
 
-    public function setHabitatComment(?string $habitatComment): static
-    {
-    $this->habitatComment = $habitatComment;
+    #[ORM\OneToMany(targetEntity: AnimalFeeding::class, mappedBy: 'rapportVeterinaire', cascade: ['persist', 'remove'])]
+    private Collection $feedings;
 
-    return $this;
-    }
-    
-    public function getObservations(): ?string
+    public function __construct()
     {
-        return $this->observations;
-    }
-
-    
-    public function setObservations(?string $observations): self
-    {
-        $this->observations = $observations;
-        return $this;
+        $this->feedings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -92,6 +77,57 @@ class RapportVeterinaire
     public function setAnimal(?Animal $animal): static
     {
         $this->animal = $animal;
+
+        return $this;
+    }
+
+    public function getObservations(): ?string
+    {
+        return $this->observations;
+    }
+
+    public function setObservations(?string $observations): static
+    {
+        $this->observations = $observations;
+
+        return $this;
+    }
+
+    public function getHabitatComment(): ?string
+    {
+        return $this->habitatComment;
+    }
+
+    public function setHabitatComment(?string $habitatComment): static
+    {
+        $this->habitatComment = $habitatComment;
+
+        return $this;
+    }
+
+    public function getFeedings(): Collection
+    {
+        return $this->feedings;
+    }
+
+    public function addFeeding(AnimalFeeding $feeding): static
+    {
+        if (!$this->feedings->contains($feeding)) {
+            $this->feedings->add($feeding);
+            $feeding->setRapportVeterinaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeeding(AnimalFeeding $feeding): static
+    {
+        if ($this->feedings->removeElement($feeding)) {
+            // Set the owning side to null if the relationship is removed
+            if ($feeding->getRapportVeterinaire() === $this) {
+                $feeding->setRapportVeterinaire(null);
+            }
+        }
 
         return $this;
     }

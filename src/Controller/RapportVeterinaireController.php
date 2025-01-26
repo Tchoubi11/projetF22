@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 #[Route('/admin/rapport_veterinaire')]
@@ -43,6 +45,18 @@ class RapportVeterinaireController extends AbstractController
             ->add('animal', null, [
                 'choice_label' => 'prenom',
                 'label' => 'Animal',
+            ])
+            ->add('feedings', CollectionType::class, [
+                'entry_type' => TextType::class, // ou vous pouvez créer un type de formulaire spécifique pour l'alimentation
+                'entry_options' => ['label' => 'Nourriture'],
+                'allow_add' => true, // permet d'ajouter plusieurs alimentations
+                'allow_delete' => true, // permet de supprimer des alimentations
+                'by_reference' => false,
+            ])
+
+            ->add('habitatComment', TextareaType::class, [
+                'label' => 'Commentaires sur l\'habitat',
+                'required' => false,
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer le rapport',

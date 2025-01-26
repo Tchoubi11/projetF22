@@ -20,15 +20,14 @@
             </tr>
         </thead>
         <tbody>
-            {% for feeding in rapport.animal.feedings %}
+            {% for feeding in rapport.feedings %}
                 <tr>
-                    <td>{{ feeding.feedingTime|date('d/m/Y H:i') }}</td>
+                    <td>{{ feeding.date|date('d/m/Y H:i') }}</td>
                     <td>{{ feeding.food }}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-
 
     <a href="{{ path('rapport_veterinaire_list') }}" class="btn btn-secondary">Retour à la liste</a>
 {% endblock %}

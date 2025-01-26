@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class RapportVeterinaireType extends AbstractType
 {
@@ -29,6 +31,13 @@ class RapportVeterinaireType extends AbstractType
             ->add('habitatComment', TextareaType::class, [
                 'label' => 'Commentaires sur l\'habitat',
                 'required' => false,
+            ])
+            ->add('feedings', CollectionType::class, [
+                'entry_type' => TextType::class, // ou vous pouvez créer un type de formulaire spécifique pour l'alimentation
+                'entry_options' => ['label' => 'Nourriture'],
+                'allow_add' => true, // permet d'ajouter plusieurs alimentations
+                'allow_delete' => true, // permet de supprimer des alimentations
+                'by_reference' => false,
             ])
             ->add('observations', TextareaType::class, [
                 'label' => 'Observations',

@@ -6,8 +6,29 @@
     <h1>Créer un Nouveau Rapport Vétérinaire</h1>
 
     {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button class="btn btn-primary mt-3">Enregistrer</button>
+        {{ form_widget(form.date) }}
+        {{ form_widget(form.observations) }}
+        {{ form_widget(form.animal) }}
+        {{ form_widget(form.habitatComment) }}
+
+        <h2>Alimentation</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Nourriture</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for feeding in form.feedings %}
+                    <tr>
+                        <td>{{ form_widget(feeding) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {{ form_widget(form.save) }}
     {{ form_end(form) }}
 
     <a href="{{ path('rapport_veterinaire_list') }}" class="btn btn-secondary mt-3">Retour à la liste</a>

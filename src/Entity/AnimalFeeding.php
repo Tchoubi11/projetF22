@@ -12,19 +12,34 @@ class AnimalFeeding
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(targetEntity: RapportVeterinaire::class, inversedBy: 'feedings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?RapportVeterinaire $rapportVeterinaire = null;
+
     #[ORM\ManyToOne(targetEntity: Animal::class, inversedBy: 'feedings')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Animal $animal = null;
 
-    #[ORM\Column(type: "text")]
+    #[ORM\Column(type: 'text')]
     private ?string $food = null;
 
-    #[ORM\Column(type: "datetime")]
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $feedingTime = null;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getRapportVeterinaire(): ?RapportVeterinaire
+    {
+        return $this->rapportVeterinaire;
+    }
+
+    public function setRapportVeterinaire(?RapportVeterinaire $rapportVeterinaire): static
+    {
+        $this->rapportVeterinaire = $rapportVeterinaire;
+        return $this;
     }
 
     public function getAnimal(): ?Animal
@@ -35,7 +50,6 @@ class AnimalFeeding
     public function setAnimal(?Animal $animal): static
     {
         $this->animal = $animal;
-
         return $this;
     }
 
@@ -47,7 +61,6 @@ class AnimalFeeding
     public function setFood(string $food): static
     {
         $this->food = $food;
-
         return $this;
     }
 
@@ -59,7 +72,6 @@ class AnimalFeeding
     public function setFeedingTime(\DateTimeInterface $feedingTime): static
     {
         $this->feedingTime = $feedingTime;
-
         return $this;
     }
 }

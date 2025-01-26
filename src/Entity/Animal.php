@@ -10,8 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 class Animal
 {
-    //  Propriétés 
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -49,10 +47,8 @@ class Animal
     #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Alimentation::class, cascade: ['persist', 'remove'])]
     private Collection $alimentations;
 
-    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: AnimalFeeding::class)]
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: AnimalFeeding::class, cascade: ['persist', 'remove'])]
     private Collection $feedings;
-
-    //  Constructeur 
 
     public function __construct()
     {
@@ -60,15 +56,11 @@ class Animal
         $this->feedings = new ArrayCollection();
     }
 
-    //  Méthodes 
-
-    //  Getter et Setter pour ID 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    //  Getter et Setter pour Prenom 
     public function getPrenom(): ?string
     {
         return $this->prenom;
@@ -80,7 +72,6 @@ class Animal
         return $this;
     }
 
-    //  Getter et Setter pour Race 
     public function getRace(): ?Race
     {
         return $this->race;
@@ -92,7 +83,6 @@ class Animal
         return $this;
     }
 
-    //  Getter et Setter pour Image 
     public function getImage(): ?string
     {
         return $this->image;
@@ -104,7 +94,6 @@ class Animal
         return $this;
     }
 
-    //  Getter et Setter pour Habitat 
     public function getHabitat(): ?Habitat
     {
         return $this->habitat;
@@ -116,7 +105,6 @@ class Animal
         return $this;
     }
 
-    //  Getter et Setter pour Rapport Vétérinaire 
     public function getRapportVeterinaire(): ?RapportVeterinaire
     {
         return $this->rapportVeterinaire;
@@ -128,7 +116,6 @@ class Animal
         return $this;
     }
 
-    //  Getter et Setter pour Etat 
     public function getEtat(): ?string
     {
         return $this->etat;
@@ -140,7 +127,6 @@ class Animal
         return $this;
     }
 
-    //  Getter et Setter pour Poids 
     public function getPoids(): ?float
     {
         return $this->poids;
@@ -152,7 +138,6 @@ class Animal
         return $this;
     }
 
-    //  Getter et Setter pour Date de Naissance 
     public function getDateNaissance(): ?\DateTimeInterface
     {
         return $this->dateNaissance;
@@ -164,7 +149,6 @@ class Animal
         return $this;
     }
 
-    //  Gestion des Vues 
     public function getViews(): int
     {
         return $this->views;
@@ -181,7 +165,6 @@ class Animal
         $this->views++;
     }
 
-    // Gestion des Alimentations 
     public function getAlimentations(): Collection
     {
         return $this->alimentations;
@@ -193,7 +176,6 @@ class Animal
             $this->alimentations->add($alimentation);
             $alimentation->setAnimal($this);
         }
-
         return $this;
     }
 
@@ -204,13 +186,30 @@ class Animal
                 $alimentation->setAnimal(null);
             }
         }
-
         return $this;
     }
 
-    //  Gestion des Feedings 
     public function getFeedings(): Collection
     {
         return $this->feedings;
+    }
+
+    public function addFeeding(AnimalFeeding $feeding): static
+    {
+        if (!$this->feedings->contains($feeding)) {
+            $this->feedings->add($feeding);
+            $feeding->setAnimal($this);
+        }
+        return $this;
+    }
+
+    public function removeFeeding(AnimalFeeding $feeding): static
+    {
+        if ($this->feedings->removeElement($feeding)) {
+            if ($feeding->getAnimal() === $this) {
+                $feeding->setAnimal(null);
+            }
+        }
+        return $this;
     }
 }
