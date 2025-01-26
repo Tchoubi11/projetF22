@@ -15,6 +15,11 @@
                 <h2>{{ habitat.nom }}</h2>
             </a>
         </div>
+        
     {% endfor %}
 </div>
+<div class="home-link">
+    <a href="{{ path('app_home') }}" class="btn btn-secondary">Retour à l'accueil</a>
+</div>
+
 {% endblock %}
