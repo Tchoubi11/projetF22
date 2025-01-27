@@ -8,12 +8,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Bundle\SecurityBundle\Security; // Utilisation du service moderne Security
+use Symfony\Bundle\SecurityBundle\Security; 
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
-use Symfony\Component\Security\Http\SecurityRequestAttributes; // Import des nouvelles constantes
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class AppAuthenticator extends AbstractLoginFormAuthenticator
@@ -21,7 +21,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     use TargetPathTrait;
 
     private RouterInterface $router;
-    private Security $security; // Injection du service moderne Security
+    private Security $security;
 
     public function __construct(RouterInterface $router, Security $security)
     {
@@ -31,7 +31,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     protected function getLoginUrl(Request $request): string
     {
-        return $this->router->generate('app_login');
+        return $this->router->generate('app_login'); // Chemin vers la page de login
     }
 
     public function authenticate(Request $request): Passport
@@ -39,7 +39,6 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         $email = $request->request->get('email', '');
         $password = $request->request->get('password', '');
 
-        // Utilisation de SecurityRequestAttributes pour remplacer la constante dépréciée
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
         return new Passport(
@@ -50,22 +49,30 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $user = $this->security->getUser(); // Utilisation du service moderne Security pour obtenir l'utilisateur
-
-        // Redirection selon le rôle de l'utilisateur
+        $user = $this->security->getUser();
+    
+        // Vérification des rôles
         if (in_array('ROLE_ADMIN', $user->getRoles())) {
             return new RedirectResponse($this->router->generate('admin_dashboard'));
-        } elseif (in_array('ROLE_EMPLOYE', $user->getRoles()) || in_array('ROLE_VETERINAIRE', $user->getRoles())) {
-            return new RedirectResponse($this->router->generate('admin_service_index'));
+        } elseif (in_array('ROLE_VETERINAIRE', $user->getRoles())) {
+            return new RedirectResponse($this->router->generate('veterinaire_dashboard'));
+        } elseif (in_array('ROLE_EMPLOYE', $user->getRoles())) {
+            return new RedirectResponse($this->router->generate('employe_dashboard'));
         }
-
-        // Par défaut, retour à la page de connexion
-        return new RedirectResponse($this->router->generate('app_login'));
+    
+        // Gestion des utilisateurs avec des rôles non valides
+        $session = $request->getSession();
+        if ($session && $session instanceof \Symfony\Component\HttpFoundation\Session\Session) {
+            $session->getFlashBag()->add('error', 'Accès non autorisé.'); // Ajout du message flash
+        }
+    
+        return new RedirectResponse($this->router->generate('app_login')); // Redirection vers le login
     }
+    
+
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
-        // Utilisation de SecurityRequestAttributes pour remplacer la constante dépréciée
         $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
 
         return new RedirectResponse($this->getLoginUrl($request));
