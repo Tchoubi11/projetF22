@@ -44,7 +44,6 @@ security:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin/user, roles: ROLE_ADMIN }
-        - { path: ^/admin/service, roles: ROLE_EMPLOYE }
         - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/service, roles: [ROLE_EMPLOYE, ROLE_ADMIN] }
 
