@@ -11,8 +11,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use App\Form\AnimalFeedingType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use App\Entity\Animal;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 
 #[Route('/admin/rapport_veterinaire')]
 class RapportVeterinaireController extends AbstractController
@@ -29,11 +32,22 @@ class RapportVeterinaireController extends AbstractController
     }
 
     // Créer un nouveau rapport vétérinaire
-    #[Route('/new', name: 'rapport_veterinaire_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em): Response
+    // Créer un nouveau rapport vétérinaire pour un animal spécifique
+    #[Route('/new/{id}', name: 'rapport_veterinaire_new', methods: ['GET', 'POST'])]
+    public function new(int $id, Request $request, EntityManagerInterface $em): Response
     {
+        // Récupérer l'animal avec l'ID spécifié
+        $animal = $em->getRepository(Animal::class)->find($id);
+    
+        if (!$animal) {
+            throw $this->createNotFoundException('L\'animal n\'a pas été trouvé.');
+        }
+    
+        // Créer un nouveau rapport vétérinaire et lier l'animal au rapport
         $rapport = new RapportVeterinaire();
-
+        $rapport->setAnimal($animal);  // Lier l'animal au rapport vétérinaire
+    
+        // Créer le formulaire pour le rapport vétérinaire
         $form = $this->createFormBuilder($rapport)
             ->add('date', DateType::class, [
                 'widget' => 'single_text',
@@ -41,43 +55,56 @@ class RapportVeterinaireController extends AbstractController
             ])
             ->add('observations', TextareaType::class, [
                 'label' => 'Observations',
-            ])
-            ->add('animal', null, [
-                'choice_label' => 'prenom',
-                'label' => 'Animal',
+                'attr' => [
+            'placeholder' => 'Entrez vos observations ici', // Placeholder pour la zone de texte
+             ],
             ])
             ->add('feedings', CollectionType::class, [
-                'entry_type' => TextType::class, // ou vous pouvez créer un type de formulaire spécifique pour l'alimentation
-                'entry_options' => ['label' => 'Nourriture'],
-                'allow_add' => true, // permet d'ajouter plusieurs alimentations
-                'allow_delete' => true, // permet de supprimer des alimentations
+                'entry_type' => AnimalFeedingType::class, // Utilisation du formulaire pour AnimalFeeding
+                'allow_add' => true,
+                'allow_delete' => true,
                 'by_reference' => false,
             ])
-
+            
+            ->add('animal', EntityType::class, [
+                'class' => Animal::class,
+                'choice_label' => 'prenom',  // Affiche le nom de l'animal
+                'data' => $animal,         // Pré-sélectionner l'animal
+                      // Désactiver le champ pour qu'il ne soit pas modifiable
+            ])
             ->add('habitatComment', TextareaType::class, [
                 'label' => 'Commentaires sur l\'habitat',
-                'required' => false,
+           'attr' => [
+            'placeholder' => 'Commentaires sur l\'habitat (facultatif)', // Placeholder pour habitat comment
+            ],
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer le rapport',
             ])
             ->getForm();
-
+    
         $form->handleRequest($request);
-
+    
+        // Si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($rapport);
             $em->flush();
-
+    
+            // Message flash pour le succès
             $this->addFlash('success', 'Rapport vétérinaire créé avec succès.');
-
+    
+            // Rediriger vers la liste des rapports
             return $this->redirectToRoute('rapport_veterinaire_list');
         }
-
+    
+        // Rendre le formulaire et passer l'animal au template
         return $this->render('admin/rapport_veterinaire/new.html.twig', [
             'form' => $form->createView(),
+            'animal' => $animal,  // Passer l'animal au template pour le lien
         ]);
     }
+    
+
 
     // Afficher les détails d'un rapport vétérinaire
     #[Route('/{id}', name: 'rapport_veterinaire_show', methods: ['GET'])]

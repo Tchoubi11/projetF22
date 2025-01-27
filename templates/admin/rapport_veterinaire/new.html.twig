@@ -6,30 +6,92 @@
     <h1>Créer un Nouveau Rapport Vétérinaire</h1>
 
     {{ form_start(form) }}
-        {{ form_widget(form.date) }}
-        {{ form_widget(form.observations) }}
-        {{ form_widget(form.animal) }}
-        {{ form_widget(form.habitatComment) }}
+        <!-- Champ pour la date -->
+        <div>
+            <label for="{{ form.date.vars.id }}">Date du rapport :</label>
+            {{ form_widget(form.date) }}
+        </div>
+
+        <!-- Champ pour les observations -->
+        <div>
+            <label for="{{ form.observations.vars.id }}">Observations :</label>
+            {{ form_widget(form.observations) }}
+        </div>
+
+        <!-- Champ pour sélectionner l'animal -->
+        <div>
+            <label for="{{ form.animal.vars.id }}">Sélectionner un animal :</label>
+            {{ form_widget(form.animal) }}
+        </div>
+
+        <!-- Champ pour les commentaires sur l'habitat -->
+        <div>
+            <label for="{{ form.habitatComment.vars.id }}">Commentaires sur l'habitat :</label>
+            {{ form_widget(form.habitatComment) }}
+        </div>
 
         <h2>Alimentation</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Nourriture</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for feeding in form.feedings %}
-                    <tr>
-                        <td>{{ form_widget(feeding) }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Nourriture</th>
+        </tr>
+    </thead>
+    <tbody data-prototype="{{ form_widget(form.feedings.vars.prototype)|e('html_attr') }}">
+        {% for feeding in form.feedings %}
+            <tr>
+                <td>{{ form_widget(feeding.date) }}</td>
+                <td>{{ form_widget(feeding.nourriture) }}</td>
+                <td>
+                    <button class="btn btn-danger remove-item" type="button">Supprimer</button>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
-        {{ form_widget(form.save) }}
-    {{ form_end(form) }}
+<button type="button" class="btn btn-success" id="add_feeding">Ajouter un aliment</button>
 
-    <a href="{{ path('rapport_veterinaire_list') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+<!-- Bouton pour enregistrer le rapport -->
+<div>
+    {{ form_widget(form.save) }}
+</div>
+{{ form_end(form) }}
+<a href="{{ path('rapport_veterinaire_list') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const collectionHolder = document.querySelector('tbody[data-prototype]');
+        const addButton = document.getElementById('add_feeding');
+
+        // Ajouter un élément
+        addButton.addEventListener('click', function () {
+            const prototype = collectionHolder.dataset.prototype;
+            const index = collectionHolder.children.length;
+            const newForm = prototype.replace(/__name__/g, index);
+
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = newForm + `
+                <td>
+                    <button class="btn btn-danger remove-item" type="button">Supprimer</button>
+                </td>
+            `;
+
+            collectionHolder.appendChild(newRow);
+            addRemoveListeners(newRow);
+        });
+
+        // Supprimer un élément
+        function addRemoveListeners(row) {
+            row.querySelector('.remove-item').addEventListener('click', function () {
+                row.remove();
+            });
+        }
+
+        // Appliquer les écouteurs sur les éléments existants
+        collectionHolder.querySelectorAll('tr').forEach(addRemoveListeners);
+    });
+</script>
+
 {% endblock %}

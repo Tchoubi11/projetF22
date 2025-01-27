@@ -20,12 +20,18 @@
             </tr>
         </thead>
         <tbody>
-            {% for feeding in rapport.feedings %}
+            {% if rapport.feedings is not empty %}
+                {% for feeding in rapport.feedings %}
+                    <tr>
+                        <td>{{ feeding.date|date('d/m/Y H:i') }}</td>
+                        <td>{{ feeding.food }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
                 <tr>
-                    <td>{{ feeding.date|date('d/m/Y H:i') }}</td>
-                    <td>{{ feeding.food }}</td>
+                    <td colspan="2">Aucune donnée d'alimentation disponible.</td>
                 </tr>
-            {% endfor %}
+            {% endif %}
         </tbody>
     </table>
 

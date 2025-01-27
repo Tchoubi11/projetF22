@@ -29,8 +29,11 @@ class Animal
     #[ORM\JoinColumn(nullable: false)]
     private ?Habitat $habitat = null;
 
-    #[ORM\OneToOne(mappedBy: 'animal', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'animal', targetEntity: RapportVeterinaire::class)]
     private ?RapportVeterinaire $rapportVeterinaire = null;
+    
+
+
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $etat = null;
@@ -112,6 +115,11 @@ class Animal
 
     public function setRapportVeterinaire(?RapportVeterinaire $rapportVeterinaire): static
     {
+        // Empêche une relation circulaire
+        if ($rapportVeterinaire && $rapportVeterinaire->getAnimal() !== $this) {
+            $rapportVeterinaire->setAnimal($this);
+        }
+
         $this->rapportVeterinaire = $rapportVeterinaire;
         return $this;
     }
