@@ -287,7 +287,7 @@ class HomeController extends AbstractController
     }
 
     #[Route('/admin/user/notify', name: 'admin_user_notify')]
-    public function notifyUser(User $user, MailerInterface $mailer): void
+    public function notifyUser(User $user, MailerInterface $mailer): Response
     {
         $email = (new Email())
             ->from('admin@example.com')
@@ -296,5 +296,9 @@ class HomeController extends AbstractController
             ->html('<p>Votre compte a été créé. Veuillez contacter un administrateur pour obtenir votre mot de passe.</p>');
 
         $mailer->send($email);
+
+
+    $this->addFlash('success', 'Notification envoyée à l\'utilisateur.');
+    return $this->redirectToRoute('admin_dashboard');
     }
 }
