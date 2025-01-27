@@ -17,7 +17,7 @@ use App\Entity\Animal;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 
-#[Route('/admin/rapport_veterinaire')]
+#[Route('/rapport_veterinaire')]
 class RapportVeterinaireController extends AbstractController
 {
     // Liste des rapports vétérinaires
@@ -29,7 +29,7 @@ public function list(EntityManagerInterface $em): Response
     // Exemple : Récupérer un animal spécifique (par exemple, le premier animal trouvé)
     $animal = $em->getRepository(Animal::class)->findOneBy([]);
 
-    return $this->render('admin/rapport_veterinaire/list.html.twig', [
+    return $this->render('/rapport_veterinaire/list.html.twig', [
         'rapports' => $rapports,
         'animal' => $animal, // Passez l'animal au template
     ]);
@@ -99,7 +99,7 @@ public function new(int $id, Request $request, EntityManagerInterface $em): Resp
         return $this->redirectToRoute('rapport_veterinaire_show', ['id' => $rapport->getId()]);
     }
 
-    return $this->render('admin/rapport_veterinaire/new.html.twig', [
+    return $this->render('/rapport_veterinaire/new.html.twig', [
         'form' => $form->createView(),
         'animal' => $animal,
     ]);
@@ -115,7 +115,7 @@ public function new(int $id, Request $request, EntityManagerInterface $em): Resp
     #[Route('/{id}', name: 'rapport_veterinaire_show', methods: ['GET'])]
 public function show(RapportVeterinaire $rapport): Response
 {
-    return $this->render('admin/rapport_veterinaire/show.html.twig', [
+    return $this->render('/rapport_veterinaire/show.html.twig', [
         'rapport' => $rapport,
     ]);
 }

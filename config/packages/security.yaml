@@ -27,6 +27,9 @@ security:
                 password_parameter: password
                 default_target_path: admin_service_index
                 always_use_default_target_path: true    
+
+            entry_point: form_login 
+
             logout:
                 path: app_logout
                 target: app_home
@@ -34,7 +37,6 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week
                 path: /
-            
 
     access_control: 
         - { path: ^/admin, roles: ROLE_ADMIN }

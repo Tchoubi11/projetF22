@@ -1,30 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Connexion - Zoo Arcadia{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h2 class="text-center">Connexion</h2>
-    <form action="{{ path('app_login') }}" method="post">
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-    
-        <div class="mb-3">
-            <label for="username" class="form-label">Nom d'utilisateur</label>
-            <input type="text" class="form-control" id="username" name="_username" required>
-        </div>
-    
-        <div class="mb-3">
-            <label for="password" class="form-label">Mot de Passe</label>
-            <input type="password" class="form-control" id="password" name="_password" required>
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Se Connecter</button>
-    
+    <h1>Connexion</h1>
+
+    <form method="post">
         {% if error %}
             <div class="alert alert-danger">
                 {{ error.messageKey|trans(error.messageData, 'security') }}
             </div>
         {% endif %}
+
+        <div>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" value="{{ last_username }}" required>
+        </div>
+
+        <div>
+            <label for="password">Mot de passe</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+
+        <button type="submit">Se connecter</button>
     </form>
-    
-</div>
 {% endblock %}
