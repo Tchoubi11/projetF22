@@ -39,7 +39,7 @@
             {% for feeding in form.feedings %}
                 <tr>
                     <td>{{ form_widget(feeding.feedingTime) }}</td>
-                    <td>{{ form_widget(feeding.nourriture) }}</td>
+                    <td>{{ form_widget(feeding.food) }}</td>
                     <td>
                         <button class="btn btn-danger remove-item" type="button">Supprimer</button>
                     </td>

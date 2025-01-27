@@ -21,7 +21,7 @@ class AnimalFeedingType extends AbstractType
             'required' => false,  // Champ optionnel
             'data' => $feedingTime ?? new \DateTime(), // Valeur par défaut si feedingTime est null
         ])
-            ->add('nourriture', TextType::class, [
+            ->add('food', TextType::class, [
                 'label' => 'Nourriture',
                 'required' => true,
             ]);
