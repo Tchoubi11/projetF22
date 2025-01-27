@@ -19,8 +19,9 @@ class RapportVeterinaire
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)] // Passez à TEXT pour accepter des détails plus longs
     private ?string $detail = null;
+    
     #[ORM\OneToOne(inversedBy: 'rapportVeterinaire', targetEntity: Animal::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Animal $animal = null;
@@ -29,12 +30,9 @@ class RapportVeterinaire
 
 
     #[ORM\Column(type: "text", nullable: true)]
-    private ?string $observations = null;
-
-    #[ORM\Column(type: "text", nullable: true)]
     private ?string $habitatComment = null;//colonne est spécifique à l'entité RapportVeterinaire utilisée pour un animal particulier.
 
-    #[ORM\OneToMany(targetEntity: AnimalFeeding::class, mappedBy: 'rapportVeterinaire', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: AnimalFeeding::class, mappedBy: 'rapport', cascade: ['persist', 'remove'])]
     private Collection $feedings;
 
     public function __construct()
@@ -82,17 +80,7 @@ class RapportVeterinaire
         return $this;
     }
 
-    public function getObservations(): ?string
-    {
-        return $this->observations;
-    }
-
-    public function setObservations(?string $observations): static
-    {
-        $this->observations = $observations;
-
-        return $this;
-    }
+   
 
     public function getHabitatComment(): ?string
     {

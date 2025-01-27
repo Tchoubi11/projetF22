@@ -4,15 +4,15 @@ namespace App\Form;
 
 use App\Entity\RapportVeterinaire;
 use App\Entity\Animal;
+use App\Entity\AnimalFeeding;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RapportVeterinaireType extends AbstractType
 {
@@ -21,10 +21,10 @@ class RapportVeterinaireType extends AbstractType
         $builder
             ->add('animal', EntityType::class, [
                 'class' => Animal::class,
-                'choice_label' => 'prenom', 
+                'choice_label' => 'prenom',
                 'label' => 'Animal',
             ])
-            ->add('date', DateTimeType::class, [
+            ->add('date', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'Date du rapport',
             ])
@@ -33,14 +33,15 @@ class RapportVeterinaireType extends AbstractType
                 'required' => false,
             ])
             ->add('feedings', CollectionType::class, [
-                'entry_type' => TextType::class, // ou vous pouvez créer un type de formulaire spécifique pour l'alimentation
-                'entry_options' => ['label' => 'Nourriture'],
-                'allow_add' => true, // permet d'ajouter plusieurs alimentations
-                'allow_delete' => true, // permet de supprimer des alimentations
+                'entry_type' => AnimalFeedingType::class, // Utilisez un formulaire spécifique pour `AnimalFeeding`
+                'allow_add' => true,
+                'allow_delete' => true,
                 'by_reference' => false,
+                'label' => 'Alimentation',
             ])
-            ->add('observations', TextareaType::class, [
-                'label' => 'Observations',
+            ->add('detail', TextareaType::class, [
+                'label' => 'Détails',
+                'required' => true,
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer le rapport',

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 class AnimalFeeding
@@ -13,17 +14,19 @@ class AnimalFeeding
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: RapportVeterinaire::class, inversedBy: 'feedings')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?RapportVeterinaire $rapportVeterinaire = null;
+    #[ORM\JoinColumn(name: 'rapport_veterinaire_id', referencedColumnName: 'id', nullable: false)]
+    private ?RapportVeterinaire $rapport = null;
+
 
     #[ORM\ManyToOne(targetEntity: Animal::class, inversedBy: 'feedings')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Animal $animal = null;
 
-    #[ORM\Column(type: 'text')]
+
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $food = null;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $feedingTime = null;
 
     public function getId(): ?int
@@ -33,12 +36,12 @@ class AnimalFeeding
 
     public function getRapportVeterinaire(): ?RapportVeterinaire
     {
-        return $this->rapportVeterinaire;
+        return $this->rapport;
     }
 
-    public function setRapportVeterinaire(?RapportVeterinaire $rapportVeterinaire): static
+    public function setRapportVeterinaire(?RapportVeterinaire $rapport): self
     {
-        $this->rapportVeterinaire = $rapportVeterinaire;
+        $this->rapport = $rapport;
         return $this;
     }
 
@@ -47,7 +50,7 @@ class AnimalFeeding
         return $this->animal;
     }
 
-    public function setAnimal(?Animal $animal): static
+    public function setAnimal(?Animal $animal): self
     {
         $this->animal = $animal;
         return $this;
@@ -58,7 +61,7 @@ class AnimalFeeding
         return $this->food;
     }
 
-    public function setFood(string $food): static
+    public function setFood(string $food): self
     {
         $this->food = $food;
         return $this;
@@ -69,7 +72,7 @@ class AnimalFeeding
         return $this->feedingTime;
     }
 
-    public function setFeedingTime(\DateTimeInterface $feedingTime): static
+    public function setFeedingTime(?\DateTimeInterface $feedingTime): self
     {
         $this->feedingTime = $feedingTime;
         return $this;

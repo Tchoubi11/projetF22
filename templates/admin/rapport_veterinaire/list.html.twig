@@ -1,39 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des rapports vétérinaires{% endblock %}
+{% block title %}Liste des Rapports Vétérinaires{% endblock %}
 
 {% block body %}
-<h1>Liste des rapports vétérinaires</h1>
+<h1>Liste des Rapports Vétérinaires</h1>
 
-<table>
+{% if animal %}
+    <a href="{{ path('rapport_veterinaire_new', { id: animal.id }) }}" class="btn btn-primary">Créer un nouveau rapport</a>
+{% else %}
+    <p class="text-danger">Aucun animal sélectionné. Impossible de créer un rapport.</p>
+{% endif %}
+
+<table class="table">
     <thead>
         <tr>
             <th>ID</th>
+            <th>Nom de l'Animal</th>
             <th>Date</th>
-            <th>Animal</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for rapport in rapports %}
-        <tr>
-            <td>{{ rapport.id }}</td>
-            <td>{{ rapport.date|date('Y-m-d') }}</td>
-            <td>{{ rapport.animal.prenom }}</td>
-            <td>
-                <a href="{{ path('rapport_veterinaire_show', {id: rapport.id}) }}">Voir</a>
-                <form action="{{ path('rapport_veterinaire_delete', {id: rapport.id}) }}" method="post" style="display:inline;">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ rapport.id) }}">
-                    <button type="submit">Supprimer</button>
-                </form>
-            </td>
-        </tr>
+            <tr>
+                <td>{{ rapport.id }}</td>
+                <td>{{ rapport.animal ? rapport.animal.prenom : 'Non spécifié' }}</td>
+                <td>{{ rapport.date|date('d/m/Y') }}</td>
+                <td>
+                    <a href="{{ path('rapport_veterinaire_show', { id: rapport.id }) }}" class="btn btn-info btn-sm">Voir</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Aucun rapport vétérinaire enregistré.</td>
+            </tr>
         {% endfor %}
     </tbody>
 </table>
-<form method="post" action="{{ path('app_logout') }}">
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
-    <button type="submit" class="btn btn-danger">Se déconnecter</button>
-</form>
-
 {% endblock %}
