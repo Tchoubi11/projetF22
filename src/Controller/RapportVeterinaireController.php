@@ -66,6 +66,10 @@ public function new(int $id, Request $request, EntityManagerInterface $em): Resp
             'label' => 'Commentaires sur l\'habitat',
             'required' => false,
         ])
+        ->add('detail', TextareaType::class, [
+            'label' => 'Détails',
+            'required' => true,
+        ])
         ->add('feedings', CollectionType::class, [
             'entry_type' => AnimalFeedingType::class,
             'allow_add' => true,
