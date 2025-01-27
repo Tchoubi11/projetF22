@@ -3,3 +3,14 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+admin_dashboard:
+    path: /admin/dashboard
+    controller: App\Controller\AdminController::index
+
+veterinaire_dashboard:
+    path: /veterinaire/dashboard
+    controller: App\Controller\VeterinaireController::index
+
+employe_dashboard:
+    path: /employe/dashboard
+    controller: App\Controller\EmployeController::index
