@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord - Vétérinaire{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center">Tableau de bord - Vétérinaire</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Liste des animaux</h5>
+                    <p class="card-text">Consultez et mettez à jour les informations médicales des animaux.</p>
+                    <a href="{{ path('veterinaire_animals') }}" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Rapports vétérinaires</h5>
+                    <p class="card-text">Créer et gérer les rapports vétérinaires pour les animaux.</p>
+                    <a href="{{ path('veterinaire_reports') }}" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

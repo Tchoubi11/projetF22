@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord - Employé{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center">Tableau de bord - Employé</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gérer les avis</h5>
+                    <p class="card-text">Consultez, validez ou supprimez les avis des visiteurs.</p>
+                    <a href="{{ path('employe_avis') }}" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Tâches quotidiennes</h5>
+                    <p class="card-text">Planifiez et exécutez vos tâches quotidiennes dans le zoo.</p>
+                    <a href="{{ path('employe_tasks') }}" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

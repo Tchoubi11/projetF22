@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord - Admin{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center">Tableau de bord - Admin</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gérer les utilisateurs</h5>
+                    <p class="card-text">Ajouter, modifier ou supprimer des utilisateurs.</p>
+                    <a href="{{ path('admin_user_list') }}" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Voir les rapports</h5>
+                    <p class="card-text">Consultez les rapports et statistiques du zoo.</p>
+                    <a href="{{ path('admin_reports') }}" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Paramètres</h5>
+                    <p class="card-text">Configurer les paramètres généraux de l'application.</p>
+                    <a href="{{ path('admin_settings') }}" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
