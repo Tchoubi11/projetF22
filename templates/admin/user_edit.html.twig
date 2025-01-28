@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier les rôles de {{ user.username }}{% endblock %}
+
+{% block body %}
+    <h1>Modifier les rôles de l'utilisateur {{ user.username }}</h1>
+
+    {# Affichage des messages flash pour le succès ou l'erreur #}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    {# Formulaire de modification des rôles #}
+    {{ form_start(form) }}
+        {{ form_row(form.roles) }}
+        <button class="btn btn-primary mt-3">Mettre à jour les rôles</button>
+    {{ form_end(form) }}
+
+    {# Lien de retour vers la liste des utilisateurs #}
+    <a href="{{ path('user_list') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+{% endblock %}

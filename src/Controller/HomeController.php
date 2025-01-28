@@ -304,7 +304,67 @@ class HomeController extends AbstractController
             'user' => $user,  // Passer l'utilisateur au template
         ]);
     }
+    #[Route('/admin/users', name: 'user_list')]
+    public function listUsers(EntityManagerInterface $em): Response
+    {
+        // Récupérer tous les utilisateurs
+        $users = $em->getRepository(User::class)->findAll();
     
+        // Passer les utilisateurs au template
+        return $this->render('admin/user_list.html.twig', [
+            'users' => $users,  // Passer la liste des utilisateurs
+        ]);
+    }
+    #[Route('/edit/{id}', name: 'user_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, User $user, EntityManagerInterface $em): Response
+    {
+        // Vérifie si on tente de modifier un compte administrateur (avant de modifier quoi que ce soit)
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
+            throw $this->createAccessDeniedException('Impossible de modifier un compte Administrateur.');
+        }
+    
+        // Crée le formulaire pour modifier les rôles de l'utilisateur
+        $form = $this->createFormBuilder($user)
+            ->add('roles', ChoiceType::class, [
+                'choices' => [
+                    'Employé' => 'ROLE_EMPLOYE',
+                    'Vétérinaire' => 'ROLE_VETERINAIRE',
+                ],
+                'expanded' => false,
+                'multiple' => true,
+                'label' => 'Rôles',
+            ])
+            ->getForm();
+    
+        $form->handleRequest($request);
+    
+        // Vérifie si le formulaire est soumis et valide
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Vérifie à nouveau si le rôle admin est assigné dans les données soumises
+            if (in_array('ROLE_ADMIN', $user->getRoles())) {
+                throw $this->createAccessDeniedException('Impossible d\'attribuer le rôle Administrateur.');
+            }
+    
+            // Sauvegarde les modifications dans la base de données
+            $em->persist($user);
+            $em->flush();
+    
+            // Ajoute un message flash pour informer du succès de l'opération
+            $this->addFlash('success', 'Les rôles de l\'utilisateur ont été mis à jour avec succès.');
+    
+            // Redirige vers la liste des utilisateurs après la mise à jour
+            return $this->redirectToRoute('user_list');
+        }
+    
+        // Retourne la vue avec le formulaire et l'utilisateur
+        return $this->render('admin/user_edit.html.twig', [  // Chemin corrigé pour le template
+            'form' => $form->createView(),
+            'user' => $user,
+        ]);
+    }
+    
+
+        
 
     #[Route('/admin/user/notify/{id}', name: 'admin_user_notify')]
      public function notifyUser(User $user, MailerInterface $mailer): Response
