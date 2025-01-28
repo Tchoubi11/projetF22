@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Modifier les rôles de l'utilisateur {{ user.username }}</h1>
 
-    {# Affichage des messages flash pour le succès ou l'erreur #}
+    
     {% for label, messages in app.flashes %}
         <div class="alert alert-{{ label }}">
             {% for message in messages %}

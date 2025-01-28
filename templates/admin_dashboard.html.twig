@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h1 class="text-center">Tableau de bord - Admin</h1>
+    <h1 class="text-center">Tableau de bord - Administrateur</h1>
     
     <div class="row mt-4">
         <div class="col-md-4">
@@ -12,7 +12,8 @@
                 <div class="card-body">
                     <h5 class="card-title">Gérer les utilisateurs</h5>
                     <p class="card-text">Ajouter, modifier ou supprimer des utilisateurs.</p>
-                    <a href="{{ path('admin_user_create') }}" class="btn btn-primary">Créer un utilisateur</a>  <!-- Lien pour créer un utilisateur -->
+                    <a href="{{ path('admin_user_create') }}" class="btn btn-primary">Créer un utilisateur</a>  
+                    <a href="{{ path('admin_user_list') }}" class="btn btn-secondary mt-2">Voir les utilisateurs</a>  
                 </div>
             </div>
         </div>
@@ -38,6 +39,7 @@
         </div>
     </div>
 </div>
+
 <form action="{{ path('app_logout') }}" method="post">
     <button type="submit" class="btn btn-danger">Se déconnecter</button>
 </form>

@@ -19,7 +19,8 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use App\Repository\UserRepository;
 
 class HomeController extends AbstractController
 {
@@ -265,14 +266,16 @@ class HomeController extends AbstractController
     }
 
     #[Route('/admin/user/create', name: 'admin_user_create')]
-    public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher, MailerInterface $mailer): Response
     {
         $user = new User();
     
-        // Création du formulaire
+        // Création du formulaire pour l'utilisateur avec nom et prénom
         $form = $this->createFormBuilder($user)
-            ->add('username', TextType::class)
-            ->add('password', PasswordType::class)
+            ->add('username', EmailType::class, [
+                'required' => false,  // Rendre ce champ optionnel
+            ])
+            ->add('password', PasswordType::class)  // Mot de passe
             ->add('roles', ChoiceType::class, [
                 'choices' => [
                     'Employé' => 'ROLE_EMPLOYE',
@@ -281,103 +284,139 @@ class HomeController extends AbstractController
                 'expanded' => false,
                 'multiple' => true,
             ])
+            ->add('nom', TextType::class, [
+                'required' => true,  // Le champ nom est obligatoire
+            ])
+            ->add('prenom', TextType::class, [
+                'required' => true,  // Le champ prénom est obligatoire
+            ])
+            ->add('email', EmailType::class, [
+                'required' => true,  // Le champ email est obligatoire
+            ])
             ->getForm();
     
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
+            // Vérifier si l'email est renseigné, sinon utiliser le username
+            if (!$user->getEmail()) {
+                $this->addFlash('error', 'L\'email est obligatoire.');
+                return $this->redirectToRoute('admin_user_create');
+            }
+    
+            // Si le username est vide, on le remplit avec l'email
+            if (!$user->getUsername()) {
+                $user->setUsername($user->getEmail());
+            }
+    
+            // Hash du mot de passe pour le sécuriser avant de l'enregistrer
             $user->setPassword(
                 $passwordHasher->hashPassword($user, $user->getPassword())
             );
     
+            // Sauvegarde de l'utilisateur dans la base de données
             $this->entityManager->persist($user);
             $this->entityManager->flush();
+    
+            // Appel de la méthode pour envoyer un mail de notification
+            $this->notifyUser($user, $mailer);
     
             $this->addFlash('success', 'Utilisateur créé avec succès.');
     
             return $this->redirectToRoute('admin_dashboard');
         }
     
-        // Passer l'objet 'user' en plus du formulaire au template
+        // Ajout de la variable "user" à la vue
         return $this->render('admin/user_create.html.twig', [
             'form' => $form->createView(),
-            'user' => $user,  // Passer l'utilisateur au template
+            'user' => $user,  // Passer l'objet user à la vue
         ]);
     }
-    #[Route('/admin/users', name: 'user_list')]
-    public function listUsers(EntityManagerInterface $em): Response
-    {
-        // Récupérer tous les utilisateurs
-        $users = $em->getRepository(User::class)->findAll();
     
-        // Passer les utilisateurs au template
+
+    
+
+#[Route('/edit/{id}', name: 'user_edit', methods: ['GET', 'POST'])]
+public function edit(Request $request, User $user, EntityManagerInterface $em): Response
+{
+    // Vérifie si on tente de modifier un compte administrateur (avant de modifier quoi que ce soit)
+    if (in_array('ROLE_ADMIN', $user->getRoles())) {
+        throw $this->createAccessDeniedException('Impossible de modifier un compte Administrateur.');
+    }
+
+    // Crée le formulaire pour modifier les rôles de l'utilisateur
+    $form = $this->createFormBuilder($user)
+        ->add('username', EmailType::class, [
+            'required' => false, // Rendre ce champ optionnel
+        ])
+        ->add('password', PasswordType::class)
+        ->add('roles', ChoiceType::class, [
+            'choices' => [
+                'Employé' => 'ROLE_EMPLOYE',
+                'Vétérinaire' => 'ROLE_VETERINAIRE',
+            ],
+            'expanded' => false,
+            'multiple' => true,
+        ])
+        ->add('nom', TextType::class)
+        ->add('prenom', TextType::class)
+        ->add('email', EmailType::class)
+        ->getForm();
+
+    $form->handleRequest($request);
+
+    // Vérifie si le formulaire est soumis et valide
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Si le username est vide, on le remplit avec l'email
+        if (!$user->getUsername()) {
+            $user->setUsername($user->getEmail());
+        }
+
+        // Sauvegarde les modifications dans la base de données
+        $em->persist($user);
+        $em->flush();
+
+        // Ajoute un message flash pour informer du succès de l'opération
+        $this->addFlash('success', 'Les rôles de l\'utilisateur ont été mis à jour avec succès.');
+
+        // Redirige vers la liste des utilisateurs après la mise à jour
+        return $this->redirectToRoute('user_list');
+    }
+
+    // Retourne la vue avec le formulaire et l'utilisateur
+    return $this->render('admin/user_edit.html.twig', [  // Chemin corrigé pour le template
+        'form' => $form->createView(),
+        'user' => $user,
+    ]);
+}
+
+    // Route pour afficher la liste des utilisateurs
+    #[Route('/admin/users', name: 'admin_user_list')]
+    public function listUsers(UserRepository $userRepository): Response
+    {
+        // Récupérer tous les utilisateurs depuis la base de données
+        $users = $userRepository->findAll();
+
+        // Afficher la vue avec les utilisateurs
         return $this->render('admin/user_list.html.twig', [
-            'users' => $users,  // Passer la liste des utilisateurs
+            'users' => $users,
         ]);
     }
-    #[Route('/edit/{id}', name: 'user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, EntityManagerInterface $em): Response
-    {
-        // Vérifie si on tente de modifier un compte administrateur (avant de modifier quoi que ce soit)
-        if (in_array('ROLE_ADMIN', $user->getRoles())) {
-            throw $this->createAccessDeniedException('Impossible de modifier un compte Administrateur.');
-        }
-    
-        // Crée le formulaire pour modifier les rôles de l'utilisateur
-        $form = $this->createFormBuilder($user)
-            ->add('roles', ChoiceType::class, [
-                'choices' => [
-                    'Employé' => 'ROLE_EMPLOYE',
-                    'Vétérinaire' => 'ROLE_VETERINAIRE',
-                ],
-                'expanded' => false,
-                'multiple' => true,
-                'label' => 'Rôles',
-            ])
-            ->getForm();
-    
-        $form->handleRequest($request);
-    
-        // Vérifie si le formulaire est soumis et valide
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Vérifie à nouveau si le rôle admin est assigné dans les données soumises
-            if (in_array('ROLE_ADMIN', $user->getRoles())) {
-                throw $this->createAccessDeniedException('Impossible d\'attribuer le rôle Administrateur.');
-            }
-    
-            // Sauvegarde les modifications dans la base de données
-            $em->persist($user);
-            $em->flush();
-    
-            // Ajoute un message flash pour informer du succès de l'opération
-            $this->addFlash('success', 'Les rôles de l\'utilisateur ont été mis à jour avec succès.');
-    
-            // Redirige vers la liste des utilisateurs après la mise à jour
-            return $this->redirectToRoute('user_list');
-        }
-    
-        // Retourne la vue avec le formulaire et l'utilisateur
-        return $this->render('admin/user_edit.html.twig', [  // Chemin corrigé pour le template
-            'form' => $form->createView(),
-            'user' => $user,
-        ]);
-    }
-    
 
         
 
     #[Route('/admin/user/notify/{id}', name: 'admin_user_notify')]
-     public function notifyUser(User $user, MailerInterface $mailer): Response
-     {
-    // Création de l'email avec l'email dynamique de l'utilisateur
+public function notifyUser(User $user, MailerInterface $mailer): Response
+{
+    // Création de l'email
     $email = (new Email())
-        ->from('josé@aecadia.com')  // Adresse de l'expéditeur
-        ->to($user->getEmail())     // Utilisation de l'email dynamique de l'utilisateur
+        ->from('noreply@tondomaine.com')  // Adresse de l'expéditeur
+        ->to($user->getEmail())            // Email dynamique de l'utilisateur
         ->subject('Votre compte a été créé')
         ->html(
-            '<p>Bonjour ' . $user->getPrenom() . ' ' . $user->getNom() . ',</p>' .  // Ajout du nom et prénom de l'utilisateur
-            '<p>Votre compte a été créé avec succès. Voici votre nom d\'utilisateur :</p>' .
-            '<p><strong>' . $user->getUsername() . '</strong></p>' .   // Affichage du username
+            '<p>Bonjour ' . $user->getPrenom() . ' ' . $user->getNom() . ',</p>' .  
+            '<p>Votre compte a été créé avec succès. Voici votre nom d\'utilisateur :</p>' . 
+            '<p><strong>' . $user->getEmail() . '</strong></p>' .  // Affichage de l'email comme nom d'utilisateur
             '<p>Veuillez contacter un administrateur pour obtenir votre mot de passe.</p>'
         );
 
@@ -390,5 +429,6 @@ class HomeController extends AbstractController
     // Redirection vers le tableau de bord administrateur
     return $this->redirectToRoute('admin_dashboard');
 }
+
 
 }

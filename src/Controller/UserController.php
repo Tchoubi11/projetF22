@@ -13,62 +13,63 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 #[Route('/admin/user')]
 class UserController extends AbstractController
 {
-    #[Route('/edit/{id}', name: 'user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, EntityManagerInterface $em): Response
-    {
-        // Vérifie si on tente de modifier un compte administrateur
-        if (in_array('ROLE_ADMIN', $user->getRoles())) {
-            throw $this->createAccessDeniedException('Impossible de modifier un compte Administrateur.');
-        }
+    // #[Route('/edit/{id}', name: 'user_edit', methods: ['GET', 'POST'])]
+    // public function edit(Request $request, User $user, EntityManagerInterface $em): Response
+    // {
+    //     // Vérifie si on tente de modifier un compte administrateur
+    //     if (in_array('ROLE_ADMIN', $user->getRoles())) {
+    //         throw $this->createAccessDeniedException('Impossible de modifier un compte Administrateur.');
+    //     }
 
-        // Crée le formulaire pour modifier les rôles de l'utilisateur
-        $form = $this->createFormBuilder($user)
-            ->add('roles', ChoiceType::class, [
-                'choices' => [
-                    'Employé' => 'ROLE_EMPLOYE',
-                    'Vétérinaire' => 'ROLE_VETERINAIRE',
-                ],
-                'expanded' => false,
-                'multiple' => true,
-                'label' => 'Rôles',
-            ])
-            ->getForm();
+    //     // Crée le formulaire pour modifier les rôles de l'utilisateur
+    //     $form = $this->createFormBuilder($user)
+    //         ->add('roles', ChoiceType::class, [
+    //             'choices' => [
+    //                 'Employé' => 'ROLE_EMPLOYE',
+    //                 'Vétérinaire' => 'ROLE_VETERINAIRE',
+    //             ],
+    //             'expanded' => false,
+    //             'multiple' => true,
+    //             'label' => 'Rôles',
+    //         ])
+    //         ->getForm();
 
-        $form->handleRequest($request);
+    //     $form->handleRequest($request);
 
-        // Vérifie si le formulaire est soumis et valide
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Vérifie à nouveau si le rôle admin est assigné dans les données soumises
-            if (in_array('ROLE_ADMIN', $user->getRoles())) {
-                throw $this->createAccessDeniedException('Impossible d\'attribuer le rôle Administrateur.');
-            }
+    //     // Vérifie si le formulaire est soumis et valide
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         // Vérifie à nouveau si le rôle admin est assigné dans les données soumises
+    //         if (in_array('ROLE_ADMIN', $user->getRoles())) {
+    //             throw $this->createAccessDeniedException('Impossible d\'attribuer le rôle Administrateur.');
+    //         }
 
-            $em->persist($user);
-            $em->flush();
+    //         $em->persist($user);
+    //         $em->flush();
 
-            $this->addFlash('success', 'Les rôles de l\'utilisateur ont été mis à jour avec succès.');
+    //         $this->addFlash('success', 'Les rôles de l\'utilisateur ont été mis à jour avec succès.');
 
-            return $this->redirectToRoute('user_list');
-        }
+    //         return $this->redirectToRoute('user_list');
+    //     }
 
-        return $this->render('admin/user/edit.html.twig', [
-            'form' => $form->createView(),
-            'user' => $user,
-        ]);
-    }
+    //     return $this->render('admin/user/edit.html.twig', [
+    //         'form' => $form->createView(),
+    //         'user' => $user,
+    //     ]);
+    // }
 
-    #[Route('/', name: 'user_list', methods: ['GET'])]
-    public function index(EntityManagerInterface $em): Response
-    {
-        // Récupération de la liste des utilisateurs
-        $users = $em->getRepository(User::class)->findAll();
+    // #[Route('/', name: 'user_list', methods: ['GET'])]
+    // public function index(EntityManagerInterface $em): Response
+    // {
+    //     // Récupération de la liste des utilisateurs
+    //     $users = $em->getRepository(User::class)->findAll();
 
-        return $this->render('admin/user/index.html.twig', [
-            'users' => $users,
-        ]);
-    }
-    //public function eraseCredentials(): void
-    //   {
-    // Logique éventuelle pour supprimer les informations sensibles
-  // }
+    //     return $this->render('admin/user/index.html.twig', [
+    //         'users' => $users,
+    //     ]);
+    // }
+    
+    // public function eraseCredentials(): void
+    // {
+    //     // Logique éventuelle pour supprimer les informations sensibles
+    // }
 }

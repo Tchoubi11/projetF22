@@ -6,15 +6,19 @@
     <h1>Créer un utilisateur</h1>
 
     {% if user.username %}
-        <h2>Nom d'utilisateur : {{ user.username }}</h2>  {# Affiche le nom d'utilisateur si l'utilisateur est créé #}
+        <h2>Nom d'utilisateur : {{ user.username }}</h2>
     {% else %}
         <h2>Veuillez remplir les informations de l'utilisateur ci-dessous.</h2>
     {% endif %}
 
     {{ form_start(form) }}
+        {{ form_row(form.email) }}  
         {{ form_row(form.username) }}
         {{ form_row(form.password) }}
         {{ form_row(form.roles) }}
+        {{ form_row(form.nom) }}  
+        {{ form_row(form.prenom) }}  
+
         <button class="btn btn-success">Créer</button>
     {{ form_end(form) }}
 

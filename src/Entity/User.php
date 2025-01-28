@@ -24,7 +24,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column(length: 50, nullable: true)]  
+    
     private ?string $username = null;
 
     #[ORM\Column(type: 'json')] 
@@ -92,7 +92,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername(string $username): static
+    public function setUsername(?string $username): self //ici je rends mon champ username optionnel
     {
         $this->username = $username;
 
@@ -119,12 +119,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->username; // Pour la sécurité symfony
+       // Retourne username s'il est défini, sinon retourne email
+       return $this->username ?? $this->email;
     }
 
     public function eraseCredentials()
     {
-        // Pour éffacer les données temporaires ou sensibles de l'utilisateur comme le mot de passe ou username
+        // Pour éffacer les données temporaires ou sensibles de l'utilisateur comme le mot de passe ou username(je laisse la methode vide)
         //if (isset($this->password)) {
       //  $this->password = null;
     //}
