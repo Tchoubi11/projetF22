@@ -17,8 +17,8 @@ security:
             lazy: true
             provider: app_user_provider
             pattern: ^/
-            custom_authenticators:
-                - App\Security\AppAuthenticator
+            custom_authenticators: App\Security\AppAuthenticator
+          
 
             form_login:
                 login_path: app_login
@@ -38,16 +38,15 @@ security:
                 lifetime: 604800 # 1 week
                 path: /
 
-    access_control: 
-        - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/veterinaire, roles: ROLE_VETERINARY }
-        - { path: ^/employee, roles: ROLE_EMPLOYEE }
-        - { path: ^/, roles: ROLE_USER }
-        - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/admin/user, roles: ROLE_ADMIN }
-        - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/service, roles: [ROLE_EMPLOYE, ROLE_ADMIN] }
+    access_control:
+       - { path: ^/admin, roles: ROLE_ADMIN }
+       - { path: ^/veterinaire, roles: ROLE_VETERINARY }
+       - { path: ^/employee, roles: ROLE_EMPLOYEE }
+       - { path: ^/login, roles: PUBLIC_ACCESS }
+       - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/admin, roles: ROLE_ADMIN }
+
+        
 
 
 
