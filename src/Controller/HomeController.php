@@ -231,7 +231,23 @@ class HomeController extends AbstractController
             'contacts' => $contacts,
         ]);
     }
+   
+  
 
+    // Route pour le tableau de bord Vétérinaire
+    #[Route('/veterinaire/dashboard', name: 'veterinaire_dashboard')]
+    public function veterinaireDashboard(): Response
+    {
+    return $this->render('veterinaire_dashboard.html.twig');  
+    }
+
+    // Route pour le tableau de bord Employé
+    #[Route('/employe/dashboard', name: 'employe_dashboard')]
+    public function employeDashboard(): Response
+    {
+    return $this->render('employe_dashboard.html.twig');  
+    }
+    //Route pour la connexion
     #[Route('/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -286,19 +302,29 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/user/notify', name: 'admin_user_notify')]
-    public function notifyUser(User $user, MailerInterface $mailer): Response
-    {
-        $email = (new Email())
-            ->from('josé@aecadia.com')
-            ->to('lise@arcadia.com')
-            ->subject('Votre compte a été créé')
-            ->html('<p>Votre compte a été créé. Veuillez contacter un administrateur pour obtenir votre mot de passe.</p>');
+    #[Route('/admin/user/notify/{id}', name: 'admin_user_notify')]
+     public function notifyUser(User $user, MailerInterface $mailer): Response
+     {
+    // Création de l'email avec l'email dynamique de l'utilisateur
+    $email = (new Email())
+        ->from('josé@aecadia.com')  // Adresse de l'expéditeur
+        ->to($user->getEmail())     // Utilisation de l'email dynamique de l'utilisateur
+        ->subject('Votre compte a été créé')
+        ->html(
+            '<p>Bonjour ' . $user->getPrenom() . ' ' . $user->getNom() . ',</p>' .  // Ajout du nom et prénom de l'utilisateur
+            '<p>Votre compte a été créé avec succès. Voici votre nom d\'utilisateur :</p>' .
+            '<p><strong>' . $user->getUsername() . '</strong></p>' .   // Affichage du username
+            '<p>Veuillez contacter un administrateur pour obtenir votre mot de passe.</p>'
+        );
 
-        $mailer->send($email);
+    // Envoi de l'email
+    $mailer->send($email);
 
-
+    // Ajouter un message flash de succès
     $this->addFlash('success', 'Notification envoyée à l\'utilisateur.');
+
+    // Redirection vers le tableau de bord administrateur
     return $this->redirectToRoute('admin_dashboard');
-    }
+}
+
 }
