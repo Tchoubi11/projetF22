@@ -1,12 +1,13 @@
 security:
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'  # Ceci est correct pour la gestion des mots de passe
 
+    # Fournisseur d'utilisateurs basé sur une entité User
     providers:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: username
+                property: email  # Remarque : ici, c'est 'email' et non 'username' si vous utilisez l'email comme identifiant
 
     firewalls:
         dev:
@@ -15,47 +16,43 @@ security:
 
         main:
             lazy: true
-            provider: app_user_provider
+            provider: app_user_provider  # Utilisation du fournisseur 'app_user_provider'
             pattern: ^/
-            custom_authenticators: App\Security\AppAuthenticator
-          
+            custom_authenticators:
+                - App\Security\AppAuthenticator  # Authentificateur personnalisé
 
             form_login:
                 login_path: app_login
                 check_path: app_login
-                username_parameter: email
-                password_parameter: password
-                default_target_path: admin_service_index
+                username_parameter: email  # Paramètre pour l'email
+                password_parameter: password  # Paramètre pour le mot de passe
+                default_target_path: admin_service_index  # La page de redirection par défaut après la connexion
                 always_use_default_target_path: true    
 
-            entry_point: form_login 
+            entry_point: form_login
 
             logout:
                 path: app_logout
-                target: app_home
+                target: app_home  # La page cible après la déconnexion
             remember_me:
                 secret: '%kernel.secret%'
-                lifetime: 604800 # 1 week
+                lifetime: 604800 # 1 semaine
                 path: /
 
+    # Contrôle d'accès
     access_control:
-       - { path: ^/admin, roles: ROLE_ADMIN }
-       - { path: ^/veterinaire, roles: ROLE_VETERINARY }
-       - { path: ^/employee, roles: ROLE_EMPLOYEE }
-       - { path: ^/login, roles: PUBLIC_ACCESS }
-       - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/admin, roles: ROLE_ADMIN }
-
-        
-
-
-
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/veterinaire, roles: ROLE_VETERINARY }
+        - { path: ^/employee, roles: ROLE_EMPLOYEE }
+        - { path: ^/login, roles: PUBLIC_ACCESS }  # Accès public à la page de connexion
+        - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }  # Accès à la déconnexion en tant qu'utilisateur anonyme
+        - { path: ^/admin, roles: ROLE_ADMIN }  # Assurez-vous que les utilisateurs sans rôle approprié n'ont pas accès à l'admin
 
 when@test:
     security:
         password_hashers:
             Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
                 algorithm: auto
-                cost: 4 # Lowest possible value for bcrypt
-                time_cost: 3 # Lowest possible value for argon
-                memory_cost: 10 # Lowest possible value for argon
+                cost: 4 # Plus faible valeur possible pour bcrypt
+                time_cost: 3 # Plus faible valeur possible pour argon
+                memory_cost: 10 # Plus faible valeur possible pour argon
