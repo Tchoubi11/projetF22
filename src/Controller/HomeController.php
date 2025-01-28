@@ -290,8 +290,8 @@ class HomeController extends AbstractController
     public function notifyUser(User $user, MailerInterface $mailer): Response
     {
         $email = (new Email())
-            ->from('admin@example.com')
-            ->to($user->getUsername())
+            ->from('josé@aecadia.com')
+            ->to('lise@arcadia.com')
             ->subject('Votre compte a été créé')
             ->html('<p>Votre compte a été créé. Veuillez contacter un administrateur pour obtenir votre mot de passe.</p>');
 

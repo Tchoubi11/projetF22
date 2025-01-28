@@ -24,12 +24,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column(length: 50, unique: true)]  //Ajout de l'attribut unique pour garantir l'unicité
+    #[ORM\Column(length: 50, nullable: true)]  
     private ?string $username = null;
 
     #[ORM\Column(type: 'json')] 
     private array $roles = [];
 
+    #[ORM\Column(length: 180, unique: true)] 
+    private ?string $email = null;
+
+
+
+    public function getEmail(): ?string
+    {
+    return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+    $this->email = $email;
+
+    return $this;
+    }
     public function getId(): ?int
     {
         return $this->id;
