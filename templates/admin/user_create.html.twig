@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un utilisateur{% endblock %}
+
+{% block body %}
+    <h1>Créer un utilisateur</h1>
+
+    {% if user.username %}
+        <h2>Nom d'utilisateur : {{ user.username }}</h2>  {# Affiche le nom d'utilisateur si l'utilisateur est créé #}
+    {% else %}
+        <h2>Veuillez remplir les informations de l'utilisateur ci-dessous.</h2>
+    {% endif %}
+
+    {{ form_start(form) }}
+        {{ form_row(form.username) }}
+        {{ form_row(form.password) }}
+        {{ form_row(form.roles) }}
+        <button class="btn btn-success">Créer</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('admin_dashboard') }}" class="btn btn-secondary mt-3">Retour au tableau de bord</a>
+{% endblock %}

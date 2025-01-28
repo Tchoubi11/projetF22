@@ -268,7 +268,8 @@ class HomeController extends AbstractController
     public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
-
+    
+        // Création du formulaire
         $form = $this->createFormBuilder($user)
             ->add('username', TextType::class)
             ->add('password', PasswordType::class)
@@ -281,26 +282,29 @@ class HomeController extends AbstractController
                 'multiple' => true,
             ])
             ->getForm();
-
+    
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(
                 $passwordHasher->hashPassword($user, $user->getPassword())
             );
-
+    
             $this->entityManager->persist($user);
             $this->entityManager->flush();
-
+    
             $this->addFlash('success', 'Utilisateur créé avec succès.');
-
+    
             return $this->redirectToRoute('admin_dashboard');
         }
-
+    
+        // Passer l'objet 'user' en plus du formulaire au template
         return $this->render('admin/user_create.html.twig', [
             'form' => $form->createView(),
+            'user' => $user,  // Passer l'utilisateur au template
         ]);
     }
+    
 
     #[Route('/admin/user/notify/{id}', name: 'admin_user_notify')]
      public function notifyUser(User $user, MailerInterface $mailer): Response
