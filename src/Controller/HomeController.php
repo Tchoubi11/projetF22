@@ -219,19 +219,6 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/contacts', name: 'app_contact')]
-    public function contacts(): Response
-    {
-        $contacts = [
-            ['name' => 'Jean-Marie', 'email' => 'jean.marie@example.com', 'phone' => '123-456-7890', 'mission' => 'Intendant'],
-            ['name' => 'Frank Herve', 'email' => 'frank.herve@example.com', 'phone' => '987-654-3210', 'mission' => 'Coordonnateur'],
-            ['name' => 'Albert Einstein', 'email' => 'albert.einstein@example.com', 'phone' => '456-789-1234', 'mission' => 'Directeur'],
-        ];
-
-        return $this->render('home/contact.html.twig', [
-            'contacts' => $contacts,
-        ]);
-    }
    
   
 
