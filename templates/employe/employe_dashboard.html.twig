@@ -5,7 +5,8 @@
 {% block body %}
 <div class="container mt-5">
     <h1 class="text-center">Tableau de bord - Employé</h1>
-    
+
+    <!--  section pour gérer les avis -->
     <div class="row mt-4">
         <div class="col-md-6">
             <div class="card">
@@ -17,12 +18,17 @@
             </div>
         </div>
         
+    </div>
+
+    <!--  section pour gérer l'alimentation -->
+    <div class="row mt-4">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Tâches quotidiennes</h5>
-                    <p class="card-text">Planifiez et exécutez vos tâches quotidiennes dans le zoo.</p>
-                    
+                    <h5 class="card-title">Gérer l'Alimentation</h5>
+                    <p class="card-text">Ajoutez ou consultez les informations sur l'alimentation des animaux.</p>
+                    <a href="{{ path('employe_alimentation_index') }}" class="btn btn-primary">Consulter les consommations</a>
+                    <a href="{{ path('employe_alimentation_new') }}" class="btn btn-secondary ">Ajouter une consommation</a>
                 </div>
             </div>
         </div>
