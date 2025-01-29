@@ -14,3 +14,6 @@ veterinaire_dashboard:
 employe_dashboard:
     path: /employe/dashboard
     controller: App\Controller\EmployeController::index
+app_contact:
+    path: /contacts
+    controller: App\Controller\ContactController::contacts
