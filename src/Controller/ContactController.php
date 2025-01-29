@@ -31,7 +31,7 @@ class ContactController extends AbstractController
             // Envoi de l'email au zoo
             $email = (new Email())
                 ->from($contactRequest->getEmail())
-                ->to('zoo@example.com')  // L'email du zoo
+                ->to('zoo@arcadia.com')  
                 ->subject('Demande de contact')
                 ->html(
                     '<p>Titre : ' . $contactRequest->getTitre() . '</p>' .
