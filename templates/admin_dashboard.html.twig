@@ -22,8 +22,11 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Gérer les services</h5>
-                    <p class="card-text">Consultez les rapports et statistiques du zoo.</p>
-                    
+                    <p class="card-text">Consultez et gérez les services du zoo.</p>
+                    <!-- Lien vers la liste des services -->
+                    <a href="{{ path('admin_service_index') }}" class="btn btn-primary">Voir les services</a>
+                    <!-- Lien vers l'ajout d'un nouveau service -->
+                    <a href="{{ path('admin_service_new') }}" class="btn btn-secondary mt-2">Ajouter un service</a>
                 </div>
             </div>
         </div>
