@@ -410,13 +410,13 @@ public function notifyUser(User $user, MailerInterface $mailer): Response
 {
     // Création de l'email
     $email = (new Email())
-        ->from('noreply@tondomaine.com')  // Adresse de l'expéditeur
-        ->to($user->getEmail())            // Email dynamique de l'utilisateur
+        ->from('noreply@arcadia.com')
+        ->to($user->getEmail())
         ->subject('Votre compte a été créé')
         ->html(
             '<p>Bonjour ' . $user->getPrenom() . ' ' . $user->getNom() . ',</p>' .  
             '<p>Votre compte a été créé avec succès. Voici votre nom d\'utilisateur :</p>' . 
-            '<p><strong>' . $user->getEmail() . '</strong></p>' .  // Affichage de l'email comme nom d'utilisateur
+            '<p><strong>' . $user->getEmail() . '</strong></p>' .  
             '<p>Veuillez contacter un administrateur pour obtenir votre mot de passe.</p>'
         );
 
