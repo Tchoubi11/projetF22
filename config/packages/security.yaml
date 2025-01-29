@@ -44,7 +44,6 @@ security:
         - { path: ^/veterinaire, roles: ROLE_VETERINAIRE }
         - { path: ^/employe, roles: ROLE_EMPLOYE }
         - { path: ^/login, roles: PUBLIC_ACCESS }  
-        
         - { path: ^/logout, roles: IS_AUTHENTICATED_FULLY }
           
 

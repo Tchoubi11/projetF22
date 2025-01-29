@@ -36,7 +36,12 @@ public function list(EntityManagerInterface $em): Response
 }
 
 
-    
+     // Route pour le tableau de bord Vétérinaire
+     #[Route('/veterinaire/dashboard', name: 'veterinaire_dashboard')]
+     public function index(): Response
+     {
+     return $this->render('rapport_veterinaire/veterinaire_dashboard.html.twig');  
+     }
 
 
 #[Route('/new/{id}', name: 'rapport_veterinaire_new', methods: ['GET', 'POST'])]

@@ -9,7 +9,7 @@ admin_dashboard:
 
 veterinaire_dashboard:
     path: /veterinaire/dashboard
-    controller: App\Controller\VeterinaireController::index
+    controller: App\Controller\RapportVeterinaireController::index
 
 employe_dashboard:
     path: /employe/dashboard

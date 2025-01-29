@@ -224,12 +224,7 @@ class HomeController extends AbstractController
    
   
 
-    // Route pour le tableau de bord Vétérinaire
-    #[Route('/veterinaire/dashboard', name: 'veterinaire_dashboard')]
-    public function veterinaireDashboard(): Response
-    {
-    return $this->render('veterinaire_dashboard.html.twig');  
-    }
+   
 
     // Route pour le tableau de bord Employé
     #[Route('/employe/dashboard', name: 'employe_dashboard')]
