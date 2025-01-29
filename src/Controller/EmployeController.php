@@ -1,6 +1,6 @@
 <?php
 
-// src/Controller/EmployeController.php
+
 
 namespace App\Controller;
 
@@ -12,14 +12,14 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class EmployeController extends AbstractController
 {
     #[Route('/employe/dashboard', name: 'employe_dashboard')]
-    public function dashboard(): Response
+    public function index(): Response
     {
-        // ic je vérifie que l'utilisateur connecté a le rôle "ROLE_EMPLOYE"
+        // on vérifie que l'utilisateur connecté a le rôle "ROLE_EMPLOYE"
         if (!$this->isGranted('ROLE_EMPLOYE')) {
             throw new AccessDeniedException('Accès non autorisé.');
         }
 
-        // Rendre le template du dashboard employé
-        return $this->render('employe/dashboard_employe.html.twig');
+        // on retourne le template du dashboard employé
+        return $this->render('employe/employe_dashboard.html.twig');
     }
 }
