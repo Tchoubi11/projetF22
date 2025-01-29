@@ -34,7 +34,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     {
         return $this->router->generate('app_login');
     }
-
+    
     public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email', '');

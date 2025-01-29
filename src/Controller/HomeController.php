@@ -21,6 +21,8 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\RedirectResponse; 
+
 
 class HomeController extends AbstractController
 {
@@ -415,7 +417,14 @@ public function notifyUser(User $user, MailerInterface $mailer): Response
 
     // Redirection vers le tableau de bord administrateur
     return $this->redirectToRoute('admin_dashboard');
-}
-
+   }
+  #[Route('/logout', name: 'app_logout')]
+   public function logout(Request $request): RedirectResponse
+   {
+    $session = $request->getSession();
+    $session->invalidate();  
+    
+    return $this->redirectToRoute('app_home');
+   }
 
 }

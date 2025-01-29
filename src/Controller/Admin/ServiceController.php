@@ -99,9 +99,5 @@ class ServiceController extends AbstractController
         return $this->redirectToRoute('admin_service_index');
     }
 
-    #[Route('/logout', name: 'app_logout', methods: ['POST'])]
-    public function logout(): void
-    {
-        // Symfony gère automatiquement la déconnexion, donc ce contrôleur peut rester vide
-    }
+    
 }

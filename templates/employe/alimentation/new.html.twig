@@ -11,8 +11,7 @@
 {{ form_end(form) }}
 
 <a href="{{ path('employe_alimentation_index') }}">Retour</a>
-<form method="post" action="{{ path('app_logout') }}">
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+<form action="{{ path('app_logout') }}" method="post">
     <button type="submit" class="btn btn-danger">Se déconnecter</button>
 </form>
 

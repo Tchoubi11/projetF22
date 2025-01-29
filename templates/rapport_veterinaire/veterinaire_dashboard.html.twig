@@ -22,10 +22,15 @@
                 <div class="card-body">
                     <h5 class="card-title">Rapports vétérinaires</h5>
                     <p class="card-text">Créer et gérer les rapports vétérinaires pour les animaux.</p>
-                    <a href="{{ path('veterinaire_reports') }}" class="btn btn-primary">Accéder</a>
+                    <!-- Lien vers la liste des rapports vétérinaires -->
+                    <a href="{{ path('rapport_veterinaire_list') }}" class="btn btn-primary">Voir les rapports</a>
+                    <!-- Lien pour ajouter un nouveau rapport vétérinaire -->
+                    <a href="{{ path('rapport_veterinaire_new', {'id': 1}) }}" class="btn btn-success mt-2">Ajouter un rapport</a> <!-- Remplacer 1 par un ID d'animal existant -->
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Section supplémentaire pour afficher un message ou autre fonctionnalité -->
 </div>
 {% endblock %}

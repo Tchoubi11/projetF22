@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+//namespace App\Controller;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-#[Route('/admin/user')]
-class UserController extends AbstractController
-{
+//#[Route('/admin/user')]
+//class UserController extends AbstractController
+//{
     // #[Route('/edit/{id}', name: 'user_edit', methods: ['GET', 'POST'])]
     // public function edit(Request $request, User $user, EntityManagerInterface $em): Response
     // {
@@ -72,4 +72,4 @@ class UserController extends AbstractController
     // {
     //     // Logique éventuelle pour supprimer les informations sensibles
     // }
-}
+//}

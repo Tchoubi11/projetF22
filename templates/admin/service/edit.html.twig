@@ -14,6 +14,9 @@
 {{ form_end(form) }}
 
 <a href="{{ path('admin_service_index') }}">Retour à la liste des services</a>
-<a href="{{ path('app_logout') }}" class="btn btn-danger">Se déconnecter</a>
+<form action="{{ path('app_logout') }}" method="post">
+    <button type="submit" class="btn btn-danger">Se déconnecter</button>
+</form>
+
 
 {% endblock %}

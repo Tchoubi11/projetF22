@@ -16,9 +16,8 @@
             </li>
         {% endfor %}
     </ul>
-    <form method="post" action="{{ path('app_logout') }}">
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+    <form action="{{ path('app_logout') }}" method="post">
         <button type="submit" class="btn btn-danger">Se déconnecter</button>
-    </form>
+    </form>    
     <a href="{{ path('employe_dashboard') }}" class="btn btn-secondary mt-3">Retour au tableau de bord</a>
 {% endblock %}
