@@ -22,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse; 
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 
 class HomeController extends AbstractController
@@ -122,18 +123,26 @@ class HomeController extends AbstractController
     }
 
     #[Route('/services', name: 'app_services')]
-    public function services(): Response
-    {
-        $services = [
-            'Restauration' => 'Dégustez une variété de plats savoureux dans nos restaurants situés au cœur du zoo.',
-            'Visite du zoo en petit train' => 'Explorez tout le zoo sans effort grâce à notre petit train.',
-            'Visites des habitats avec un guide (gratuit)' => 'Plongez dans l\'univers fascinant des animaux grâce à nos visites guidées gratuites.'
-        ];
-
-        return $this->render('home/services.html.twig', [
-            'services' => $services,
-        ]);
+public function services(): Response
+{
+    // Si l'utilisateur n'est pas admin ou employé, on le redirige vers la page de connexion
+    if (!($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_EMPLOYE'))) {
+        return $this->redirectToRoute('app_login');  // Redirection vers la page de connexion
     }
+
+    // Logique pour afficher les services (par exemple)
+    $services = [
+        'Restauration' => 'Dégustez une variété de plats savoureux dans nos restaurants situés au cœur du zoo.',
+        'Visite du zoo en petit train' => 'Explorez tout le zoo sans effort grâce à notre petit train.',
+        'Visites des habitats avec un guide (gratuit)' => 'Plongez dans l\'univers fascinant des animaux grâce à nos visites guidées gratuites.'
+    ];
+
+    // Rendu du template avec les services
+    return $this->render('services/index.html.twig', [
+        'services' => $services,
+    ]);
+}
+
 
     #[Route('/habitats', name: 'app_habitats')]
     public function habitats(): Response
