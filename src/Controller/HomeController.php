@@ -123,25 +123,30 @@ class HomeController extends AbstractController
     }
 
     #[Route('/services', name: 'app_services')]
-public function services(): Response
-{
-    // Si l'utilisateur n'est pas admin ou employé, on le redirige vers la page de connexion
-    if (!($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_EMPLOYE'))) {
-        return $this->redirectToRoute('app_login');  // Redirection vers la page de connexion
+    public function services(): Response
+    {
+        // Logique pour afficher les services
+        $services = [
+            'Restauration' => [
+                'description' => 'Dégustez une variété de plats savoureux dans nos restaurants situés au cœur du zoo.',
+                'image' => 'uploads/images/679b7a2c9f1a1.jpg' // Le chemin vers l'image
+            ],
+            'Visite du zoo en petit train' => [
+                'description' => 'Explorez tout le zoo sans effort grâce à notre petit train.',
+                'image' => 'uploads/images/679b840a3c0f3.jpg'
+            ],
+            'Visites des habitats avec un guide (gratuit)' => [
+                'description' => 'Plongez dans l\'univers fascinant des animaux grâce à nos visites guidées gratuites.',
+                'image' => 'uploads/images/679b8381509c1.jpg'
+            ]
+        ];
+    
+        // Rendu du template avec les services
+        return $this->render('home/services.html.twig', [
+            'services' => $services,
+        ]);
     }
-
-    // Logique pour afficher les services (par exemple)
-    $services = [
-        'Restauration' => 'Dégustez une variété de plats savoureux dans nos restaurants situés au cœur du zoo.',
-        'Visite du zoo en petit train' => 'Explorez tout le zoo sans effort grâce à notre petit train.',
-        'Visites des habitats avec un guide (gratuit)' => 'Plongez dans l\'univers fascinant des animaux grâce à nos visites guidées gratuites.'
-    ];
-
-    // Rendu du template avec les services
-    return $this->render('services/index.html.twig', [
-        'services' => $services,
-    ]);
-}
+    
 
 
     #[Route('/habitats', name: 'app_habitats')]

@@ -4,18 +4,30 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h2 class="text-center">Nos Services</h2>
-    <div class="row mt-4">
-        {% for name, description in services %}
-            <div class="col-md-4">
-                <div class="card mb-4">
+    <h2 class="text-center mb-5">Nos Services</h2>
+    <div class="row">
+        {% for name, service in services %}
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card shadow-sm rounded-3 border-0 transition-transform">
+                    <img src="{{ asset(service.image) }}" class="card-img-top rounded-3" alt="{{ name }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ name }}</h5>
-                        <p class="card-text">{{ description }}</p>
+                        <p class="card-text">{{ service.description }}</p>
                     </div>
                 </div>
             </div>
         {% endfor %}
+        <!-- Paragraphe amélioré -->
+        <p class="text-center font-weight-bold text-primary mt-4 " style="font-size: 1.25rem;">
+            Pour en savoir plus sur nos services, veuillez contacter le zoo.
+        </p>
     </div>
 </div>
+
+<!-- Bouton Retour à l'accueil -->
+<div class="text-center mt-4">
+    <a href="{{ path('app_home') }}" class="btn btn-outline-dark btn-lg">Retour à l'accueil</a>
+</div>
+
+
 {% endblock %}

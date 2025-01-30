@@ -89,13 +89,13 @@
     border: 1px solid #ddd;
     margin-top: 10px;
     border-radius: 5px;
-    max-height: 0; /* Caché par défaut */
+    max-height: 0; /* pour cacher par défaut */
     overflow: hidden;
     opacity: 0; /* Initialement invisible */
     transition: max-height 0.5s ease-out, opacity 0.3s ease-out; /* Transition pour masquer et afficher */
 }
     .animal-info.show {
-        max-height: 500px; /* Assurez-vous que la valeur de max-height est suffisante pour afficher le contenu */
+        max-height: 500px; 
         opacity: 1; /* Rendre visible */
     }
     
@@ -105,12 +105,12 @@
     
     body {
         font-family: 'Arial', sans-serif;
-        background-color: #f5f5e6; /* Beige doux */
-        color: #4a6c47; /* Vert foncé */
+        background-color: #f5f5e6; 
+        color: #4a6c47; 
     }
 
     .navbar {
-        background-color: #3c7634; /* Vert naturel */
+        background-color: #3c7634; 
     }
 
     .navbar-brand, .nav-link {
@@ -123,7 +123,7 @@
     }
 
     h1, h2, h3 {
-        color: #2f4e2e; /* Vert sombre */
+        color: #2f4e2e; 
     }
 
     h2.text-center, h3.text-center {
@@ -182,3 +182,5 @@
         padding: 10px;
         text-align: left;
     }
+    
+
