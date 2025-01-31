@@ -202,13 +202,13 @@ class AppFixtures extends Fixture
                 $animal->setEtat($animalData['etat']);
                 $manager->persist($animal);
 
-                $rapport = new RapportVeterinaire();
-                $rapport->setAnimal($animal);
-                $rapport->setDate(new \DateTime($animalData['dateDePassage']));
-                $rapport->setDetail("Rapport de santé pour l'animal : {$animalData['prenom']}.");
-                $manager->persist($rapport);
+               // $rapport = new RapportVeterinaire();
+               // $rapport->setAnimal($animal);
+               // $rapport->setDate(new \DateTime($animalData['dateDePassage']));
+               // $rapport->setDetail("Rapport de santé pour l'animal : {$animalData['prenom']}.");
+               // $manager->persist($rapport);
 
-                $animal->setRapportVeterinaire($rapport);
+                // $animal->setRapportVeterinaire($rapport);
             }
         }
 

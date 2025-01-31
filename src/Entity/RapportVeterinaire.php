@@ -19,7 +19,7 @@ class RapportVeterinaire
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)] // Passez à TEXT pour accepter des détails plus longs
+    #[ORM\Column(type: Types::TEXT, nullable: true)] 
     private ?string $detail = null;
     
     #[ORM\OneToOne(inversedBy: 'rapportVeterinaire', targetEntity: Animal::class)]

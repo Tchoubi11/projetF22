@@ -26,12 +26,12 @@ public function list(EntityManagerInterface $em): Response
 {
     $rapports = $em->getRepository(RapportVeterinaire::class)->findAll();
 
-    // Exemple : Récupérer un animal spécifique (par exemple, le premier animal trouvé)
+    
     $animal = $em->getRepository(Animal::class)->findOneBy([]);
 
     return $this->render('/rapport_veterinaire/list.html.twig', [
         'rapports' => $rapports,
-        'animal' => $animal, // Passez l'animal au template
+        'animal' => $animal, 
     ]);
 }
 
