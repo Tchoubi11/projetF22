@@ -34,18 +34,23 @@ security:
                 path: app_logout
                 target: app_home  
             remember_me:
-                secret: '%kernel.secret%'
+                secret: '%kernel.secret%'  #A verifier avec ça si ça marche secret: '%env(APP_SECRET)%'
                 lifetime: 604800 # 1 semaine
                 path: /
 
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_USER]
+        ROLE_EMPLOYE: [ROLE_USER]
+
     # Contrôle d'accès
     access_control:
+        - { path: ^/admin/service, roles: ROLE_EMPLOYE }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/veterinaire, roles: ROLE_VETERINAIRE }
         - { path: ^/employe, roles: ROLE_EMPLOYE }
         - { path: ^/login, roles: PUBLIC_ACCESS }  
         - { path: ^/logout, roles: IS_AUTHENTICATED_FULLY }
-          
+        
 
 when@test:
     security:

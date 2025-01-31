@@ -64,6 +64,10 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         } elseif (in_array('ROLE_EMPLOYE', $user->getRoles())) {
             return new RedirectResponse($this->router->generate('employe_dashboard'));
         }
+        elseif (in_array('ROLE_EMPLOYE', $user->getRoles())) {
+            return new RedirectResponse($this->router->generate('admin_service_index')); // Redirection vers /admin/service
+        }
+        
 
         // Gestion des utilisateurs avec des rôles non valides
         $session = $request->getSession();

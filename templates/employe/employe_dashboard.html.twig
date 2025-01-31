@@ -6,9 +6,10 @@
 <div class="container mt-5">
     <h1 class="text-center">Tableau de bord - Employé</h1>
 
-    <!--  section pour gérer les avis -->
+    <!--  section pour gérer les avis, les services et l'alimentation sur la même ligne -->
     <div class="row mt-4">
-        <div class="col-md-6">
+        <!-- Gérer les avis -->
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Gérer les avis</h5>
@@ -17,24 +18,35 @@
                 </div>
             </div>
         </div>
-        
-    </div>
 
-    <!--  section pour gérer l'alimentation -->
-    <div class="row mt-4">
-        <div class="col-md-6">
+        <!-- Gérer les services -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gérer les services</h5>
+                    <p class="card-text">Consultez et gérez les services du zoo.</p>
+                    <a href="{{ path('admin_service_index') }}" class="btn btn-primary">Voir les services</a>
+                    <a href="{{ path('admin_service_new') }}" class="btn btn-secondary mt-2">Ajouter un service</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gérer l'Alimentation -->
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Gérer l'Alimentation</h5>
                     <p class="card-text">Ajoutez ou consultez les informations sur l'alimentation des animaux.</p>
                     <a href="{{ path('employe_alimentation_index') }}" class="btn btn-primary">Consulter les consommations</a>
-                    <a href="{{ path('employe_alimentation_new') }}" class="btn btn-secondary ">Ajouter une consommation</a>
+                    <a href="{{ path('employe_alimentation_new') }}" class="btn btn-secondary mt-2">Ajouter une consommation</a>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Formulaire de déconnexion -->
+    <form action="{{ path('app_logout') }}" method="post" class="mt-4">
+        <button type="submit" class="btn btn-danger">Se déconnecter</button>
+    </form>
 </div>
-<form action="{{ path('app_logout') }}" method="post">
-    <button type="submit" class="btn btn-danger">Se déconnecter</button>
-</form>
 {% endblock %}

@@ -9,7 +9,7 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nom d'utilisateur</th>
+                <th>Prenom d'utilisateur</th>
                 <th>Rôles</th>
                 <th>Actions</th>
             </tr>
@@ -18,7 +18,7 @@
             {% for user in users %}
                 <tr>
                     <td>{{ user.id }}</td>
-                    <td>{{ user.username }}</td>
+                    <td>{{ user.prenom }}</td>
                     <td>{{ user.roles|join(', ') }}</td>
                     <td>
                         <a href="{{ path('user_edit', { id: user.id }) }}" class="btn btn-sm btn-warning">Modifier</a>

@@ -22,7 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse; 
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+
 
 
 class HomeController extends AbstractController
@@ -30,16 +30,21 @@ class HomeController extends AbstractController
     private $habitatRepository;
     private $avisRepository;
     private $entityManager;
+    private $mailer;
+    private $userRepository;
 
-    // Injection de HabitatRepository, AvisRepository et EntityManager via le constructeur
     public function __construct(
         HabitatRepository $habitatRepository,
         AvisRepository $avisRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        MailerInterface $mailer,  
+        UserRepository $userRepository  
     ) {
         $this->habitatRepository = $habitatRepository;
         $this->avisRepository = $avisRepository;
         $this->entityManager = $entityManager;
+        $this->mailer = $mailer;
+        $this->userRepository = $userRepository;
     }
     
     #[Route('/', name: 'app_home')]
@@ -48,7 +53,7 @@ class HomeController extends AbstractController
         // Récupération des avis visibles
         $avisVisibles = $this->avisRepository->findBy(['isVisible' => true]);
 
-        // Créationd' un nouvel avis et traite le formulaire
+        // Création d' un nouvel avis 
         $avis = new Avis();
         $form = $this->createForm(AvisType::class, $avis);
 
@@ -61,7 +66,7 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-        // Contenu statique pour les critiques, habitats et services
+        // Contenu statique pour les habitats et services
         $reviews = [
             "Très belle expérience, mes enfants ont adoré voir les tigres!" => "Cathérine",
             "Un endroit magnifique et bien entretenu. Bravo à l'équipe!" => "Marcus",
@@ -129,7 +134,7 @@ class HomeController extends AbstractController
         $services = [
             'Restauration' => [
                 'description' => 'Dégustez une variété de plats savoureux dans nos restaurants situés au cœur du zoo.',
-                'image' => 'uploads/images/679b7a2c9f1a1.jpg' // Le chemin vers l'image
+                'image' => 'uploads/images/679b7a2c9f1a1.jpg' 
             ],
             'Visite du zoo en petit train' => [
                 'description' => 'Explorez tout le zoo sans effort grâce à notre petit train.',
@@ -235,11 +240,6 @@ class HomeController extends AbstractController
         ]);
     }
 
-   
-  
-
-   
-
     // Route pour le tableau de bord Employé
     #[Route('/employe/dashboard', name: 'employe_dashboard')]
     public function employeDashboard(): Response
@@ -263,17 +263,15 @@ class HomeController extends AbstractController
         ]);
     }
 
+    
     #[Route('/admin/user/create', name: 'admin_user_create')]
-    public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher, MailerInterface $mailer): Response
+    public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher): Response 
     {
         $user = new User();
     
-        // Création du formulaire pour l'utilisateur avec nom et prénom
         $form = $this->createFormBuilder($user)
-            ->add('username', EmailType::class, [
-                'required' => false,  // Rendre ce champ optionnel
-            ])
-            ->add('password', PasswordType::class)  // Mot de passe
+            ->add('username', EmailType::class, ['required' => false])
+            ->add('password', PasswordType::class)
             ->add('roles', ChoiceType::class, [
                 'choices' => [
                     'Employé' => 'ROLE_EMPLOYE',
@@ -282,54 +280,40 @@ class HomeController extends AbstractController
                 'expanded' => false,
                 'multiple' => true,
             ])
-            ->add('nom', TextType::class, [
-                'required' => true,  // Le champ nom est obligatoire
-            ])
-            ->add('prenom', TextType::class, [
-                'required' => true,  // Le champ prénom est obligatoire
-            ])
-            ->add('email', EmailType::class, [
-                'required' => true,  // Le champ email est obligatoire
-            ])
+            ->add('nom', TextType::class, ['required' => true])
+            ->add('prenom', TextType::class, ['required' => true])
+            ->add('email', EmailType::class, ['required' => true])
             ->getForm();
     
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            // Vérifier si l'email est renseigné, sinon utiliser le username
             if (!$user->getEmail()) {
                 $this->addFlash('error', 'L\'email est obligatoire.');
                 return $this->redirectToRoute('admin_user_create');
             }
     
-            // Si le username est vide, on le remplit avec l'email
             if (!$user->getUsername()) {
                 $user->setUsername($user->getEmail());
             }
     
-            // Hash du mot de passe pour le sécuriser avant de l'enregistrer
             $user->setPassword(
                 $passwordHasher->hashPassword($user, $user->getPassword())
             );
     
-            // Sauvegarde de l'utilisateur dans la base de données
             $this->entityManager->persist($user);
             $this->entityManager->flush();
     
-            // Appel de la méthode pour envoyer un mail de notification
-            $this->notifyUser($user, $mailer);
-    
-            $this->addFlash('success', 'Utilisateur créé avec succès.');
-    
-            return $this->redirectToRoute('admin_dashboard');
+            return $this->redirectToRoute('admin_user_notify', ['id' => $user->getId()]);
         }
     
-        // Ajout de la variable "user" à la vue
         return $this->render('admin/user_create.html.twig', [
             'form' => $form->createView(),
-            'user' => $user,  // Passer l'objet user à la vue
+            'user' => $user,
         ]);
     }
+    
+
     
 
     
@@ -337,12 +321,12 @@ class HomeController extends AbstractController
 #[Route('/edit/{id}', name: 'user_edit', methods: ['GET', 'POST'])]
 public function edit(Request $request, User $user, EntityManagerInterface $em): Response
 {
-    // Vérifie si on tente de modifier un compte administrateur (avant de modifier quoi que ce soit)
+    // pour vérifier si on tente de modifier un compte administrateur (avant de modifier quoi que ce soit)
     if (in_array('ROLE_ADMIN', $user->getRoles())) {
         throw $this->createAccessDeniedException('Impossible de modifier un compte Administrateur.');
     }
 
-    // Crée le formulaire pour modifier les rôles de l'utilisateur
+    // formulaire pour modifier les rôles de l'utilisateur
     $form = $this->createFormBuilder($user)
         ->add('username', EmailType::class, [
             'required' => false, // Rendre ce champ optionnel
@@ -404,29 +388,33 @@ public function edit(Request $request, User $user, EntityManagerInterface $em): 
         
 
     #[Route('/admin/user/notify/{id}', name: 'admin_user_notify')]
-public function notifyUser(User $user, MailerInterface $mailer): Response
-{
-    // Création de l'email
-    $email = (new Email())
-        ->from('noreply@arcadia.com')
-        ->to($user->getEmail())
-        ->subject('Votre compte a été créé')
-        ->html(
-            '<p>Bonjour ' . $user->getPrenom() . ' ' . $user->getNom() . ',</p>' .  
-            '<p>Votre compte a été créé avec succès. Voici votre nom d\'utilisateur :</p>' . 
-            '<p><strong>' . $user->getEmail() . '</strong></p>' .  
-            '<p>Veuillez contacter un administrateur pour obtenir votre mot de passe.</p>'
-        );
-
-    // Envoi de l'email
-    $mailer->send($email);
-
-    // Ajouter un message flash de succès
-    $this->addFlash('success', 'Notification envoyée à l\'utilisateur.');
-
-    // Redirection vers le tableau de bord administrateur
-    return $this->redirectToRoute('admin_dashboard');
-   }
+    public function notifyUser(int $id, UserRepository $userRepository, MailerInterface $mailer): Response
+    {
+        // Récupération de l'utilisateur
+        $user = $userRepository->find($id);
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé.');
+        }
+    
+        // Création de l'email
+        $email = (new Email())
+            ->from('noreply@arcadia.com')
+            ->to($user->getEmail())
+            ->subject('Votre compte a été créé')
+            ->html($this->renderView('emails/notify_user.html.twig', ['user' => $user]));
+    
+        // Envoi de l'email
+        try {
+            $mailer->send($email);
+            $this->addFlash('success', 'Notification envoyée avec succès.');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Erreur lors de l\'envoi de l\'e-mail : ' . $e->getMessage());
+        }
+    
+        return $this->redirectToRoute('admin_dashboard');
+    }
+    
+   
   #[Route('/logout', name: 'app_logout')]
    public function logout(Request $request): RedirectResponse
    {
