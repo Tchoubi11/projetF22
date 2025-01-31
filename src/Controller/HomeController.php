@@ -80,10 +80,11 @@ class HomeController extends AbstractController
         ];
 
         $services = [
-            'Restauration',
-            'Visite du zoo en petit train',
-            'Visites des habitats avec un guide (gratuit)'
+            ['name' => 'Restauration', 'icon' => 'fas fa-utensils'],
+            ['name' => 'Visite du zoo en petit train', 'icon' => 'fas fa-train'],
+            ['name' => 'Visites des habitats avec un guide (gratuit)', 'icon' => 'fas fa-users']
         ];
+        
 
         return $this->render('home/index.html.twig', [
             'form' => $form->createView(),
