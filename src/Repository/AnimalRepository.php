@@ -19,7 +19,7 @@ class AnimalRepository extends ServiceEntityRepository
         parent::__construct($registry, Animal::class);
     }
 
-    // Exemple de méthode personnalisée pour rechercher des animaux par état
+    // Méthode pour rechercher des animaux par état
     public function findByEtat($etat)
     {
         return $this->createQueryBuilder('a')
@@ -28,4 +28,15 @@ class AnimalRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    // Méthode pour rechercher des animaux par prénom 
+    public function findByPrenom(string $prenom): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.prenom LIKE :prenom')  
+            ->setParameter('prenom', '%' . $prenom . '%')  
+            ->getQuery()
+            ->getResult();
+    }
+    
 }

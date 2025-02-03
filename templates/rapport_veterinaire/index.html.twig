@@ -3,39 +3,51 @@
 {% block title %}Liste des Rapports Vétérinaires{% endblock %}
 
 {% block body %}
-    <h1>Liste des Rapports Vétérinaires</h1>
+<div class="container mt-5">
+    <h1 class="text-center">Liste des Rapports Vétérinaires</h1>
 
-    <a href="{{ path('rapport_veterinaire_new') }}" class="btn btn-primary">Créer un nouveau rapport</a>
+    {# Formulaire de filtrage par animal #}
+    {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.animal, 'Sélectionner un animal :') }}
+            {{ form_widget(form.animal, { 'attr': { 'class': 'form-control' } }) }}
+        </div>
+        <button class="btn btn-primary" type="submit">Filtrer</button>
+    {{ form_end(form) }}
+
+    {% if animal %}
+    <div class="mt-4">
+        <a href="{{ path('rapport_veterinaire_new', { id: animal.id }) }}" class="btn btn-success">Ajouter un rapport pour {{ animal.prenom }}</a>
+    </div>
+{% endif %}
 
     <table class="table mt-3">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Nom de l'Animal</th>
                 <th>Date</th>
+                <th>Détails</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for rapport in rapports %}
                 <tr>
-                    <td>{{ rapport.id }}</td>
-                    <td>{{ rapport.animal.prenom }}</td>
-                    <td>{{ rapport.date ? rapport.date|date('d/m/Y') : 'N/A' }}</td>
+                    <td>{{ rapport.date|date('d/m/Y') }}</td>
+                    <td>{{ rapport.detail }}</td>
                     <td>
-                        <a href="{{ path('rapport_veterinaire_show', { id: rapport.id }) }}" class="btn btn-info btn-sm">Voir</a>
-                        <form method="post" action="{{ path('rapport_veterinaire_delete', { id: rapport.id }) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce rapport ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ rapport.id) }}">
-                            <button class="btn btn-danger btn-sm">Supprimer</button>
-                        </form>
+                        <a href="{{ path('rapport_veterinaire_show', { id: rapport.id }) }}">Voir le rapport</a>
+
                     </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-center">Aucun rapport trouvé.</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    <form method="post" action="{{ path('app_logout') }}">
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
-        <button type="submit" class="btn btn-danger">Se déconnecter</button>
-    </form>
-    
+    <div class="mt-4">
+        <a href="{{ path('veterinaire_dashboard') }}" class="btn btn-secondary">Retour au tableau de bord</a>
+    </div>
+</div>
 {% endblock %}

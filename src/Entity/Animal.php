@@ -29,8 +29,8 @@ class Animal
     #[ORM\JoinColumn(nullable: false)]
     private ?Habitat $habitat = null;
 
-    #[ORM\OneToOne(mappedBy: 'animal', targetEntity: RapportVeterinaire::class)]
-    private ?RapportVeterinaire $rapportVeterinaire = null;
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: RapportVeterinaire::class, cascade: ['persist', 'remove'])]
+    private Collection $rapportsVeterinaires;
     
 
 
@@ -47,15 +47,14 @@ class Animal
     #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private int $views = 0;
 
-    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Alimentation::class, cascade: ['persist', 'remove'])]
-    private Collection $alimentations;
+  
 
     #[ORM\OneToMany(mappedBy: 'animal', targetEntity: AnimalFeeding::class, cascade: ['persist', 'remove'])]
     private Collection $feedings;
 
     public function __construct()
     {
-        $this->alimentations = new ArrayCollection();
+        $this->rapportsVeterinaires = new ArrayCollection();
         $this->feedings = new ArrayCollection();
     }
 
@@ -108,21 +107,31 @@ class Animal
         return $this;
     }
 
-    public function getRapportVeterinaire(): ?RapportVeterinaire
+    public function getRapportsVeterinaires(): Collection
     {
-        return $this->rapportVeterinaire;
+        return $this->rapportsVeterinaires;
     }
 
-    public function setRapportVeterinaire(?RapportVeterinaire $rapportVeterinaire): static
-    {
-        // Empêche une relation circulaire
-        if ($rapportVeterinaire && $rapportVeterinaire->getAnimal() !== $this) {
-            $rapportVeterinaire->setAnimal($this);
-        }
 
-        $this->rapportVeterinaire = $rapportVeterinaire;
+    public function addRapportVeterinaire(RapportVeterinaire $rapport): static
+    {
+        if (!$this->rapportsVeterinaires->contains($rapport)) {
+            $this->rapportsVeterinaires->add($rapport);
+            $rapport->setAnimal($this);
+        }
         return $this;
     }
+    public function removeRapportVeterinaire(RapportVeterinaire $rapport): static
+    {
+        if ($this->rapportsVeterinaires->removeElement($rapport)) {
+            // on vérifie si l'animal actuel est bien assigné avant de le dissocier
+            if ($rapport->getAnimal() === $this) {
+                $rapport->setAnimal(null);
+            }
+        }
+        return $this;
+    }
+    
 
     public function getEtat(): ?string
     {
@@ -172,30 +181,7 @@ class Animal
     {
         $this->views++;
     }
-
-    public function getAlimentations(): Collection
-    {
-        return $this->alimentations;
-    }
-
-    public function addAlimentation(Alimentation $alimentation): static
-    {
-        if (!$this->alimentations->contains($alimentation)) {
-            $this->alimentations->add($alimentation);
-            $alimentation->setAnimal($this);
-        }
-        return $this;
-    }
-
-    public function removeAlimentation(Alimentation $alimentation): static
-    {
-        if ($this->alimentations->removeElement($alimentation)) {
-            if ($alimentation->getAnimal() === $this) {
-                $alimentation->setAnimal(null);
-            }
-        }
-        return $this;
-    }
+   
 
     public function getFeedings(): Collection
     {

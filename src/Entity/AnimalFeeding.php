@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -14,20 +13,36 @@ class AnimalFeeding
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: RapportVeterinaire::class, inversedBy: 'feedings')]
-    #[ORM\JoinColumn(name: 'rapport_veterinaire_id', referencedColumnName: 'id', nullable: false)]
-    private ?RapportVeterinaire $rapport = null;
-
+    #[ORM\JoinColumn(name: 'rapport_veterinaire_id', referencedColumnName: 'id', nullable: true)]
+    private ?RapportVeterinaire $rapportVeterinaire = null;
 
     #[ORM\ManyToOne(targetEntity: Animal::class, inversedBy: 'feedings')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'animal_id', referencedColumnName: 'id', nullable: false)]
     private ?Animal $animal = null;
 
-
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message: 'Food must not be blank')] 
     private ?string $food = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Assert\GreaterThanOrEqual("today", message: "The feeding time must be today or in the future")] 
     private ?\DateTimeInterface $feedingTime = null;
+
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    private $quantity; 
+
+    public function getQuantity(): ?float
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(float $quantity): self
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
 
     public function getId(): ?int
     {
@@ -36,12 +51,12 @@ class AnimalFeeding
 
     public function getRapportVeterinaire(): ?RapportVeterinaire
     {
-        return $this->rapport;
+        return $this->rapportVeterinaire;
     }
 
-    public function setRapportVeterinaire(?RapportVeterinaire $rapport): self
+    public function setRapportVeterinaire(?RapportVeterinaire $rapportVeterinaire): self
     {
-        $this->rapport = $rapport;
+        $this->rapportVeterinaire = $rapportVeterinaire;
         return $this;
     }
 

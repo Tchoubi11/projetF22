@@ -9,7 +9,25 @@ admin_dashboard:
 
 veterinaire_dashboard:
     path: /veterinaire/dashboard
+    controller: App\Controller\RapportVeterinaireController::dashboard
+
+rapport_veterinaire_index:
+    path: /rapport_veterinaire
     controller: App\Controller\RapportVeterinaireController::index
+
+rapport_veterinaire_show:
+    path: /rapport_veterinaire/{id}
+    controller: App\Controller\RapportVeterinaireController::show
+
+rapport_veterinaire_new:
+    path: /rapport_veterinaire/new/{id}
+    controller: App\Controller\RapportVeterinaireController::new
+
+rapport_veterinaire_delete:
+    path: /rapport_veterinaire/delete/{id}
+    controller: App\Controller\RapportVeterinaireController::delete
+    methods: [POST]
+
 
 employe_dashboard:
     path: /employe/dashboard

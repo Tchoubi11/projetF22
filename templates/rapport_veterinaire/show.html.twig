@@ -3,36 +3,41 @@
 {% block title %}Détails du Rapport Vétérinaire{% endblock %}
 
 {% block body %}
-<h1>Détails du Rapport Vétérinaire</h1>
+<div class="container mt-5">
+    <h1 class="text-center">Détails du Rapport Vétérinaire</h1>
 
-<p><strong>ID :</strong> {{ rapport.id }}</p>
-<p><strong>Animal :</strong> {{ rapport.animal ? rapport.animal.prenom : 'Aucun animal lié' }}</p>
-<p><strong>Date :</strong> {{ rapport.date|date('d/m/Y') }}</p>
-<p><strong>Observations :</strong> {{ rapport.detail }}</p>
-<p><strong>Commentaires sur l'Habitat :</strong> {{ rapport.habitatComment }}</p>
+    <div class="card p-3">
+        <p><strong>ID :</strong> {{ rapport.id }}</p>
+        <p><strong>Animal :</strong> {{ rapport.animal ? rapport.animal.prenom : 'Aucun animal lié' }}</p>
+        <p><strong>Date :</strong> {{ rapport.date|date('d/m/Y') }}</p>
+        <p><strong>Observations :</strong> {{ rapport.detail }}</p>
+        <p><strong>Commentaires sur l'Habitat :</strong> {{ rapport.habitatComment }}</p>
+    </div>
 
-<h2>Alimentation</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Nourriture</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for feeding in rapport.feedings %}
+    <h2 class="mt-4">Alimentation</h2>
+    <table class="table">
+        <thead>
             <tr>
-                <td>{{ feeding.feedingTime|date('d/m/Y') }}</td>
-                <td>{{ feeding.nourriture }}</td>
+                <th>Date</th>
+                <th>Nourriture</th>
+                <th>Quantité</th>
             </tr>
-        {% else %}
-            <tr>
-                <td colspan="2">Aucune donnée d'alimentation disponible.</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {% for feeding in rapport.feedings %}
+                <tr>
+                    <td>{{ feeding.feedingTime|date('d/m/Y') }}</td>
+                    <td>{{ feeding.food }}</td>
+                    <td>{{ feeding.quantity }} g</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2" class="text-center">Aucune donnée d'alimentation disponible.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-
-<a href="{{ path('rapport_veterinaire_list') }}" class="btn btn-secondary">Retour à la liste</a>
+    <a href="{{ path('rapport_veterinaire_index') }}" class="btn btn-secondary">Retour à la liste</a>
+</div>
 {% endblock %}

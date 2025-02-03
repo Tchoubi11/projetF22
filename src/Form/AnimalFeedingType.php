@@ -1,7 +1,5 @@
 <?php
 
-// src/Form/AnimalFeedingType.php
-
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -10,21 +8,29 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Entity\AnimalFeeding;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class AnimalFeedingType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('feedingTime', DateTimeType::class, [
-            'widget' => 'single_text',
-            'required' => false,  // Champ optionnel
-            'data' => $feedingTime ?? new \DateTime(), // Valeur par défaut si feedingTime est null
-        ])
+            ->add('feedingTime', DateTimeType::class, [
+                'widget' => 'single_text',
+                'data' => new \DateTime(),  
+            ])
+            
             ->add('food', TextType::class, [
                 'label' => 'Nourriture',
                 'required' => true,
+            ])
+            ->add('quantity', NumberType::class, [
+                'label' => 'Quantité (en grammes)',
+                'required' => true,
+                'scale' => 2,  
+                'attr' => ['class' => 'form-control'],
             ]);
+           
     }
 
     public function configureOptions(OptionsResolver $resolver)
