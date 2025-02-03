@@ -36,9 +36,32 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
-                    </li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('admin_dashboard') }}">Tableau de bord Administrateur</a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_VETERINAIRE') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('veterinaire_dashboard') }}">Tableau de bord Vétérinaire</a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_EMPLOYE') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('employe_dashboard') }}">Tableau de bord Employé</a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <li class="nav-item">
+                            <form action="{{ path('app_logout') }}" method="post">
+                                <button type="submit" class="nav-link btn btn-link text-white">Déconnexion</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -50,13 +73,13 @@
     <section class="mb-5">
         <h2 class="text-center">Bienvenue au Zoo Arcadia</h2>
         <p class="text-center">
-            Situé au cœur de la magnifique forêt de Brocéliande, en Bretagne, le Zoo Arcadia est un havre de paix pour les amoureux de la nature et des animaux. Depuis son ouverture en 1960, le zoo s’est engagé à protéger la biodiversité et à offrir un espace unique où les visiteurs peuvent découvrir des espèces fascinantes dans des habitats soigneusement reconstitués.
+            Situé au cœur de la magnifique forêt de Brocéliande, en Bretagne, le Zoo Arcadia est un havre de paix pour les amoureux de la nature et des animaux. Depuis son ouverture en 1960, le zoo s'est engagé à protéger la biodiversité et à offrir un espace unique où les visiteurs peuvent découvrir des espèces fascinantes dans des habitats soigneusement reconstitués.
         </p>
         <p class="text-center">
-            En tant que zoo écoresponsable, nous fonctionnons exclusivement grâce à des énergies renouvelables, en harmonie avec notre mission de préserver notre planète. Nos habitats, conçus pour refléter les écosystèmes naturels, accueillent une grande diversité d’animaux, allant des majestueuses girafes des savanes aux crocodiles des marais. Chaque jour, notre équipe dédiée de vétérinaires veille à la santé et au bien-être de nos résidents.
+            En tant que zoo écoresponsable, nous fonctionnons exclusivement grâce à des énergies renouvelables, en harmonie avec notre mission de préserver notre planète. Nos habitats, conçus pour refléter les écosystèmes naturels, accueillent une grande diversité d'animaux, allant des majestueuses girafes des savanes aux crocodiles des marais. Chaque jour, notre équipe dédiée de vétérinaires veille à la santé et au bien-être de nos résidents.
         </p>
         <p class="text-center">
-            Découvrez un lieu où la nature, la pédagogie et le respect de l’environnement se rencontrent, et participez à nos efforts pour construire un avenir plus vert.
+            Découvrez un lieu où la nature, la pédagogie et le respect de l'environnement se rencontrent, et participez à nos efforts pour construire un avenir plus vert.
         </p>
     </section>
 
