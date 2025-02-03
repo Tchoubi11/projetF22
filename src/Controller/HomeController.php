@@ -79,12 +79,12 @@ class HomeController extends AbstractController
             'Marais' => ['Couguar', 'Renard gris']
         ];
 
-        $services = [
-            ['name' => 'Restauration', 'icon' => 'fas fa-utensils'],
-            ['name' => 'Visite du zoo en petit train', 'icon' => 'fas fa-train'],
-            ['name' => 'Visites des habitats avec un guide (gratuit)', 'icon' => 'fas fa-users']
-        ];
-        
+       $services = [
+    ['name' => 'Restauration', 'icon' => 'fas fa-utensils'],
+    ['name' => 'Visite du zoo en petit train', 'icon' => 'fas fa-train'],
+    ['name' => 'Visites des habitats avec un guide (gratuit)', 'icon' => 'fas fa-users']
+];
+
 
         return $this->render('home/index.html.twig', [
             'form' => $form->createView(),
@@ -213,13 +213,18 @@ class HomeController extends AbstractController
         foreach ($habitat->getAnimaux() as $animal) {
             $nourriture = implode(', ', $nourritures[$animal->getPrenom()] ?? ['Non spécifiée']);
             $grammage = $grammages[$animal->getPrenom()] ?? 'Non spécifié';
+    
+            // Récupération du dernier rapport vétérinaire
+            $rapportsVeterinaires = $animal->getRapportsVeterinaires();
+            if (!$rapportsVeterinaires->isEmpty()) {
+                $dernierRapport = $rapportsVeterinaires->last(); 
+                $dateDePassage = $dernierRapport->getDate()->format('Y-m-d');
+                $avisVeterinaire = $dernierRapport->getDetail();
+            } else {
+                $dateDePassage = 'Non spécifiée';
+                $avisVeterinaire = 'Non disponible';
+            }
 
-            // On récupère les données vétérinaires si disponibles
-            $rapportVeterinaire = $animal->getRapportVeterinaire();
-            $dateDePassage = $rapportVeterinaire ? $rapportVeterinaire->getDate()->format('Y-m-d') : 'Non spécifiée';
-            $avisVeterinaire = $rapportVeterinaire ? $rapportVeterinaire->getDetail() : 'Non disponible';
-
-            // Ajout de la clé "views"
             $views = $animal->getViews();  // Supposons que chaque animal a un nombre de vues
 
             $animauxDetails[] = [
