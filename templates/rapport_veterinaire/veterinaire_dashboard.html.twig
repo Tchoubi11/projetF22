@@ -33,7 +33,14 @@
 
     
 </div>
-<form action="{{ path('app_logout') }}" method="post">
-    <button type="submit" class="btn btn-danger">Se déconnecter</button>
-</form>
+<div class="d-flex justify-content-between mt-4">
+    <!-- Lien vers l'accueil -->
+    <a href="{{ path('app_home') }}" class="btn btn-primary">Retour à l'accueil</a>
+
+    <!-- Formulaire de déconnexion -->
+    <form action="{{ path('app_logout') }}" method="post">
+        <button type="submit" class="btn btn-danger">Se déconnecter</button>
+    </form>
+</div>
+
 {% endblock %}
