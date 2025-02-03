@@ -16,28 +16,16 @@ class AlimentationRepository extends ServiceEntityRepository
         parent::__construct($registry, Alimentation::class);
     }
 
-    //    /**
-    //     * @return Alimentation[] Returns an array of Alimentation objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('a.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Alimentation
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Récupère toutes les alimentations triées par dateHeure (du plus récent au plus ancien)
+     *
+     * @return Alimentation[]
+     */
+    public function findAll(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.dateHeure', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

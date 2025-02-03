@@ -25,7 +25,7 @@ class AlimentationType extends AbstractType
                 'label' => 'Type de nourriture',
             ])  
             ->add('grammage', NumberType::class, [
-                'label' => 'Grammage (en kg)',
+                'label' => 'Grammage (en g)',
             ])
             ->add('animal', EntityType::class, [
                 'class' => Animal::class,
