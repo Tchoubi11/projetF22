@@ -10,6 +10,7 @@ use App\Entity\Avis;
 
 class EmployeController extends AbstractController
 {
+    //Ici on gère la gestion des avis soumis qui ne sont pas encore visibles.
     private $avisRepository;
 
     // Injection de dépendance

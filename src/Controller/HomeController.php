@@ -31,6 +31,8 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(Request $request): Response
     {
+        //Ici on gère la soumission d'un nouvel avis par l'utilisateur qui sera invisible par défaut jusqu'à sa validation.
+
         // Récupération des avis visibles
         $avisVisibles = $this->avisRepository->findBy(['isVisible' => true]);
 
@@ -48,11 +50,6 @@ class HomeController extends AbstractController
         }
 
         // Contenu statique pour les habitats et services
-        $reviews = [
-            "Très belle expérience, mes enfants ont adoré voir les tigres!" => "Cathérine",
-            "Un endroit magnifique et bien entretenu. Bravo à l'équipe!" => "Marcus",
-            "Les habitats sont vraiment bien conçus. Un moment inoubliable." => "John",
-        ];
 
         $habitats = [
             'Savane' => ['Lions', 'Girafes', 'Zèbres'],
@@ -70,7 +67,6 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig', [
             'form' => $form->createView(),
             'avisVisibles' => $avisVisibles,
-            'reviews' => $reviews,
             'habitats' => $habitats,
             'services' => $services,
         ]);
@@ -139,21 +135,21 @@ class HomeController extends AbstractController
         ];
 
         $grammages = [
-            'Simba' => '5.0 kg',
-            'Hero' => '1.8 kg',
-            'Raja' => '6.0 kg',
-            'Shelly' => '0.8 kg',
-            'Ziggy' => '4.0 kg',
-            'Lynxie' => '2.7 kg',
+            'Simba' => '5.0 g',
+            'Hero' => '1.8 g',
+            'Raja' => '6.0 g',
+            'Shelly' => '0.8 g',
+            'Ziggy' => '4.0 g',
+            'Lynxie' => '2.7 g',
             'Grace' => '3.5 kg',
-            'Kong' => '3.8 kg',
-            'Shadow' => '4.5 kg',
-            'Kiki' => '2.5 kg',
-            'Coco' => '3.2 kg',
-            'Blaze' => '5.5 kg',
-            'Snap' => '8.0 kg',
-            'Hoppy' => '0.2 kg',
-            'Iris' => '1.5 kg',
+            'Kong' => '3.8 g',
+            'Shadow' => '4.5 g',
+            'Kiki' => '2.5 g',
+            'Coco' => '3.2 g',
+            'Blaze' => '5.5 g',
+            'Snap' => '8.0 g',
+            'Hoppy' => '0.2 g',
+            'Iris' => '1.5 g',
         ];
 
         // Tableau des détails des animaux
@@ -195,8 +191,6 @@ class HomeController extends AbstractController
             'animaux' => $animauxDetails,
         ]);
     }
-
-    // Route pour le tableau de bord Employé
    
 
     //Route pour la connexion
@@ -217,7 +211,7 @@ class HomeController extends AbstractController
     }
 
     
-    
+    //Route pour la déconnexion
    
     #[Route('/logout', name: 'app_logout')]
     public function logout(Request $request): RedirectResponse
