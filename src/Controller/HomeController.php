@@ -76,38 +76,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/employe/avis', name: 'employe_avis')]
-    public function gestionAvis(): Response
-    {
-        // Pour m'assurer que seuls les administrateurs et les utilisateurs peuvent accéder à la route
-        $this->denyAccessUnlessGranted('ROLE_EMPLOYE');
-
-        // Je récupère les avis non visibles
-        $avisNonVisibles = $this->avisRepository->findBy(['isVisible' => false]);
-
-        return $this->render('employe/avis.html.twig', [
-            'avisNonVisibles' => $avisNonVisibles,
-        ]);
-    }
-
-    #[Route('/employe/avis/valider/{id}', name: 'employe_avis_valider')]
-    public function validerAvis(Avis $avis): Response
-    {
-        $avis->setVisible(true);
-        $this->avisRepository->save($avis, true);
-
-        $this->addFlash('success', 'Avis validé avec succès.');
-        return $this->redirectToRoute('employe_avis');
-    }
-
-    #[Route('/employe/avis/supprimer/{id}', name: 'employe_avis_supprimer')]
-    public function supprimerAvis(Avis $avis): Response
-    {
-        $this->avisRepository->remove($avis, true);
-
-        $this->addFlash('success', 'Avis supprimé avec succès.');
-        return $this->redirectToRoute('employe_avis');
-    }
+    
 
     #[Route('/services', name: 'app_services')]
     public function services(): Response
@@ -228,11 +197,8 @@ class HomeController extends AbstractController
     }
 
     // Route pour le tableau de bord Employé
-    #[Route('/employe/dashboard', name: 'employe_dashboard')]
-    public function employeDashboard(): Response
-    {
-    return $this->render('employe_dashboard.html.twig');  
-    }
+   
+
     //Route pour la connexion
     #[Route('/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
