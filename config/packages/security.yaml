@@ -44,7 +44,7 @@ security:
 
     # Contrôle d'accès
     access_control:
-        - { path: ^/admin/service, roles: ROLE_EMPLOYE }
+       # - { path: ^/admin/service, roles: ROLE_EMPLOYE }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/veterinaire, roles: ROLE_VETERINAIRE }
         - { path: ^/employe, roles: ROLE_EMPLOYE }
