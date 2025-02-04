@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 #[Route('/admin/user')]
 class UserController extends AbstractController
@@ -30,6 +31,11 @@ class UserController extends AbstractController
     #[Route('/create', name: 'admin_user_create')]
     public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
+        // Création du cache
+    $cache = new FilesystemAdapter('', 3600); // Initalisation de $cache
+
+    $cache->delete('users_list'); // Invalide le cache
+
         $user = new User();
 
         $form = $this->createFormBuilder($user)
@@ -79,6 +85,11 @@ class UserController extends AbstractController
     #[Route('/edit/{id}', name: 'user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $em): Response
     {
+         // Création du cache
+        $cache = new FilesystemAdapter('', 3600); // Initalisation de $cache
+
+        $cache->delete('users_list'); // Invalide le cache
+
         if (in_array('ROLE_ADMIN', $user->getRoles())) {
             throw $this->createAccessDeniedException('Impossible de modifier un compte Administrateur.');
         }
@@ -122,7 +133,14 @@ class UserController extends AbstractController
     #[Route('/list', name: 'admin_user_list')]
     public function listUsers(UserRepository $userRepository): Response
     {
-        $users = $userRepository->findAll();
+        // Création du cache
+    $cache = new FilesystemAdapter('',3600);
+
+    // Récupère les utilisateurs depuis le cache si disponibles
+    $users = $cache->get('users_list', function() use ($userRepository) {
+        // Si non, récupère les utilisateurs depuis la base de données
+        return $userRepository->findAll();
+    });
 
         return $this->render('admin/user_list.html.twig', [
             'users' => $users,
