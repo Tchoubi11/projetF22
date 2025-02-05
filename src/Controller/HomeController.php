@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Avis;
 use App\Entity\Habitat;
 use App\Form\AvisType;
+use App\Repository\AnimalRepository;
 use App\Repository\AvisRepository;
 use App\Repository\HabitatRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse; 
@@ -72,7 +73,13 @@ class HomeController extends AbstractController
         ]);
     }
 
-    
+ //   #[Route('/test', name: 'app_test')]
+  //  public function test(AnimalRepository $animalRepository){
+         
+   //    $animaux= $animalRepository->findAll();
+  //     dd($animaux);
+   // }
+
 
     #[Route('/services', name: 'app_services')]
     public function services(): Response
