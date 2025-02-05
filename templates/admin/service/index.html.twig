@@ -36,6 +36,14 @@
         {% endfor %}
     </tbody>
 </table>
-<a href="{{ path('admin_dashboard') }}" class="btn btn-secondary mt-3">Retour au tableau de bord</a>
+<!-- Si l'utilisateur est admin, on affiche le bouton -->
+{% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('admin_dashboard') }}" class="btn btn-secondary mt-3">Retour au tableau de bord</a>
+{% endif %}
+
+<!-- Si l'utilisateur est employé,on affiche le bouton sauf sur la page 'admin_service_index' -->
+{% if is_granted('ROLE_EMPLOYE') and app.request.attributes.get('_route') != 'admin_service_index' %}
+    <a href="{{ path('admin_dashboard') }}" class="btn btn-secondary mt-3">Retour au tableau de bord</a>
+{% endif %}
 {% endblock %}
 
