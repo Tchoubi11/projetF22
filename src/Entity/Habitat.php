@@ -22,7 +22,7 @@ class Habitat
     private ?string $description = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $commentaireHabitat = null; //contient des commentaires généraux  supplémentaires sur l'habitat lui-même.
+    private ?string $commentaireHabitat = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $adresse = null;
@@ -30,20 +30,17 @@ class Habitat
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     private ?string $horairesOuverture = null;
 
+    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'habitat', cascade: ['persist', 'remove'])]
+    private Collection $images;
+
     #[ORM\OneToMany(targetEntity: Animal::class, mappedBy: 'habitat', cascade: ['persist', 'remove'])]
     private Collection $animaux;
-
-    #[ORM\ManyToMany(targetEntity: Image::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinTable(name: 'habitat_images')]
-    private Collection $images;
 
     public function __construct()
     {
         $this->animaux = new ArrayCollection();
         $this->images = new ArrayCollection();
     }
-
-    // Suppression des getters et setters pour `comment` et conservation de ceux pour `commentaireHabitat`
 
     public function getId(): ?int
     {
@@ -58,7 +55,6 @@ class Habitat
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -70,7 +66,6 @@ class Habitat
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -82,7 +77,6 @@ class Habitat
     public function setCommentaireHabitat(?string $commentaireHabitat): static
     {
         $this->commentaireHabitat = $commentaireHabitat;
-
         return $this;
     }
 
@@ -94,7 +88,6 @@ class Habitat
     public function setAdresse(?string $adresse): static
     {
         $this->adresse = $adresse;
-
         return $this;
     }
 
@@ -106,6 +99,32 @@ class Habitat
     public function setHorairesOuverture(?string $horairesOuverture): static
     {
         $this->horairesOuverture = $horairesOuverture;
+        return $this;
+    }
+
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): static
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setHabitat($this); // Met à jour la relation inverse
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): static
+    {
+        if ($this->images->removeElement($image)) {
+            // Vérifier si l'image est associée à cet habitat et la dissocier
+            if ($image->getHabitat() === $this) {
+                $image->setHabitat(null);
+            }
+        }
 
         return $this;
     }
@@ -132,27 +151,6 @@ class Habitat
                 $animal->setHabitat(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getImages(): Collection
-    {
-        return $this->images;
-    }
-
-    public function addImage(Image $image): static
-    {
-        if (!$this->images->contains($image)) {
-            $this->images->add($image);
-        }
-
-        return $this;
-    }
-
-    public function removeImage(Image $image): static
-    {
-        $this->images->removeElement($image);
 
         return $this;
     }

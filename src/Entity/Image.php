@@ -14,9 +14,11 @@ class Image
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)] 
-    #[ORM\ManyToMany(targetEntity: Habitat::class, mappedBy: 'images')]
-    #[ORM\JoinTable(name: 'habitat_images')]
+    #[ORM\ManyToOne(targetEntity: Habitat::class, inversedBy: 'images')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Habitat $habitat = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $imagePath = null;
 
     // Propriété temporaire pour gérer l'upload
@@ -27,6 +29,17 @@ class Image
         return $this->id;
     }
 
+    public function getHabitat(): ?Habitat
+    {
+        return $this->habitat;
+    }
+
+    public function setHabitat(?Habitat $habitat): static
+    {
+        $this->habitat = $habitat;
+        return $this;
+    }
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -35,7 +48,6 @@ class Image
     public function setImagePath(?string $imagePath): static
     {
         $this->imagePath = $imagePath;
-
         return $this;
     }
 
@@ -47,8 +59,6 @@ class Image
     public function setImageFile(?UploadedFile $imageFile): static
     {
         $this->imageFile = $imageFile;
-
         return $this;
     }
 }
- 
