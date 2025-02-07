@@ -34,9 +34,15 @@ class RapportVeterinaire
     #[Assert\Valid]
     private Collection $feedings;
 
+    #[ORM\ManyToMany(targetEntity: Alimentation::class, mappedBy: 'rapportsVeterinaires')]
+    private Collection $alimentations;
+
+    
+
     public function __construct()
     {
         $this->feedings = new ArrayCollection();
+        $this->alimentations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -109,6 +115,24 @@ class RapportVeterinaire
                 $feeding->setRapportVeterinaire(null);
             }
         }
+        return $this;
+    }
+    public function getAlimentations(): Collection
+    {
+        return $this->alimentations;
+    }
+
+    public function addAlimentation(Alimentation $alimentation): static
+    {
+        if (!$this->alimentations->contains($alimentation)) {
+            $this->alimentations[] = $alimentation;
+        }
+        return $this;
+    }
+
+    public function removeAlimentation(Alimentation $alimentation): static
+    {
+        $this->alimentations->removeElement($alimentation);
         return $this;
     }
 }

@@ -9,6 +9,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Entity\AnimalFeeding;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use App\Entity\Alimentation;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class AnimalFeedingType extends AbstractType
 {
@@ -18,6 +21,9 @@ class AnimalFeedingType extends AbstractType
             ->add('feedingTime', DateTimeType::class, [
                 'widget' => 'single_text',
                 'data' => new \DateTime(),  
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
             ])
             
             ->add('food', TextType::class, [
@@ -29,7 +35,8 @@ class AnimalFeedingType extends AbstractType
                 'required' => true,
                 'scale' => 2,  
                 'attr' => ['class' => 'form-control'],
-            ]);
+            ])
+            ;
            
     }
 

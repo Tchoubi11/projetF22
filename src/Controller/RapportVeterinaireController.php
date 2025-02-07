@@ -12,8 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use App\Repository\AnimalRepository;  
-
+use App\Repository\AnimalRepository;
+use App\Repository\AlimentationRepository;
 
 #[Route('/rapport_veterinaire')]
 class RapportVeterinaireController extends AbstractController
@@ -29,7 +29,6 @@ class RapportVeterinaireController extends AbstractController
     #[Route('/', name: 'rapport_veterinaire_index')]
     public function index(Request $request, EntityManagerInterface $em): Response
     {
-        // Formulaire pour sélectionner un animal
         $form = $this->createFormBuilder()
             ->add('animal', EntityType::class, [
                 'class' => Animal::class,
@@ -40,19 +39,15 @@ class RapportVeterinaireController extends AbstractController
             ->getForm();
 
         $form->handleRequest($request);
-
         $animal = null;
+
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $animal = $data['animal']; // ici je récupère l'animal sélectionné
+            $animal = $data['animal'];
         }
 
-        // Récupéreration des rapports vétérinaires, on filtre si un animal est sélectionné
-        if ($animal) {
-            $rapports = $em->getRepository(RapportVeterinaire::class)->findBy(['animal' => $animal]);
-        } else {
-            $rapports = $em->getRepository(RapportVeterinaire::class)->findAll();  // Si aucun animal sélectionné
-        }
+        $rapports = $animal ? $em->getRepository(RapportVeterinaire::class)->findBy(['animal' => $animal])
+                            : $em->getRepository(RapportVeterinaire::class)->findAll();
 
         return $this->render('rapport_veterinaire/index.html.twig', [
             'form' => $form->createView(),
@@ -61,48 +56,89 @@ class RapportVeterinaireController extends AbstractController
         ]);
     }
 
-    
-    // Création d'un rapport vétérinaire
     #[Route('/new/{id}', name: 'rapport_veterinaire_new')]
-    public function new(Request $request, EntityManagerInterface $em, AnimalRepository $animalRepository, int $id): Response
+    public function new(Request $request, AnimalRepository $animalRepository, AlimentationRepository $alimentationRepository, int $id): Response
     {
-        // Récupéreration de l'animal par son ID
+        // Vérifier si l'ID est valide
+        if (!$id) {
+            throw new \Exception("L'ID de l'animal est manquant");
+        }
+    
+        // Trouver l'animal par son ID
         $animal = $animalRepository->find($id);
-        
         if (!$animal) {
             throw $this->createNotFoundException('Animal non trouvé');
         }
     
-        // Création d'un rapport vétérinaire et association avec l'animal
-        $rapport = new RapportVeterinaire();
-        $rapport->setAnimal($animal);  
+        // Récupérer les consommations alimentaires pour cet animal
+        $alimentations = $alimentationRepository->findBy(['animal' => $animal]);
     
-        // Création du formulaire
+        // Debug : Vérifier si des alimentations ont été récupérées
+        dump($alimentations); // Affichez les alimentations récupérées
+    
+        // Créer un rapport vétérinaire
+        $rapport = new RapportVeterinaire();
+        $rapport->setAnimal($animal);
+    
+        // Créer le formulaire
         $form = $this->createForm(RapportVeterinaireType::class, $rapport);
         $form->handleRequest($request);
-        
+    
         if ($form->isSubmitted() && $form->isValid()) {
-            // on associe chaque alimentation au rapport et à l'animal
-            foreach ($rapport->getFeedings() as $feeding) {
-                $feeding->setAnimal($animal);
-                $feeding->setRapportVeterinaire($rapport);
-                $em->persist($feeding);
+            try {
+                // Enregistrer le rapport vétérinaire
+                $this->entityManager->persist($rapport);
+                $this->entityManager->flush();
+    
+                // Vérifier que des alimentations existent
+                if (!empty($alimentations)) {
+                    foreach ($alimentations as $alimentation) {
+                        // Créer un nouvel objet AnimalFeeding pour chaque alimentation
+                        $animalFeeding = new AnimalFeeding();
+                        $animalFeeding->setFood($alimentation->getNourriture());
+                        $animalFeeding->setFeedingTime(new \DateTime()); // Horodatage actuel
+                        $animalFeeding->setQuantity($alimentation->getGrammage());
+                        $animalFeeding->setRapportVeterinaire($rapport);
+    
+                        // Associer l'animal avant de persister
+                        $animalFeeding->setAnimal($animal); // Associer l'animal
+    
+                        // Vérification que l'animal est bien défini avant la persistance
+                        if ($animalFeeding->getAnimal() === null) {
+                            throw new \Exception('L\'animal doit être défini avant la persistance');
+                        }
+    
+                        // Debug : Vérification que AnimalFeeding est correctement créé
+                        dump($animalFeeding); // Affiche l'objet AnimalFeeding
+    
+                        // Persister l'alimentation
+                        $this->entityManager->persist($animalFeeding);
+                    }
+    
+                    // Effectuer la sauvegarde après avoir persisté toutes les alimentations
+                    $this->entityManager->flush();
+                }
+    
+                // Rediriger vers la page du rapport après la soumission
+                return $this->redirectToRoute('rapport_veterinaire_show', ['id' => $rapport->getId()]);
+    
+            } catch (\Exception $e) {
+                // Gérer les exceptions et afficher les erreurs
+                dump($e->getMessage());
+                $this->addFlash('error', 'Une erreur est survenue lors de l\'enregistrement du rapport vétérinaire.');
             }
-    
-            // Enregistrement du rapport vétérinaire
-            $em->persist($rapport);
-            $em->flush();
-    
-            return $this->redirectToRoute('rapport_veterinaire_show', ['id' => $rapport->getId()]);
         }
     
+        // Rendu du formulaire et des alimentations
         return $this->render('rapport_veterinaire/new.html.twig', [
             'form' => $form->createView(),
+            'alimentations' => $alimentations,
         ]);
     }
     
-
-    // Afficheage d'un rapport vétérinaire
+    
+    
+    // Affichage d'un rapport vétérinaire
     #[Route('/{id}', name: 'rapport_veterinaire_show')]
     public function show(int $id): Response
     {
@@ -117,7 +153,7 @@ class RapportVeterinaireController extends AbstractController
         ]);
     }
 
-    // Suppréssion un rapport vétérinaire
+    // Suppression d'un rapport vétérinaire
     #[Route('/delete/{id}', name: 'rapport_veterinaire_delete', methods: ['POST'])]
     public function delete(Request $request, RapportVeterinaire $rapport, EntityManagerInterface $em): Response
     {
@@ -129,10 +165,11 @@ class RapportVeterinaireController extends AbstractController
 
         return $this->redirectToRoute('rapport_veterinaire_index');
     }
-    #[Route('/veterinaire/dashboard', name: 'veterinaire_dashboard')]
-    public function dashboard(): Response
-    {
-        // Logique pour le tableau de bord du vétérinaire
-        return $this->render('rapport_veterinaire/veterinaire_dashboard.html.twig');
-    }
+
+    #[Route('/dashboard', name: 'rapport_veterinaire_dashboard')]
+public function dashboard(): Response
+{
+    return $this->render('rapport_veterinaire/veterinaire_dashboard.html.twig', []);
+}
+
 }

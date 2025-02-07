@@ -28,4 +28,20 @@ class AlimentationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Trouver les alimentations pour un animal donné.
+     *
+     * @param int $animal L'ID de l'animal concerné
+     * @return Alimentation[]
+     */
+    public function findByAnimal($animal): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.animal = :animal')
+            ->setParameter('animal', $animal)
+            ->orderBy('a.dateHeure', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

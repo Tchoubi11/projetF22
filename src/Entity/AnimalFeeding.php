@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -39,10 +40,8 @@ class AnimalFeeding
     public function setQuantity(float $quantity): self
     {
         $this->quantity = $quantity;
-
         return $this;
     }
-
 
     public function getId(): ?int
     {
