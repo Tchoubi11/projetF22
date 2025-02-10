@@ -57,11 +57,14 @@ class RapportVeterinaireController extends AbstractController
         ]);
     }
 
+    
+    #[Route('/new/{id}', name: 'rapport_veterinaire_new')]
     public function new(
         Request $request,
         AnimalRepository $animalRepository,
         AlimentationRepository $alimentationRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        int $id
     ): Response {
         $rapport = new RapportVeterinaire();
         $form = $this->createForm(RapportVeterinaireType::class, $rapport);
@@ -70,6 +73,12 @@ class RapportVeterinaireController extends AbstractController
     
         
         $alimentations = [];
+        $animal = $animalRepository->find($id);
+if (!$animal) {
+    throw $this->createNotFoundException("Animal non trouvé.");
+}
+$rapport->setAnimal($animal);
+
     
         if ($form->isSubmitted() && $form->isValid()) {
             $animal = $form->get('animal')->getData();
@@ -117,6 +126,7 @@ class RapportVeterinaireController extends AbstractController
             'alimentations' => $alimentations, 
         ]);
     }
+
     
     
     
@@ -183,7 +193,7 @@ public function getAlimentation(
      //   ];
     //}
     $data['html'] = $this->renderView('rapport_veterinaire/_alimentations.html.twig',['alimentations' =>$alimentations]) ;
-
+    dump($data['html']);
     return new JsonResponse($data);
 }
 

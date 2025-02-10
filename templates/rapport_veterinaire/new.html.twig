@@ -92,34 +92,35 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-let champAnimal = document.getElementById('rapport_veterinaire_animal');
+document.addEventListener("DOMContentLoaded", function () {
+    let champAnimal = document.getElementById('rapport_veterinaire_animal');
 
-champAnimal.addEventListener('change',function(event){
+    if (champAnimal) {
+        champAnimal.addEventListener('change', function (event) {
+            let animalId = event.target.value;
 
- let animalId =event.target.value;
- 
- champAnimal.value = animalId;
+            if (animalId) {
+                let xhr = new XMLHttpRequest();
+                xhr.open('GET', '/rapport_veterinaire/get-alimentation/' + animalId, true);
+                xhr.responseType = 'json';
 
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === 4) {
+                        let divAlimentationAnimal = document.getElementById('champ_alimentation_animal');
 
- let xhr = new XMLHttpRequest();
- xhr.open('GET','https://localhost:8000/rapport_veterinaire/get-alimentation/'+animalId);
- xhr.responseType='json';
- xhr.send();
-// xhr.onload() =function(){
-//    console.log(xhr.response)
-// }   
-//console.log(xhr.response);
-xhr.onreadystatechange = ()=>{
-    if(xhr.readyState==4){
-        console.log(xhr.response);
-        let divAlimentationAnimal = document.getElementById('champ_alimentation_animal');
-        divAlimentationAnimal.innerHTML=xhr.response.html;
-        
+                        if (xhr.status === 200 && xhr.response) {
+                            divAlimentationAnimal.innerHTML = xhr.response.html; // Injecte le HTML retourné
+                        } else {
+                            divAlimentationAnimal.innerHTML = "<p class='text-danger'>Impossible de charger les données.</p>";
+                        }
+                    }
+                };
+
+                xhr.send();
+            }
+        });
     }
-}
-
-
-})
+});
 
 
 
