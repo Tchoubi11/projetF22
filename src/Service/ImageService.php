@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Service;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -21,62 +20,65 @@ class ImageService
         }
     }
 
-    public function compressAndResize(string $imagePath, int $newWidth, int $newHeight, int $quality = 80): ?string
+    public function getUploadDir(): string
+    {
+        return $this->uploadDir;
+    }
+
+    // Compression sans redimensionnement
+    public function compressOnly(string $imagePath, int $quality = 75): ?string
     {
         $fullPath = $this->uploadDir . $imagePath;
-        
-        if (!$this->filesystem->exists($fullPath)) {
-            return null; // L'image n'existe pas
+
+        // Vérifier si le fichier existe
+        if (!file_exists($fullPath)) {
+            return null;
         }
 
+        // Ouvrir l'image en fonction du type
         $imageInfo = getimagesize($fullPath);
         if (!$imageInfo) {
-            return null; // Fichier non valide
+            return null; // Si l'image est invalide
         }
 
-        // Détecter le type de l'image
         $mime = $imageInfo['mime'];
         switch ($mime) {
             case 'image/jpeg':
-                $image = \imagecreatefromjpeg($fullPath);
+                $image = imagecreatefromjpeg($fullPath);
                 break;
             case 'image/png':
-                $image = \imagecreatefrompng($fullPath);
+                $image = imagecreatefrompng($fullPath);
                 break;
             case 'image/gif':
-                $image = \imagecreatefromgif($fullPath);
+                $image = imagecreatefromgif($fullPath);
                 break;
             case 'image/webp':
-                $image = \imagecreatefromwebp($fullPath);
+                $image = imagecreatefromwebp($fullPath);
                 break;
             default:
                 return null; // Format non supporté
         }
 
-        // Redimensionner l'image
-        $resizedImage = imagescale($image, $newWidth, $newHeight);
-
-        // Sauvegarder l'image compressée
+        // Compression de l'image sans redimensionner
         $compressedPath = $this->uploadDir . 'compressed_' . $imagePath;
-        
         switch ($mime) {
             case 'image/jpeg':
-                imagejpeg($resizedImage, $compressedPath, $quality);
+                imagejpeg($image, $compressedPath, $quality);
                 break;
             case 'image/png':
-                imagepng($resizedImage, $compressedPath, round($quality / 10)); // 0 à 9 pour PNG
+                imagepng($image, $compressedPath, round($quality / 10)); // 0 à 9 pour PNG
                 break;
             case 'image/gif':
-                imagegif($resizedImage, $compressedPath);
+                imagegif($image, $compressedPath);
                 break;
             case 'image/webp':
-                imagewebp($resizedImage, $compressedPath, $quality);
+                imagewebp($image, $compressedPath, $quality);
                 break;
         }
 
+        // Libérer la mémoire
         imagedestroy($image);
-        imagedestroy($resizedImage);
 
-        return 'compressed_' . $imagePath; // Retourner le chemin de l'image compressée
+        return $compressedPath; // Retourne le chemin du fichier compressé
     }
 }

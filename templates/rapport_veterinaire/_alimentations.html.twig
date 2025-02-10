@@ -1,0 +1,20 @@
+<h2>Consommation quotidienne de l'animal </h2>
+<div id="feedings-container" class="row">
+    {% for alimentation in alimentations %}
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm border-0 rounded">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">
+                        <i class="fas fa-utensils"></i> Repas à {{ alimentation.dateHeure|date('H:i') }}
+                    </h5>
+                    <p class="card-text"><strong>Nourriture :</strong> {{ alimentation.nourriture }}</p>
+                    <p class="card-text"><strong>Quantité :</strong> {{ alimentation.grammage }} g</p>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="col-12">
+            <p class="text-muted text-center">Aucune consommation alimentaire enregistrée pour cet animal pour le moment.</p>
+        </div>
+    {% endfor %}
+</div>
