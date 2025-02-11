@@ -1,23 +1,117 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Statistiques des Animaux{% endblock %}
+{% block title %}Tableau de bord - Admin{% endblock %}
 
 {% block body %}
-<h1>Statistiques des Animaux</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Prénom</th>
-            <th>Consultations</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for animal in statistics %}
-        <tr>
-            <td>{{ animal.prenom }}</td>
-            <td>{{ animal.views }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container mt-5">
+    <h1 class="text-center">Tableau de bord - Administrateur</h1>
+
+    <div class="row mt-4">
+        <!-- Gérer les utilisateurs -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gérer les utilisateurs</h5>
+                    <p class="card-text">Ajouter, modifier ou supprimer des utilisateurs.</p>
+                    <a href="{{ path('admin_user_create') }}" class="btn btn-primary">Créer un utilisateur</a>
+                    <a href="{{ path('admin_user_list') }}" class="btn btn-secondary mt-2">Voir les utilisateurs</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gérer les services -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gérer les services</h5>
+                    <p class="card-text">Consultez et gérez les services du zoo.</p>
+                    <a href="{{ path('admin_service_index') }}" class="btn btn-primary">Voir les services</a>
+                    <a href="{{ path('admin_service_new') }}" class="btn btn-secondary mt-2">Ajouter un service</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques des Animaux -->
+        <div class="container mt-4">
+            <h1>Statistiques des Animaux</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Prénom</th>
+                        <th>Vues</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if animals is defined and animals is not empty %}
+                        {% for animal in animals %}
+                            <tr>
+                                <td>{{ animal.prenom }}</td>
+                                <td id="views-{{ animal.prenom }}">{{ animal.views }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="2">Aucun animal trouvé.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+            <button id="update-views-btn" class="btn btn-primary mt-3">Actualiser les vues</button>
+        </div>
+    </div>
+
+    <!-- Boutons d'actions -->
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{{ path('app_home') }}" class="btn btn-primary">Retour à l'accueil</a>
+
+        <form action="{{ path('app_logout') }}" method="post">
+            <button type="submit" class="btn btn-danger">Se déconnecter</button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    let updateButton = document.getElementById("update-views-btn");
+
+    if (updateButton) {
+        updateButton.addEventListener("click", function () {
+            let rows = document.querySelectorAll("tbody tr");
+
+            rows.forEach(row => {
+                let prenomElement = row.children[0]; // Prénom (1ère colonne)
+                let viewsContainer = row.children[1]; // 2ème colonne pour "Vues"
+
+                if (prenomElement && viewsContainer) {
+                    let prenom = prenomElement.textContent.trim();
+
+                    if (prenom) {
+                        let xhr = new XMLHttpRequest();
+                        xhr.open("GET", "/animalDocument/getViews/" + encodeURIComponent(prenom), true);
+                        xhr.responseType = "json";
+
+                        xhr.onreadystatechange = function () {
+                            if (xhr.readyState === 4) {
+                                if (xhr.status === 200 && xhr.response) {
+                                    // Vérifie si "views" est dans la réponse
+                                    if (xhr.response.views !== undefined) {
+                                        viewsContainer.innerHTML = `<span class="badge bg-info">${xhr.response.views}</span>`; // Mise à jour propre
+                                    } else {
+                                        viewsContainer.innerHTML = "<span class='text-danger'>Erreur</span>";
+                                    }
+                                } else {
+                                    viewsContainer.innerHTML = "<span class='text-danger'>Erreur</span>";
+                                }
+                            }
+                        };
+
+                        xhr.send();
+                    }
+                }
+            });
+        });
+    }
+});
+</script>
+
 {% endblock %}

@@ -5,7 +5,8 @@ controllers:
     type: attribute
 admin_dashboard:
     path: /admin/dashboard
-    controller: App\Controller\AdminController::index
+    controller: App\Controller\DashboardController::dashboard
+
 
 veterinaire_dashboard:
     path: /veterinaire/dashboard
