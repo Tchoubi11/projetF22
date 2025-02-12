@@ -36,6 +36,7 @@ class RapportVeterinaireController extends AbstractController
                 'choice_label' => 'prenom',
                 'placeholder' => 'Sélectionner un animal',
                 'required' => false,
+                'data' => $options['animal'] ?? null,
             ])
             ->getForm();
 
@@ -59,73 +60,67 @@ class RapportVeterinaireController extends AbstractController
 
     
     #[Route('/new/{id}', name: 'rapport_veterinaire_new')]
-    public function new(
-        Request $request,
-        AnimalRepository $animalRepository,
-        AlimentationRepository $alimentationRepository,
-        EntityManagerInterface $entityManager,
-        int $id
-    ): Response {
-        $rapport = new RapportVeterinaire();
-        $form = $this->createForm(RapportVeterinaireType::class, $rapport);
-    
-        $form->handleRequest($request);
-    
-        
-        $alimentations = [];
-        $animal = $animalRepository->find($id);
-if (!$animal) {
-    throw $this->createNotFoundException("Animal non trouvé.");
-}
-$rapport->setAnimal($animal);
+public function new(
+    Request $request,
+    AnimalRepository $animalRepository,
+    AlimentationRepository $alimentationRepository,
+    EntityManagerInterface $entityManager,
+    int $id
+): Response {
+    $rapport = new RapportVeterinaire();
+    $form = $this->createForm(RapportVeterinaireType::class, $rapport);
 
-    
-        if ($form->isSubmitted() && $form->isValid()) {
-            $animal = $form->get('animal')->getData();
-            dump($animal);
-           
-            if (!$animal) {
-                $this->addFlash('error', 'Un animal doit être sélectionné.');
-                return $this->redirectToRoute('rapport_veterinaire_new');
-            }
-    
-           
-            if (!$animal->getId()) {
-                throw new \Exception("L'animal associé n'a pas d'ID valide.");
-            }
-    
-            
-            $rapport->setAnimal($animal);
-            
-            
-            $entityManager->persist($rapport);
-            $entityManager->flush();
-    
-            
-            $alimentations = $alimentationRepository->findBy(['animal' => $animal]);
-    
-            
-            foreach ($alimentations as $alimentation) {
-                $feeding = new AnimalFeeding();
-                $feeding->setAnimal($animal); 
-                $feeding->setRapportVeterinaire($rapport); 
-                $feeding->setFood($alimentation->getFood());
-                $feeding->setFeedingTime($alimentation->getFeedingTime());
-                $feeding->setQuantity($alimentation->getQuantity());
-    
-                $entityManager->persist($feeding); 
-            }
-    
-            $entityManager->flush(); // Sauvegarde des alimentations et du rapport
-    
-            return $this->redirectToRoute('rapport_veterinaire_success'); 
-        }
-    
-        return $this->render('rapport_veterinaire/new.html.twig', [
-            'form' => $form->createView(),
-            'alimentations' => $alimentations, 
-        ]);
+    $form->handleRequest($request);
+
+    $animal = $animalRepository->find($id);
+
+    if (!$animal) {
+        throw $this->createNotFoundException("Animal non trouvé.");
     }
+    $rapport->setAnimal($animal);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Vérifions la valeur de l'animal soumis
+        $animal = $form->get('animal')->getData();
+        dump($animal);
+
+        if (!$animal) {
+            $this->addFlash('error', 'Un animal doit être sélectionné.');
+            return $this->redirectToRoute('rapport_veterinaire_new', ['id' => $id]);
+        }
+
+        if (!$animal->getId()) {
+            throw new \Exception("L'animal associé n'a pas d'ID valide.");
+        }
+
+        $rapport->setAnimal($animal);
+        $entityManager->persist($rapport);
+        $entityManager->flush();
+
+        $alimentations = $alimentationRepository->findBy(['animal' => $animal]);
+
+        foreach ($alimentations as $alimentation) {
+            $feeding = new AnimalFeeding();
+            $feeding->setAnimal($animal);
+            $feeding->setRapportVeterinaire($rapport);
+            $feeding->setFood($alimentation->getFood());
+            $feeding->setFeedingTime($alimentation->getFeedingTime());
+            $feeding->setQuantity($alimentation->getQuantity());
+
+            $entityManager->persist($feeding);
+        }
+
+        $entityManager->flush();
+
+        
+        return $this->redirectToRoute('rapport_veterinaire_show', ['id' => $rapport->getId()]);
+    }
+
+    return $this->render('rapport_veterinaire/new.html.twig', [
+        'form' => $form->createView(),
+        'alimentations' => $alimentations ?? [],
+    ]);
+}
 
     
     

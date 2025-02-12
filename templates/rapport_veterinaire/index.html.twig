@@ -16,10 +16,11 @@
     {{ form_end(form) }}
 
     {% if animal %}
-    <div class="mt-4">
-        <a href="{{ path('rapport_veterinaire_new', { id: animal.id }) }}" class="btn btn-success">Ajouter un rapport pour {{ animal.prenom }}</a>
-    </div>
+    <a href="{{ path('rapport_veterinaire_new', { id: animal.id }) }}" class="btn btn-success">
+        Ajouter un rapport pour {{ animal.prenom }}
+    </a>
 {% endif %}
+
 
     <table class="table mt-3">
         <thead>

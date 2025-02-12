@@ -6,7 +6,8 @@
 <div class="container mt-5">
     <h1 class="text-center">Créer un Rapport Vétérinaire</h1>
 
-    <form method="post">
+    <form method="post" action="{{ path('rapport_veterinaire_new', {'id': app.request.get('id')}) }}">
+
         {{ form_start(form) }}
 
         <div class="mb-3">
@@ -18,6 +19,7 @@
         <div class="mb-3">
             <label class="form-label">Choisir un animal :</label>
             {{ form_widget(form.animal, { 'attr': { 'class': 'form-control' } }) }}
+
             {{ form_errors(form.animal) }}
         </div>
 
@@ -100,6 +102,11 @@ document.addEventListener("DOMContentLoaded", function () {
             let animalId = event.target.value;
 
             if (animalId) {
+                // Mise à jour dynamique de l'URL dans la barre d'adresse
+                let newUrl = '/rapport_veterinaire/new/' + animalId;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+
+                // Requête AJAX pour récupérer l'alimentation de l'animal
                 let xhr = new XMLHttpRequest();
                 xhr.open('GET', '/rapport_veterinaire/get-alimentation/' + animalId, true);
                 xhr.responseType = 'json';
@@ -109,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         let divAlimentationAnimal = document.getElementById('champ_alimentation_animal');
 
                         if (xhr.status === 200 && xhr.response) {
-                            divAlimentationAnimal.innerHTML = xhr.response.html; // Injecte le HTML retourné
+                            divAlimentationAnimal.innerHTML = xhr.response.html; // Injection du HTML retourné
                         } else {
                             divAlimentationAnimal.innerHTML = "<p class='text-danger'>Impossible de charger les données.</p>";
                         }
